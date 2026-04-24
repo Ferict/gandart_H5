@@ -124,7 +124,7 @@ const { runtimeContext } = useResponsiveRailLayout()
 const pageMetaStyle = computed(() => {
   const viewportHeight = runtimeContext.value.viewportHeight
   const height = viewportHeight > 0 ? `${viewportHeight}px` : '100vh'
-  return `height:${height};min-height:${height};overflow:hidden;background:#f3f6fa;`
+  return `height:${height};min-height:${height};overflow:hidden;background:#ffffff;`
 })
 
 const handleHistoryTap = () => {
@@ -219,7 +219,7 @@ const resolveEventActionLabel = (event: PriorityDrawEventViewModel) => {
 }
 
 :deep(.secondary-page-frame) {
-  background: #f3f6fa;
+  background: #ffffff;
 }
 
 .priority-draw-page-content {
@@ -240,15 +240,18 @@ const resolveEventActionLabel = (event: PriorityDrawEventViewModel) => {
 
 .priority-draw-card-shell {
   border-radius: var(--aether-surface-radius-lg, 20px);
+  border: 1px solid rgba(15, 23, 42, 0.06);
   background: rgba(255, 255, 255, 0.96);
-  box-shadow: none;
+  box-shadow: var(--aether-shadow-soft, 0 0 24px rgba(15, 23, 42, 0.05));
   overflow: hidden;
-  transition: transform 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .priority-draw-card-entry.is-entry-active .priority-draw-card-shell {
   transform: scale(0.988);
-  box-shadow: none;
+  box-shadow: var(--aether-shadow-overlay-float, 0 0 24px rgba(15, 23, 42, 0.08));
 }
 
 .priority-draw-card-shell.is-ended {
