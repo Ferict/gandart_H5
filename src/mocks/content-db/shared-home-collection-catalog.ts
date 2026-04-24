@@ -47,8 +47,6 @@ const updatedAt = '2026-03-26T23:58:00+08:00'
 export const homeMarketSortOptionSeed: Array<{ field: ContentMarketSortField; label: string }> = [
   { field: 'listedAt', label: '时间' },
   { field: 'priceInCent', label: '市场价' },
-  { field: 'tradeVolume24h', label: '交易量' },
-  { field: 'holderCount', label: '持有量' },
 ]
 
 export const homeMarketDefaultSortField: ContentMarketSortField = 'listedAt'

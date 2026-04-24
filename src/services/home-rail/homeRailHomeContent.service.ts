@@ -89,9 +89,7 @@ export const createHomeRailHomeContentShell = (): HomeRailHomeContent => {
   return createHomeRailHomeContentShellAdapter()
 }
 
-const mapHomeSortFieldToContent = (
-  field: HomeMarketSortField
-): 'listedAt' | 'priceInCent' | 'tradeVolume24h' | 'holderCount' => {
+const mapHomeSortFieldToContent = (field: HomeMarketSortField): 'listedAt' | 'priceInCent' => {
   if (field === 'price') {
     return 'priceInCent'
   }

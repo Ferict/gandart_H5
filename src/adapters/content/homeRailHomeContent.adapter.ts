@@ -63,8 +63,6 @@ const homeRailHomeContentShell: HomeRailHomeContent = {
       options: [
         { field: 'listedAt', label: '时间' },
         { field: 'price', label: '市场价' },
-        { field: 'tradeVolume24h', label: '成交量' },
-        { field: 'holderCount', label: '持有量' },
       ],
     },
     cards: [],
@@ -118,7 +116,17 @@ const resolveHomeRailHomeCurrencyUnit = resolvePriceSymbol
 
 const mapHomeRailHomeSortFieldToModel = (
   field: ContentMarketSortConfigDto['defaultField']
-): HomeMarketSortField => (field === 'priceInCent' ? 'price' : field)
+): HomeMarketSortField | null => {
+  if (field === 'listedAt') {
+    return 'listedAt'
+  }
+
+  if (field === 'priceInCent') {
+    return 'price'
+  }
+
+  return null
+}
 
 export const adaptHomeRailHomeNoticeBarBlockDto = (
   block?: ContentNoticeBarBlockDto
@@ -229,17 +237,21 @@ export const adaptHomeRailHomeMarketSortConfigBlockDto = (
     }
   }
 
-  const mappedOptions = sortConfig.options.map((option) => ({
-    field: mapHomeRailHomeSortFieldToModel(option.field),
-    label: option.label,
-  }))
+  const mappedOptions = sortConfig.options
+    .map((option) => {
+      const field = mapHomeRailHomeSortFieldToModel(option.field)
+      return field ? { field, label: option.label } : null
+    })
+    .filter((option): option is HomeMarketSortConfig['options'][number] => Boolean(option))
   const resolvedOptions =
     mappedOptions.length > 0
       ? mappedOptions
       : shellSortConfig.options.map((option) => ({ ...option }))
+  const defaultField =
+    mapHomeRailHomeSortFieldToModel(sortConfig.defaultField) ?? shellSortConfig.defaultField
 
   return {
-    defaultField: mapHomeRailHomeSortFieldToModel(sortConfig.defaultField),
+    defaultField,
     defaultDirection: sortConfig.defaultDirection,
     options: resolvedOptions,
   }

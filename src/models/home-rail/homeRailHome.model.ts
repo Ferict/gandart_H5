@@ -11,7 +11,7 @@ export type HomeMarketBadgeTone = 'new' | 'hot' | 'featured'
 export type HomeMarketVisualTone = 'ink' | 'mist' | 'aqua' | 'sand'
 export type HomePlaceholderIconKey = 'box' | 'cpu' | 'aperture' | 'hexagon' | 'triangle' | 'disc3'
 export type HomeContentTargetType = ContentTargetType
-export type HomeMarketSortField = 'listedAt' | 'price' | 'tradeVolume24h' | 'holderCount'
+export type HomeMarketSortField = 'listedAt' | 'price'
 export type HomeMarketSortDirection = 'asc' | 'desc'
 
 export type HomeContentTargetRef = ContentTargetRef

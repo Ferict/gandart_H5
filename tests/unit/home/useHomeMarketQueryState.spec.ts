@@ -17,7 +17,7 @@ const createMarketContent = (): HomeRailHomeContent['market'] => ({
     defaultDirection: 'desc',
     options: [
       { field: 'price', label: 'Price' },
-      { field: 'tradeVolume24h', label: '24h Volume' },
+      { field: 'listedAt', label: 'Time' },
     ],
   },
   cards: [],
@@ -104,7 +104,7 @@ describe('useHomeMarketQueryState', () => {
     const { state, marketTags } = createHarness()
 
     const sortOptions = state.marketSortMenuOptions.value
-    expect(sortOptions.length).toBeGreaterThan(2)
+    expect(sortOptions).toHaveLength(3)
 
     state.handleMarketTagSelect(marketTags[1])
     state.handleMarketSortOptionSelect(sortOptions[1])
@@ -124,10 +124,10 @@ describe('useHomeMarketQueryState', () => {
       categoryId: 'hot',
       keyword: undefined,
       sort: {
-        field: 'tradeVolume24h',
+        field: 'listedAt',
         direction: 'asc',
       },
     })
-    expect(state.marketListQuerySignature.value).toBe('hot::::tradeVolume24h::asc')
+    expect(state.marketListQuerySignature.value).toBe('hot::::listedAt::asc')
   })
 })

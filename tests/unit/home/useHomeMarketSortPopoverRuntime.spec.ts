@@ -13,7 +13,7 @@ const createMarketContent = (): HomeRailHomeContent['market'] => ({
     defaultDirection: 'desc',
     options: [
       { field: 'price', label: 'Price' },
-      { field: 'tradeVolume24h', label: '24h Volume' },
+      { field: 'listedAt', label: 'Time' },
     ],
   },
   cards: [],
@@ -27,11 +27,11 @@ const createHarness = () => {
     emitMarketSortClick: vi.fn(),
     scheduleMarketQuerySwitchApply: vi.fn(),
     marketSortLayerRef: ref<HTMLElement | null>(null),
-    marketSortField: ref<'listedAt' | 'price' | 'tradeVolume24h'>('listedAt'),
+    marketSortField: ref<'listedAt' | 'price'>('listedAt'),
     marketSortDirection: ref<'asc' | 'desc'>('desc'),
     isMarketDefaultSortSelected: ref(true),
     isAppliedMarketDefaultSortSelected: ref(true),
-    appliedMarketSortField: ref<'listedAt' | 'price' | 'tradeVolume24h'>('listedAt'),
+    appliedMarketSortField: ref<'listedAt' | 'price'>('listedAt'),
     appliedMarketSortDirection: ref<'asc' | 'desc'>('desc'),
   })
 

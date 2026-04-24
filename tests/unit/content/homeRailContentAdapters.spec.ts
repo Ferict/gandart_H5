@@ -411,10 +411,7 @@ describe('home rail content adapters', () => {
     expect(content.market.sortConfig).toEqual({
       defaultField: 'price',
       defaultDirection: 'desc',
-      options: [
-        { field: 'price', label: '市场价' },
-        { field: 'tradeVolume24h', label: '成交量' },
-      ],
+      options: [{ field: 'price', label: '市场价' }],
     })
   })
 
@@ -431,8 +428,6 @@ describe('home rail content adapters', () => {
     expect(content.market.sortConfig.options).toEqual([
       { field: 'listedAt', label: '时间' },
       { field: 'price', label: '市场价' },
-      { field: 'tradeVolume24h', label: '成交量' },
-      { field: 'holderCount', label: '持有量' },
     ])
     expect(content.banners).toEqual([])
   })

@@ -954,14 +954,6 @@ export const createContentBackendHttpImplementation = (
               field: 'priceInCent',
               label: '市场价',
             },
-            {
-              field: 'tradeVolume24h',
-              label: '成交量',
-            },
-            {
-              field: 'holderCount',
-              label: '持有量',
-            },
           ],
         },
         items: marketItems,
