@@ -2,7 +2,11 @@
 
 这个目录只服务于后端 handoff、联调环境和验证入口。
 
-当前唯一正式 API 真值源已经收口为：
+当前项目级后端契约入口已经收口为：
+
+1. [规则体系/后端契约/README.md](../规则体系/后端契约/README.md)
+
+当前前端已实现内容域契约入口为：
 
 1. [src/contracts/content-api.contract.ts](../src/contracts/content-api.contract.ts)
 
@@ -14,11 +18,13 @@
 
 ## 后端最小阅读顺序
 
-1. [src/contracts/content-api.contract.ts](../src/contracts/content-api.contract.ts)
-2. [后端联调环境与启动说明.md](./后端联调环境与启动说明.md)
-3. [后端移交内容清单.md](./后端移交内容清单.md)
-4. [references/README.md](./references/README.md)
-5. 需要核对真实调用链时，再看 `src/ports/content.port.ts`、`src/implementations/content.http.ts`、`src/services/content/content.service.ts` 与相关测试
+1. [规则体系/后端契约/README.md](../规则体系/后端契约/README.md)
+2. [规则体系/口径/06-项目后端契约现行使用口径.md](../规则体系/口径/06-项目后端契约现行使用口径.md)
+3. [src/contracts/content-api.contract.ts](../src/contracts/content-api.contract.ts)
+4. [后端联调环境与启动说明.md](./后端联调环境与启动说明.md)
+5. [后端移交内容清单.md](./后端移交内容清单.md)
+6. [references/README.md](./references/README.md)
+7. 需要核对真实调用链时，再看 `src/ports/content.port.ts`、`src/implementations/content.http.ts`、`src/services/content/content.service.ts` 与相关测试
 
 ## 本目录当前内容
 
@@ -39,7 +45,7 @@
 
 ## 当前正式边界
 
-- 后端当前先读 [src/contracts/content-api.contract.ts](../src/contracts/content-api.contract.ts)，不再需要在多个当前路径 API 文档之间拼装理解。
+- 后端当前先读 [规则体系/后端契约/README.md](../规则体系/后端契约/README.md)；若要核对当前前端已实现链路，再读 [src/contracts/content-api.contract.ts](../src/contracts/content-api.contract.ts)。
 - 当前正式列表契约仍是 `page + pageSize`。
 - `GET /api/content/list` 的后端 wire query 是扁平字段：`sortField / sortDirection / startDate / endDate`；前端内部 `sort.field / dateRange` 会由 http adapter 映射，不是后端要接的 query 结构。
 - `cursor` 仍后置，不属于当前正式交付。

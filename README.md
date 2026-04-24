@@ -8,7 +8,7 @@
 本仓库当前用于承载：
 
 1. 前端真实源码与测试
-2. 内容域单一正式 API 真值源
+2. 项目级后端契约与当前前端内容域实现契约
 3. 给后端的 handoff、联调和验证入口
 4. 最小参考索引；真实源码参考代码位于 `src/` 与 `tests/`
 
@@ -24,12 +24,14 @@
 
 如果你是后端或联调同学，建议按下面顺序阅读：
 
-1. [src/contracts/content-api.contract.ts](./src/contracts/content-api.contract.ts)
-2. [backend-handoff/后端联调环境与启动说明.md](./backend-handoff/后端联调环境与启动说明.md)
-3. [backend-handoff/后端移交内容清单.md](./backend-handoff/后端移交内容清单.md)
-4. [backend-handoff/references/README.md](./backend-handoff/references/README.md)
-5. [references/README.md](./references/README.md)
-6. 需要核对真实调用链时，再看 `src/` 与 `tests/`
+1. [规则体系/后端契约/README.md](./规则体系/后端契约/README.md)
+2. [规则体系/口径/06-项目后端契约现行使用口径.md](./规则体系/口径/06-项目后端契约现行使用口径.md)
+3. [src/contracts/content-api.contract.ts](./src/contracts/content-api.contract.ts)
+4. [backend-handoff/后端联调环境与启动说明.md](./backend-handoff/后端联调环境与启动说明.md)
+5. [backend-handoff/后端移交内容清单.md](./backend-handoff/后端移交内容清单.md)
+6. [backend-handoff/references/README.md](./backend-handoff/references/README.md)
+7. [references/README.md](./references/README.md)
+8. 需要核对真实调用链时，再看 `src/` 与 `tests/`
 
 ## 3. 当前正式接口
 
@@ -59,8 +61,10 @@
   - 质量工具与脚本入口
 - `backend-handoff/`
   - 后端阅读入口、联调环境与验证说明
+- `规则体系/后端契约/`
+  - 当前项目级后端契约入口
 - `src/contracts/content-api.contract.ts`
-  - 当前唯一正式 API 真值源
+  - 当前前端已实现内容域契约真值源
 - `references/`
   - 当前只保留参考索引，不再保存接口代码快照副本；真实参考实现位于 `src/` 与 `tests/`
 - `promptfoo/`、`semgrep/`、`vale-styles/`、`.continue/`
@@ -105,7 +109,7 @@ npm run check:content:http
 
 1. 默认直接验证 `scene + list`
 2. `resource / action` 需要在 `.env.local` 中补样本参数后才会继续验证
-3. 详细口径见 [src/contracts/content-api.contract.ts](./src/contracts/content-api.contract.ts) 与 [backend-handoff/后端联调环境与启动说明.md](./backend-handoff/后端联调环境与启动说明.md)
+3. 项目级后端契约口径见 [规则体系/后端契约/README.md](./规则体系/后端契约/README.md)；当前前端实现与联调验证口径见 [src/contracts/content-api.contract.ts](./src/contracts/content-api.contract.ts) 与 [backend-handoff/后端联调环境与启动说明.md](./backend-handoff/后端联调环境与启动说明.md)
 
 如果是 Windows 首次配置质量工具：
 
