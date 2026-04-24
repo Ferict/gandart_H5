@@ -23,8 +23,9 @@
 3. [src/contracts/content-api.contract.ts](../src/contracts/content-api.contract.ts)
 4. [后端联调环境与启动说明.md](./后端联调环境与启动说明.md)
 5. [后端移交内容清单.md](./后端移交内容清单.md)
-6. [references/README.md](./references/README.md)
-7. 需要核对真实调用链时，再看 `src/ports/content.port.ts`、`src/implementations/content.http.ts`、`src/services/content/content.service.ts` 与相关测试
+6. [P11.12-后端接口接入分级清单.md](./P11.12-后端接口接入分级清单.md)
+7. [references/README.md](./references/README.md)
+8. 需要核对真实调用链时，再看 `src/ports/content.port.ts`、`src/implementations/content.http.ts`、`src/services/content/content.service.ts` 与相关测试
 
 ## 本目录当前内容
 
@@ -32,6 +33,8 @@
   - 环境准备、启动命令、最小验证链与当前交付边界
 - [后端移交内容清单.md](./后端移交内容清单.md)
   - 当前应该交给后端的文件、目的和排除项
+- [P11.12-后端接口接入分级清单.md](./P11.12-后端接口接入分级清单.md)
+  - 当前页面与二线新增页面接新版后端契约时，按“原接口接入 / 建议改造 / 需改造 / 新增”维护接口分级
 - [references/README.md](./references/README.md)
   - 当前源码参考入口与查看顺序
 
