@@ -14,6 +14,7 @@ import type {
   ContentSceneDto,
 } from '../../contracts/content-api.contract'
 import { formatNoticeDisplayTime } from '../../utils/noticeTime.util'
+import { resolvePriceSymbol } from '../../utils/priceSymbol.util'
 import { adaptContentTarget } from './contentTarget.adapter'
 import type {
   HomeBannerItem,
@@ -40,7 +41,7 @@ const homeRailHomeContentShell: HomeRailHomeContent = {
     sectionTitle: '首发藏品',
     sectionSubtitle: 'Featured Drop',
     priceLabel: '铸造价格',
-    priceUnit: '元',
+    priceUnit: '￥',
     price: 0,
     minted: 0,
     supply: 0,
@@ -113,8 +114,7 @@ const resolveHomeRailHomeAssetUrl = (
   return asset.variants?.card ?? asset.originalUrl
 }
 
-const resolveHomeRailHomeCurrencyUnit = (currency: string): string =>
-  currency === 'CNY' ? '元' : currency
+const resolveHomeRailHomeCurrencyUnit = resolvePriceSymbol
 
 const mapHomeRailHomeSortFieldToModel = (
   field: ContentMarketSortConfigDto['defaultField']

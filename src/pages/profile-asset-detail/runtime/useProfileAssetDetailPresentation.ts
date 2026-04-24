@@ -7,6 +7,7 @@
 import { computed, type ComputedRef, type Ref } from 'vue'
 import type { ProfileCategoryKey } from '../../../models/home-rail/homeRailProfile.model'
 import type { ProfileAssetDetailContent } from '../../../models/profile-asset-detail/profileAssetDetail.model'
+import { resolvePriceSymbol } from '../../../utils/priceSymbol.util'
 import { DEFAULT_PROFILE_ASSET_ITEM_ID } from './useProfileAssetDetailRouteState'
 
 export interface AssetDetailTrait {
@@ -178,24 +179,8 @@ export const useProfileAssetDetailPresentation = ({
   const valueCardTitleText = computed(() => detailContent.value.title.trim())
 
   const displayPriceUnitVisual = computed(() => {
-    const currency = (detailContent.value.currency || '').trim().toUpperCase()
-    if (currency === 'CNY' || currency === 'RMB') {
-      return '\uFFE5'
-    }
-
     const raw = (detailContent.value.priceUnit || detailContent.value.currency || 'CNY').trim()
-    const normalized = raw.toUpperCase()
-    if (
-      normalized === 'CNY' ||
-      normalized === 'RMB' ||
-      raw === '\u5143' ||
-      raw === '\u00A5' ||
-      raw === '\uFFE5'
-    ) {
-      return '\uFFE5'
-    }
-
-    return raw || '\uFFE5'
+    return resolvePriceSymbol(raw) || '￥'
   })
 
   const valueCardMetricLabelText = computed(() => '当前估值 / MARKET VALUE')

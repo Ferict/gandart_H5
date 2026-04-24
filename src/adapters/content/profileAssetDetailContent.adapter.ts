@@ -9,6 +9,7 @@ import type {
 } from '../../contracts/content-api.contract'
 import type { ProfileAssetDetailContent } from '../../models/profile-asset-detail/profileAssetDetail.model'
 import type { ProfileCategoryKey } from '../../models/home-rail/homeRailProfile.model'
+import { resolvePriceSymbol } from '../../utils/priceSymbol.util'
 
 const PROFILE_CATEGORY_META: Record<ProfileCategoryKey, { label: string; englishLabel: string }> = {
   collections: { label: '资产', englishLabel: 'COLLECTION' },
@@ -41,7 +42,7 @@ export const createProfileAssetDetailFallbackPayload = (
 })
 
 export const resolveProfileAssetDetailCurrencyUnit = (currency: string): string => {
-  return currency === 'CNY' ? '楼' : currency
+  return resolvePriceSymbol(currency)
 }
 
 export const resolveProfileAssetDetailAssetUrl = (

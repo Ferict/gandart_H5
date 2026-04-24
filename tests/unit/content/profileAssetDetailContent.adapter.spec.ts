@@ -21,9 +21,15 @@ describe('profileAssetDetailContent adapter', () => {
     })
   })
 
-  it('resolves the currency unit with the same current rule', () => {
-    expect(resolveProfileAssetDetailCurrencyUnit('CNY')).toBe('楼')
-    expect(resolveProfileAssetDetailCurrencyUnit('USD')).toBe('USD')
+  it('resolves the currency unit as a visible price prefix', () => {
+    expect(resolveProfileAssetDetailCurrencyUnit('CNY')).toBe('￥')
+    expect(resolveProfileAssetDetailCurrencyUnit('RMB')).toBe('￥')
+    expect(resolveProfileAssetDetailCurrencyUnit('元')).toBe('￥')
+    expect(resolveProfileAssetDetailCurrencyUnit('¥')).toBe('￥')
+    expect(resolveProfileAssetDetailCurrencyUnit('￥')).toBe('￥')
+    expect(resolveProfileAssetDetailCurrencyUnit('USD')).toBe('$')
+    expect(resolveProfileAssetDetailCurrencyUnit('EUR')).toBe('€')
+    expect(resolveProfileAssetDetailCurrencyUnit('ETH')).toBe('ETH')
   })
 
   it('resolves asset url by detail, card, then original url', () => {
@@ -97,7 +103,7 @@ describe('profileAssetDetailContent adapter', () => {
       summary: '当前资产已归档到个人中心资产链路，后续可在这里承接更多权益与管理动作。',
       holdingsCount: 1,
       price: 1,
-      priceUnit: '楼',
+      priceUnit: '￥',
       currency: 'CNY',
       editionCode: 'ED-001',
       issueCount: 12,
@@ -139,7 +145,7 @@ describe('profileAssetDetailContent adapter', () => {
       categoryId: 'certificates',
       categoryLabel: '资格证',
       categoryEnglishLabel: 'CREDENTIAL',
-      priceUnit: 'USD',
+      priceUnit: '$',
     })
   })
 })

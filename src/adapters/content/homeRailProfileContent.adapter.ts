@@ -20,6 +20,7 @@ import type {
   ProfileSummary,
 } from '../../models/home-rail/homeRailProfile.model'
 import type { ContentTargetRef } from '../../models/content/contentTarget.model'
+import { resolvePriceSymbol } from '../../utils/priceSymbol.util'
 import { adaptContentTarget } from './contentTarget.adapter'
 
 const profileShell: HomeRailProfileContent = {
@@ -51,9 +52,7 @@ const formatCurrencyValue = (priceInCent: number): string => {
   return Math.round(priceInCent / 100).toLocaleString('en-US')
 }
 
-const resolveCurrencyUnit = (currency: string): string => {
-  return currency === 'CNY' ? '元' : currency
-}
+const resolveCurrencyUnit = resolvePriceSymbol
 
 const normalizeProfileCategoryLabel = (
   categoryId: ContentProfileCategoryId,
