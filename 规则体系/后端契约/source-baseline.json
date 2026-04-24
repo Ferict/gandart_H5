@@ -1,0 +1,1177 @@
+{
+  "sourceRoot": "H:\\工作\\天异后端抽取专项\\来源源码\\uni_h5\\uni_h5",
+  "generatedAt": "2026-04-24T14:17:22.814Z",
+  "apiFiles": [
+    "api/active/index.js",
+    "api/address/index.js",
+    "api/banner/index.js",
+    "api/box/index.js",
+    "api/collection/index.js",
+    "api/common/index.js",
+    "api/compound/index.js",
+    "api/draw/index.js",
+    "api/ext/index.js",
+    "api/integral/index.js",
+    "api/lottery/index.js",
+    "api/market/index.js",
+    "api/news/index.js",
+    "api/notice/index.js",
+    "api/order/index.js",
+    "api/order/order.js",
+    "api/shop/shop.js",
+    "api/subscribe/index.js",
+    "api/trad/index.js",
+    "api/user/index.js",
+    "api/wallet/index.js"
+  ],
+  "counts": {
+    "pages": 153,
+    "components": 82,
+    "store": 7,
+    "mixins": 5,
+    "utils": 7,
+    "api": 21
+  },
+  "files": [
+    {
+      "file": "api/active/index.js",
+      "sha1": "334ba5488716490e0fa4880de96ba1e8596ecf8d"
+    },
+    {
+      "file": "api/address/index.js",
+      "sha1": "ecca1ad3e85fcbc4985885af4b73a4c5c22da77c"
+    },
+    {
+      "file": "api/banner/index.js",
+      "sha1": "d5086bfe0d0bbb7018051d404b05449c4ded1cd7"
+    },
+    {
+      "file": "api/box/index.js",
+      "sha1": "254d49526ddf4864bd833ea44290eaf34ca88f82"
+    },
+    {
+      "file": "api/collection/index.js",
+      "sha1": "dc30ac4d0669b5609d927d34ee4e472c052af307"
+    },
+    {
+      "file": "api/common/index.js",
+      "sha1": "beabff7e00c4fb2151172d8e979c8ae093b252ae"
+    },
+    {
+      "file": "api/compound/index.js",
+      "sha1": "1718820106d0d8ae1e366fe278dcd13718ad8c4f"
+    },
+    {
+      "file": "api/draw/index.js",
+      "sha1": "8069ecb202eb8cac0f46b8cfb2f7f6dc833336fd"
+    },
+    {
+      "file": "api/ext/index.js",
+      "sha1": "f5510b6a1ec28c22aa6c36b985aa59908c169712"
+    },
+    {
+      "file": "api/integral/index.js",
+      "sha1": "16e36607b39add8c1f60b404f3535c1477316a91"
+    },
+    {
+      "file": "api/lottery/index.js",
+      "sha1": "e9d96f04d85fc12c078d78a40f24f3d05010a904"
+    },
+    {
+      "file": "api/market/index.js",
+      "sha1": "5125ebdb58b357d6f9a234091382bef726ebe497"
+    },
+    {
+      "file": "api/news/index.js",
+      "sha1": "e1e43871ec18a369393adc6a9122b1db25aa908f"
+    },
+    {
+      "file": "api/notice/index.js",
+      "sha1": "870b608503b253d06a2995ae06cd00f2e1b58d24"
+    },
+    {
+      "file": "api/order/index.js",
+      "sha1": "afd6f0de25eed74f914c29bc81ce351672c74998"
+    },
+    {
+      "file": "api/order/order.js",
+      "sha1": "e5b7d086f1bc5feafd1b3df3eeb796c1f759dff3"
+    },
+    {
+      "file": "api/shop/shop.js",
+      "sha1": "a34cdec2a135b48da83fec9c7e9b0633f75f6ee9"
+    },
+    {
+      "file": "api/subscribe/index.js",
+      "sha1": "efb379bc5f927a51a7a8d50d7047d6b175cf603a"
+    },
+    {
+      "file": "api/trad/index.js",
+      "sha1": "46774e300a6d794bb29d4394fe33d6199477cc49"
+    },
+    {
+      "file": "api/user/index.js",
+      "sha1": "373c93dd4d16ff945393636f83d334e28bd68b49"
+    },
+    {
+      "file": "api/wallet/index.js",
+      "sha1": "0764a4ca0bb9a13a75725a071efcf504bb3bd557"
+    },
+    {
+      "file": "App.vue",
+      "sha1": "6074f80c3e2fc28d50bb6a99ae272b15405b09e7"
+    },
+    {
+      "file": "components/lime-painter/canvas.js",
+      "sha1": "4b269c4c0bf640b60f73cc1d85c3a34587b503da"
+    },
+    {
+      "file": "components/lime-painter/draw.js",
+      "sha1": "93772e2dba1b32af2fd5e4fd5659793142fb9ca5"
+    },
+    {
+      "file": "components/lime-painter/gradient.js",
+      "sha1": "3ac2665e687c35b7a07a3b43f31ebd999e8c8864"
+    },
+    {
+      "file": "components/lime-painter/index.vue",
+      "sha1": "2a83d46f6b4a5377ac63138e912ef9e8f254d3f7"
+    },
+    {
+      "file": "components/lime-painter/layout.js",
+      "sha1": "f4d0050b858ce059e03d6b657cf212ad0599a474"
+    },
+    {
+      "file": "components/lime-painter/qrcode.js",
+      "sha1": "145db00c48b3ea7a49e1dc881e1f11552829f133"
+    },
+    {
+      "file": "components/lime-painter/utils.js",
+      "sha1": "7f64f4668077115a0a8b2cd772d75d8a527ffa1e"
+    },
+    {
+      "file": "components/media-3d/media-3d.vue",
+      "sha1": "fd06224beb36686f334ee5c6a5d063fccf20e64d"
+    },
+    {
+      "file": "components/media-img/media-img.vue",
+      "sha1": "dff8117068d1aee044be4fa6d97a20463ee48d52"
+    },
+    {
+      "file": "components/media-video/media-video.vue",
+      "sha1": "df7aeda821b5dc2752765893e225e06a366b4f1f"
+    },
+    {
+      "file": "components/password-authentification/password-authentification.vue",
+      "sha1": "92aebede355779a3a937f80f4c92f4c4416f4fbe"
+    },
+    {
+      "file": "components/w-activity-card/w-activity-card.vue",
+      "sha1": "b780a7806f20b8d6e3c16aec4830a83b30f7bb91"
+    },
+    {
+      "file": "components/w-agreement/w-agreement.vue",
+      "sha1": "3e53c1501aa6e89cd4ec118f60d0cf9d0d99cad9"
+    },
+    {
+      "file": "components/w-big-title/w-big-title.vue",
+      "sha1": "c4b6dd82a2d1f61839c013091d737084dbd06856"
+    },
+    {
+      "file": "components/w-button/w-button.vue",
+      "sha1": "b8bfa7a34c484f004882abd7243d0fcd9dea200c"
+    },
+    {
+      "file": "components/w-canvas/w-canvas.vue",
+      "sha1": "19bf8bde414ec764bdf0ee1a8f6058497ecbaec6"
+    },
+    {
+      "file": "components/w-checkbox/w-checkbox.vue",
+      "sha1": "9fa7dd3c9f5fd58b90f17fd26fa3e9907b7143d2"
+    },
+    {
+      "file": "components/w-container/w-container.vue",
+      "sha1": "8442876d40d25c9a61f6d2a9e42f86d13f52e4a1"
+    },
+    {
+      "file": "components/w-copyright/w-copyright.vue",
+      "sha1": "4352d6f694b638ce99168e0d2940436c03709fad"
+    },
+    {
+      "file": "components/w-crop/w-crop.vue",
+      "sha1": "23ddbaab478fdbd7a20da5a028815b7212620e8a"
+    },
+    {
+      "file": "components/w-crop/weCropper.js",
+      "sha1": "d978af7d019e2aa451f487d97b2bc067083bec64"
+    },
+    {
+      "file": "components/w-dxPop/w-dxPop.vue",
+      "sha1": "d560271921265b76a523943b1a3f009abc7e07dc"
+    },
+    {
+      "file": "components/w-grid/w-grid.vue",
+      "sha1": "345b81df0a19e373feec41ebc4e72b4a50afe450"
+    },
+    {
+      "file": "components/w-icon/w-icon.vue",
+      "sha1": "158210b6dafebf2fbb3493f7f155734fccf110a3"
+    },
+    {
+      "file": "components/w-image/w-image.vue",
+      "sha1": "3bc0c04efafcd88c4f9247e7598bfb0d970d2a82"
+    },
+    {
+      "file": "components/w-index-collection/w-index-collection.vue",
+      "sha1": "29e37380b0def8c55fe490b17166ca2c2046560f"
+    },
+    {
+      "file": "components/w-jy-verify/components/index.vue",
+      "sha1": "17594438e875edf588edf27435b2573804aa262d"
+    },
+    {
+      "file": "components/w-jy-verify/w-jy-verify.vue",
+      "sha1": "f694400b48ef9c13de0221d158e79b9b35fbe956"
+    },
+    {
+      "file": "components/w-kline/w-kline.vue",
+      "sha1": "c6003dcc6736321ca7f09b69e43e6ef0dbdea2db"
+    },
+    {
+      "file": "components/w-loading/emptyMap.js",
+      "sha1": "0e70eea642cc975365509719cc5b768f0bd36ed2"
+    },
+    {
+      "file": "components/w-loading/w-loading.vue",
+      "sha1": "623498a1d9ac481128ffc1d35ce3e64dcc046493"
+    },
+    {
+      "file": "components/w-market-action/w-market-action.vue",
+      "sha1": "978acef5576e0e23ac9f436b9ada5bdbbce666bb"
+    },
+    {
+      "file": "components/w-marketCapRanking/w-marketCapRanking.vue",
+      "sha1": "b0de6911b1305fd9616a6bc6dd33c91fd3971c5b"
+    },
+    {
+      "file": "components/w-media/w-media.vue",
+      "sha1": "19f20ea1946f694df63f50155f8fdb84958baddd"
+    },
+    {
+      "file": "components/w-modal/w-modal.vue",
+      "sha1": "de3c41e27cd5fec21e69fab1fedaf97560be9fc9"
+    },
+    {
+      "file": "components/w-model/w-model.vue",
+      "sha1": "7a33fb7d8e7a6c15e233f036c6198ddc475b6d94"
+    },
+    {
+      "file": "components/w-navbar/w-navbar.vue",
+      "sha1": "577dd6b3d561df6ffa89e18184ab0610a181aaf8"
+    },
+    {
+      "file": "components/w-notice/w-notice.vue",
+      "sha1": "ada9d6175f6cbaaf3c81067d86d1e2d26c3cb9f1"
+    },
+    {
+      "file": "components/w-pay-type/w-pay-type.vue",
+      "sha1": "30d1e1f60c767aaa63f74be52bf67ca84dcf4e42"
+    },
+    {
+      "file": "components/w-popup-bottom/w-popup-bottom.vue",
+      "sha1": "979dfa7271604270713c09704f1a2d04f43d4c03"
+    },
+    {
+      "file": "components/w-preview/w-preview.vue",
+      "sha1": "933237428b5553804835f6145f4f89cca4377023"
+    },
+    {
+      "file": "components/w-product-action/order-submit-pop.vue",
+      "sha1": "ab7d104046b38d3cb3668b9f573afc644da1adfb"
+    },
+    {
+      "file": "components/w-product-action/w-product-action.vue",
+      "sha1": "97baa3b89353a3c9544f049e92f58b4fb21dca8d"
+    },
+    {
+      "file": "components/w-product-alldraw/componentOfDrawOne/currentDrawProcess.vue",
+      "sha1": "f2522ef7bb457f4620d25205699590e08e2947e9"
+    },
+    {
+      "file": "components/w-product-alldraw/componentOfDrawOne/currentDrawType.vue",
+      "sha1": "cd51aedc2f2d13a6c0f39a1c9670e0e3dfbba6dd"
+    },
+    {
+      "file": "components/w-product-alldraw/componentOfDrawOne/drawRules.vue",
+      "sha1": "89743ef16be92ffbdf1729cc13eb3360721fc787"
+    },
+    {
+      "file": "components/w-product-alldraw/componentOfDrawOne/myDrawCode.vue",
+      "sha1": "095e9293fae15bfe5e9cf7547097341558eb2ea7"
+    },
+    {
+      "file": "components/w-product-alldraw/components/drawOfOne.vue",
+      "sha1": "d06cd133fb6836632d71bff8713f1f8695ed8034"
+    },
+    {
+      "file": "components/w-product-alldraw/w-product-alldraw.vue",
+      "sha1": "a06b4f377efffdc40efde32293bc6aed012ac392"
+    },
+    {
+      "file": "components/w-product-box/w-product-box.vue",
+      "sha1": "11307f4efe5311c221680e952feeefc2cab25b53"
+    },
+    {
+      "file": "components/w-product-builder/w-product-builder.vue",
+      "sha1": "acfa548f1041031adfc97f51c643c56f85a9ff25"
+    },
+    {
+      "file": "components/w-product-buy-need/w-product-buy-need.vue",
+      "sha1": "211c226c48d450c2ade57c722effa6936c63900d"
+    },
+    {
+      "file": "components/w-product-details-card/w-product-details-card.vue",
+      "sha1": "3fff9565b9888d0bfbddd536d0137c58d7bb9fbd"
+    },
+    {
+      "file": "components/w-product-info-list/w-product-info-list.vue",
+      "sha1": "6658020a5e38fefb2384a112a6c8a7fdbabc7f6c"
+    },
+    {
+      "file": "components/w-product-introduce/w-product-introduce.vue",
+      "sha1": "bb27667f68ac3da329a0c1f3b994b02666bd070c"
+    },
+    {
+      "file": "components/w-product-number/w-product-number.vue",
+      "sha1": "1e5b4f906c68becc6dbb8d2aa93002785d32bf28"
+    },
+    {
+      "file": "components/w-product-share/w-product-share.vue",
+      "sha1": "5d5f85cd5cd118fdb6669da1297338d6ac472fa6"
+    },
+    {
+      "file": "components/w-radio-account/w-radio-account.vue",
+      "sha1": "8d4a9c6bfec3e281b02818329b0de35ebcecbc1e"
+    },
+    {
+      "file": "components/w-search-input/w-search-input.vue",
+      "sha1": "69ded11e332e51956b943071cc98d7ffcbed09ab"
+    },
+    {
+      "file": "components/w-suspend-bar/w-suspend-bar.vue",
+      "sha1": "ed078c2a6e68fc6455e85d94dd03facfc6dc2436"
+    },
+    {
+      "file": "components/w-swiper/w-swiper.vue",
+      "sha1": "920cf58bb0d10d6193cb8f994d7dd2003e34e50c"
+    },
+    {
+      "file": "components/w-tabbar/w-tabbar.vue",
+      "sha1": "cf87fd85ae3a96942a6f2c707c7d66354e8d5bb8"
+    },
+    {
+      "file": "components/w-tabs/w-tabs.vue",
+      "sha1": "d98b483b20424a49afdea814791e08aa44a864bc"
+    },
+    {
+      "file": "components/w-tag/w-tag.vue",
+      "sha1": "3091bd54ab888dbeba9246e5e67fb40fa2d7240f"
+    },
+    {
+      "file": "components/w-toast/w-toast.vue",
+      "sha1": "d3e2d6857378262efab80c307eea1b6ec5d6d9e0"
+    },
+    {
+      "file": "components/w-yd-verify/h5SDK.js",
+      "sha1": "a6a1c4b588eeb2498f34cf3878eafe46329cfd2c"
+    },
+    {
+      "file": "components/w-yd-verify/w-yd-verify.vue",
+      "sha1": "107f7d68ba5d54d97a4f12e43243f3b3d3adbe45"
+    },
+    {
+      "file": "components/z-buttom-box/z-buttom-box.vue",
+      "sha1": "4434a0ab28a05975292731001692561aee826682"
+    },
+    {
+      "file": "components/z-button/z-button.vue",
+      "sha1": "1de936062e22d98f3d1ff32da7c295c941ceae7c"
+    },
+    {
+      "file": "components/z-common-box/z-common-box.vue",
+      "sha1": "187008fb609076612c393b1ddec6a4e3003d4f92"
+    },
+    {
+      "file": "components/z-create-order/z-create-order.vue",
+      "sha1": "ee2d0605e313a9c4c560fa9f68780fd00d3eafe0"
+    },
+    {
+      "file": "components/z-draw-actionV2/z-draw-actionV2.vue",
+      "sha1": "1dc9c8da840c03b8e03ea1e856cc021c2c78b486"
+    },
+    {
+      "file": "components/z-icon/z-icon.vue",
+      "sha1": "e5879049c54350273bf52f7e80c3c4c6f591905e"
+    },
+    {
+      "file": "components/z-image-share/z-image-share.vue",
+      "sha1": "2cda7ba20b8ffe5472f7bb1e709199c8b0b62018"
+    },
+    {
+      "file": "components/z-info-label/components/default.vue",
+      "sha1": "6e5710d94bf32959973861f55d144f13e8655081"
+    },
+    {
+      "file": "components/z-info-label/components/refreshing.vue",
+      "sha1": "eab6481d0197e3434afd4b5e90ac446fb28f9ff0"
+    },
+    {
+      "file": "components/z-info-label/z-info-label.vue",
+      "sha1": "3c13077b42f8501ff503cfb77c46cc8c2e39c569"
+    },
+    {
+      "file": "components/z-loading/z-loading.vue",
+      "sha1": "a76851bc4de9061ecf63d8360d35900ad21966ba"
+    },
+    {
+      "file": "components/z-model/z-model.vue",
+      "sha1": "1a4aaf14307a0ad4cb600bc440748a4c2c4c509f"
+    },
+    {
+      "file": "components/z-number-box/z-number-box.vue",
+      "sha1": "763c58c43e3ecd5abb58d20d0c0eedecc2c454d4"
+    },
+    {
+      "file": "components/z-tabs/z-tabs.vue",
+      "sha1": "f3f9444f04ef5ae71443dcdfad74c30c56674fa9"
+    },
+    {
+      "file": "components/z-upload/z-upload.vue",
+      "sha1": "25a9922a974fbf34d5b7753665078e26b92b7c5f"
+    },
+    {
+      "file": "config/index.js",
+      "sha1": "9233a5877ec23792eb4534885b1de2774927f635"
+    },
+    {
+      "file": "directive/bg.js",
+      "sha1": "078ff3c42d8f07fc25f3f0fce41d916c25bf15aa"
+    },
+    {
+      "file": "main.js",
+      "sha1": "b6b574dcaf1d98ea6bea4e8416d2365ab3e15f6f"
+    },
+    {
+      "file": "manifest.json",
+      "sha1": "85c625efed34af83d5067bdf4ef1df6b2ff4434b"
+    },
+    {
+      "file": "mixins/crystalMixin.js",
+      "sha1": "393d1c559269d7805c28b6ca852c03b824dfa855"
+    },
+    {
+      "file": "mixins/draw.js",
+      "sha1": "959264d9fa996eb9aa479d924072d675ec2a9cb0"
+    },
+    {
+      "file": "mixins/globalMixin.js",
+      "sha1": "07fb2b8e2ac0b5ad4f7b5ebccc5190e2c7c1d109"
+    },
+    {
+      "file": "mixins/opacityNav.js",
+      "sha1": "43927dda1c9aec61f2da0edebb9b181a2c29c98d"
+    },
+    {
+      "file": "mixins/product.js",
+      "sha1": "06333c7e403beb90831f2bcfb6b927d06a511455"
+    },
+    {
+      "file": "package-lock.json",
+      "sha1": "7ae7f937effa9ccdf6445492ab316d101cea4609"
+    },
+    {
+      "file": "package.json",
+      "sha1": "e306f917d512d478d0c3b2c6eea98eaa79dc219c"
+    },
+    {
+      "file": "pages/activeSelected/activeSelected.vue",
+      "sha1": "0afe1f112c77751f10b238e7d35526d66f8c20cb"
+    },
+    {
+      "file": "pages/activeSelected/components/ActiveBanner.vue",
+      "sha1": "dfea4ecc2c41a9d020e8c8f8a015de37523c6ad3"
+    },
+    {
+      "file": "pages/activeSelected/components/CategoryTab.vue",
+      "sha1": "72f898d8146b6e7d9572ef78c7d13cfa38d4aea8"
+    },
+    {
+      "file": "pages/activity/draw.vue",
+      "sha1": "9f2be7f7e05466a88b421aa610aebb2386e40689"
+    },
+    {
+      "file": "pages/activity/exchange.vue",
+      "sha1": "4164c72d8e68e26a4e02c108edee39759d72a551"
+    },
+    {
+      "file": "pages/activity/invitercompound.vue",
+      "sha1": "2a1e5423f891205ffa73609159c369c95178a974"
+    },
+    {
+      "file": "pages/activity/record.vue",
+      "sha1": "1eec6e2ddc4724af2823f9c87ae17591b5a8ed3f"
+    },
+    {
+      "file": "pages/blindBox/blindBoxDetails.vue",
+      "sha1": "057f3dee20d9da425bed2e38398b1af77ff41f93"
+    },
+    {
+      "file": "pages/blindBox/components/blindBox-detail-button.vue",
+      "sha1": "9c4495e7bb85b45d3c86dda8a794187ba0ac99bb"
+    },
+    {
+      "file": "pages/blindBox/index.vue",
+      "sha1": "592338bb0f643d82de5cf40f35535f7132cea610"
+    },
+    {
+      "file": "pages/blindBox/openRecord.vue",
+      "sha1": "2aa2845674c8b9349cefbda8fef237df32419298"
+    },
+    {
+      "file": "pages/blindBox/result.vue",
+      "sha1": "c3946f395739b98f11f3e60ac0073fb461b88987"
+    },
+    {
+      "file": "pages/blindBox/result2.vue",
+      "sha1": "63f1244f8ada9dbe9caa31012d7d715e35639d88"
+    },
+    {
+      "file": "pages/certification/certification.vue",
+      "sha1": "1d5ea8f76f3a6edd479287ec23154b30befce99d"
+    },
+    {
+      "file": "pages/certification/certificationStatus.vue",
+      "sha1": "eb3e8e6c5a38662933e7136b2a37503eab21e065"
+    },
+    {
+      "file": "pages/certification/components/certificationCard.vue",
+      "sha1": "3a966e2e927e2d76fc71f3199200903d64c46cb1"
+    },
+    {
+      "file": "pages/certification/components/certificationForm.vue",
+      "sha1": "cb4ae10d979b2787ef4745e71b234657e1b822ed"
+    },
+    {
+      "file": "pages/compound/components/changeMaterials.vue",
+      "sha1": "43c0ed6e71e7ddeff0722c234c23039e972e640e"
+    },
+    {
+      "file": "pages/compound/components/mainImg.vue",
+      "sha1": "52bd624c0dde90414026d6693885b28f28715846"
+    },
+    {
+      "file": "pages/compound/components/methods.vue",
+      "sha1": "46a923f347d58a2ee879af837ed44f27781de329"
+    },
+    {
+      "file": "pages/compound/compound.vue",
+      "sha1": "36f6e9ed46a974f17390a616f50ba5a23e2a7d76"
+    },
+    {
+      "file": "pages/compound/record.vue",
+      "sha1": "3252727a9c117bbac9796a74ec35e56e19607b91"
+    },
+    {
+      "file": "pages/compound/result.vue",
+      "sha1": "61ca97270b11f46888497f7a04237d3523a71b3b"
+    },
+    {
+      "file": "pages/compound/schemeDetails.vue",
+      "sha1": "fa9bd1a009bdca5aa478452e46f6800507b59f02"
+    },
+    {
+      "file": "pages/consignments/componens/my-consignments-item.vue",
+      "sha1": "09bdcc622e23f33ca44f46e27f6017b9afa7e5b4"
+    },
+    {
+      "file": "pages/consignments/consignments.vue",
+      "sha1": "fcdaaa345a584243a20fffde75d273dcde7299fb"
+    },
+    {
+      "file": "pages/consignments/myConsignment.vue",
+      "sha1": "9d9a23e4ffd5cae8e6d14976ac2d24fe7a9f4ba1"
+    },
+    {
+      "file": "pages/consignments/search.vue",
+      "sha1": "6fefb2eca7db6598a22d9c71ab338f54dcce4862"
+    },
+    {
+      "file": "pages/draw/communityShare/communityShare.vue",
+      "sha1": "bba628035fc308930ad3921d51d5441c27d00616"
+    },
+    {
+      "file": "pages/draw/drawResult/drawResult.vue",
+      "sha1": "f44a868f65e9a07caf3f52dce4325ab1a2e169a9"
+    },
+    {
+      "file": "pages/draw/InvitationFriendAssist/InvitationFriendAssist.vue",
+      "sha1": "228380338e1c7297685276dfff2dc9ec9e0d08ce"
+    },
+    {
+      "file": "pages/draw/Leaderboard/components/joinUsers.vue",
+      "sha1": "ed1810d7dfaac0a0fa10a676592c5439b3f89732"
+    },
+    {
+      "file": "pages/draw/Leaderboard/components/Leaderboard.vue",
+      "sha1": "cde93c42c7f073f02e4bfc89f5832e3a05da490f"
+    },
+    {
+      "file": "pages/draw/Leaderboard/Leaderboard.vue",
+      "sha1": "18f2b4d4defbbdcb175e9ca77e582d0eb4f0703c"
+    },
+    {
+      "file": "pages/draw/shareCommunityGroup/shareCommunityGroup.vue",
+      "sha1": "4ce2db3deeb1de3353e32785391efe596cebe994"
+    },
+    {
+      "file": "pages/index/components/IndexTopBar.vue",
+      "sha1": "1a79173d5dc67d83600ae7dc460f83ef17b12868"
+    },
+    {
+      "file": "pages/index/downloadApp.vue",
+      "sha1": "36d8d18d5b393d2805674926da7fe858e7ec3cbc"
+    },
+    {
+      "file": "pages/index/index.vue",
+      "sha1": "ffe5e9da67c89706d37a07d090be60467d457ad4"
+    },
+    {
+      "file": "pages/invitation/components/invitaionPoster.vue",
+      "sha1": "604cf4265c324356c531ff458e6d559acad28a67"
+    },
+    {
+      "file": "pages/invitation/components/recordList.vue",
+      "sha1": "7d7d2e75f9e7165c6498ee566899686ad3e37ce9"
+    },
+    {
+      "file": "pages/invitation/components/sharePoster.vue",
+      "sha1": "da49b0a018941cc20b4db8e7a275ebba4bc152aa"
+    },
+    {
+      "file": "pages/invitation/invitation.vue",
+      "sha1": "5c1ee92c1d66bd95af33ac81d1d7588a09bc731e"
+    },
+    {
+      "file": "pages/kline/buy.vue",
+      "sha1": "3be688c0ad2ef12eba931d788ca9fd4543c8d508"
+    },
+    {
+      "file": "pages/kline/info.vue",
+      "sha1": "4e64067d93561ad88e42a219f887fe13052e5268"
+    },
+    {
+      "file": "pages/leaderboard/components/rankingList.vue",
+      "sha1": "e4258bf9748111f46795f85d60c0e2c80818c309"
+    },
+    {
+      "file": "pages/leaderboard/components/topthree.vue",
+      "sha1": "54d0f23499587c73e696ece06ce73787b42e6e59"
+    },
+    {
+      "file": "pages/leaderboard/leaderboard.vue",
+      "sha1": "cd813d252daa8e038cd6f9743e9469dc59a262dc"
+    },
+    {
+      "file": "pages/login/forgetPwd.vue",
+      "sha1": "6aa13bc7f9761429ee93c776b56a45754f8750be"
+    },
+    {
+      "file": "pages/login/login.vue",
+      "sha1": "b8ce9000df576a46a0dec227c408424cf4b63138"
+    },
+    {
+      "file": "pages/login/register.vue",
+      "sha1": "8d5f5c778f3c144e142a048404d3cd39a268fad7"
+    },
+    {
+      "file": "pages/login/setPwd.vue",
+      "sha1": "93e41b630cfc32ad2266ce09bbe7d84419d63539"
+    },
+    {
+      "file": "pages/login/verification.vue",
+      "sha1": "c62c48c00bc257f037c9ffc44b0f66091f83ec37"
+    },
+    {
+      "file": "pages/lottery/components/confimPop.vue",
+      "sha1": "b36ca6af3e9612e04b83a66aaf7f9f913f89a810"
+    },
+    {
+      "file": "pages/lottery/components/countdown.vue",
+      "sha1": "a3e5cae781258121987af93c15e895160dc70805"
+    },
+    {
+      "file": "pages/lottery/components/lotteryBox.vue",
+      "sha1": "06e3ca24437e825adb6b20eae849028fa33d33f5"
+    },
+    {
+      "file": "pages/lottery/components/resultPop.vue",
+      "sha1": "178e1e41f6fb82bf1035d7d4f3b295c45a8a17d6"
+    },
+    {
+      "file": "pages/lottery/lottery - 副本.vue",
+      "sha1": "850ae36890b19343d36d4a83bd610cd8d9b7254c"
+    },
+    {
+      "file": "pages/lottery/lottery.vue",
+      "sha1": "4895b81c652adf60d32a6124b5fc3514ae722d3e"
+    },
+    {
+      "file": "pages/lottery/record.vue",
+      "sha1": "70795eddc10aa7057a0387917735ce3354388bca"
+    },
+    {
+      "file": "pages/lottery/rule.vue",
+      "sha1": "dd5eb46412dda163544d6aea4f20153b44504474"
+    },
+    {
+      "file": "pages/market/categoryManager.vue",
+      "sha1": "c8244614bb8d9d6d9283623b892d8db70efbff7a"
+    },
+    {
+      "file": "pages/market/components/batchConfirm.vue",
+      "sha1": "54824fcfc5ce0ce1f9e3731fc010b3c01a7d30ff"
+    },
+    {
+      "file": "pages/market/components/BegBuyList.vue",
+      "sha1": "2dd3243369f8fd72311d5a6a5a51f009bb827aea"
+    },
+    {
+      "file": "pages/market/components/boxSeries.vue",
+      "sha1": "6f6dad9c9336c3b1da99f54261eaab081e8fd08d"
+    },
+    {
+      "file": "pages/market/components/boxSort.vue",
+      "sha1": "1e3c7a0b1ceb7deb7cbaed2bae7bdcac75a1c583"
+    },
+    {
+      "file": "pages/market/components/categoryTab.vue",
+      "sha1": "52f75bba46e9c1bfb1bbd794d199b0f4972a12d7"
+    },
+    {
+      "file": "pages/market/components/marketCard.vue",
+      "sha1": "9ddad617a1d0e924a76f0ba8d4eee37e784b9e25"
+    },
+    {
+      "file": "pages/market/components/MarketTypeTab.vue",
+      "sha1": "c6def6180b71254b254d921da9fb3e49b61f286e"
+    },
+    {
+      "file": "pages/market/components/PayBegOrder.vue",
+      "sha1": "65149621e4dc88b7b950647d0f800da342a8ec09"
+    },
+    {
+      "file": "pages/market/components/sort.vue",
+      "sha1": "2d2d0c4aaa962317168325a0c83ab445fb4996a1"
+    },
+    {
+      "file": "pages/market/detail.vue",
+      "sha1": "5ec619c7e48f60bfeb02702af698402d55611afc"
+    },
+    {
+      "file": "pages/market/market.vue",
+      "sha1": "f1d356a8a8c8388313189382e8a0d49b51334688"
+    },
+    {
+      "file": "pages/market/marketGoodsList.vue",
+      "sha1": "08c3b8e776710e4941f1f076b0c44c7fef2d8cf1"
+    },
+    {
+      "file": "pages/market/search.vue",
+      "sha1": "087f0cd012ace693f65498b3e59d6bd999f6257c"
+    },
+    {
+      "file": "pages/market/sellBegBuy.vue",
+      "sha1": "f3ba745afa153bee36678038ddf1872f082ef4ba"
+    },
+    {
+      "file": "pages/market/sellInfo.vue",
+      "sha1": "d5b67b28f51f2dd3ae4888057f8afc265ac4f476"
+    },
+    {
+      "file": "pages/market/submitBegBuy.vue",
+      "sha1": "011dba758738096422d82c8752199bc15ca8d4b3"
+    },
+    {
+      "file": "pages/marketCapRanking/marketCapRanking.vue",
+      "sha1": "481cc34d0978086f0de1204306d94ed9fdec4dde"
+    },
+    {
+      "file": "pages/message/message.vue",
+      "sha1": "5027f8a5f1bcb39523231ca3f4498e6117cde1aa"
+    },
+    {
+      "file": "pages/my/about.vue",
+      "sha1": "6d98a9526f2a4fdbcfcf4754fc079047ca2dc137"
+    },
+    {
+      "file": "pages/my/actionPwd/getCode.vue",
+      "sha1": "a25bac9dd3e012009281b2f0cf40cb76abdc0d3c"
+    },
+    {
+      "file": "pages/my/actionPwd/setPwd.vue",
+      "sha1": "97b8189c4e9da0c83c7ad0d8fecfdb0640264a69"
+    },
+    {
+      "file": "pages/my/address/edit.vue",
+      "sha1": "0952251c047bf156576ffc7d7ee3b9bcbe658971"
+    },
+    {
+      "file": "pages/my/address/list.vue",
+      "sha1": "f39697df58cefd7ee7071807831119be67ae95ed"
+    },
+    {
+      "file": "pages/my/cancellation.vue",
+      "sha1": "fa6c13b50c9c657600b99797935b15de75ab667d"
+    },
+    {
+      "file": "pages/my/flowDoc.vue",
+      "sha1": "e506dfd831a84627f75b2acb8ba6f7df66ce25d0"
+    },
+    {
+      "file": "pages/my/info.vue",
+      "sha1": "409633ee65a37cb24f4174452e3db5ad68a64815"
+    },
+    {
+      "file": "pages/my/join.vue",
+      "sha1": "1afa4c2405a0296b361d7457339e89d784c4a671"
+    },
+    {
+      "file": "pages/my/my.vue",
+      "sha1": "724d70e99660ba132a5dd98479543ed80cdfb717"
+    },
+    {
+      "file": "pages/my/privacy.vue",
+      "sha1": "415e2116a625fc01aaf5d9d7442738dc8a94b924"
+    },
+    {
+      "file": "pages/my/service.vue",
+      "sha1": "988be82f8f87214300a04be383b62d002af8950e"
+    },
+    {
+      "file": "pages/myCollection/collectionDetails.vue",
+      "sha1": "1c4a0bca0c07c01fb32f25586fa6c698580286fb"
+    },
+    {
+      "file": "pages/myCollection/components/collection-detail-button.vue",
+      "sha1": "249ebd84c60ad05f9fd0b82eb6ec2e6cc12c9217"
+    },
+    {
+      "file": "pages/myCollection/components/collectionItem.vue",
+      "sha1": "8d16df4929a6e6f3c6ee5d0103f402bee47f3b58"
+    },
+    {
+      "file": "pages/myCollection/components/collectionSearch.vue",
+      "sha1": "0ad11443a82df2e9f618b3eacac4ec375a25f870"
+    },
+    {
+      "file": "pages/myCollection/components/popDetails.vue",
+      "sha1": "881d9209c403359be1fc818c6e2b7c4803b32fc8"
+    },
+    {
+      "file": "pages/myCollection/myCollection.vue",
+      "sha1": "39075a16d831b910f06923c0de98cab0416b8897"
+    },
+    {
+      "file": "pages/notice/components/comment.vue",
+      "sha1": "a4863ac1d873226b6f063158f34ee23a5e3ddf4d"
+    },
+    {
+      "file": "pages/notice/components/new-list.vue",
+      "sha1": "b047a08dcf4d605f09b6fe6b28481f9200d3bfb5"
+    },
+    {
+      "file": "pages/notice/components/notice-list.vue",
+      "sha1": "c1a77f8dfb47eff5ecdce25db7e930c6068bdcbd"
+    },
+    {
+      "file": "pages/notice/components/wall-list.vue",
+      "sha1": "50ca9f184bf212791bc7791f8d8ed020d513767b"
+    },
+    {
+      "file": "pages/notice/newsDetails.vue",
+      "sha1": "bb0ff60a6dcfaa2d31230dc24febf654cd24d9d1"
+    },
+    {
+      "file": "pages/notice/notice.vue",
+      "sha1": "ead25c6f0ab087b51f3e696fa50366e30826c171"
+    },
+    {
+      "file": "pages/notice/noticeDetails.vue",
+      "sha1": "cfe68c5334eb305a2beac75d5cb07efbfb195afa"
+    },
+    {
+      "file": "pages/notice/search.vue",
+      "sha1": "03a439f1c63086042f83d162c6c7ab0c01c865dd"
+    },
+    {
+      "file": "pages/notice/sendRumor.vue",
+      "sha1": "1a122ffa8236ea014cbc54ad463e7e9e9ab56f6f"
+    },
+    {
+      "file": "pages/notice/wallDetails.vue",
+      "sha1": "abeac85241e458f33154f900a85184dd1ac7ba2e"
+    },
+    {
+      "file": "pages/order/beg/info.vue",
+      "sha1": "9dbaad8d5a2096640516446b47575bc07d68fc32"
+    },
+    {
+      "file": "pages/order/beg/list.vue",
+      "sha1": "403e0b8052dd6b3b7b372973d8045dfeb2db05ca"
+    },
+    {
+      "file": "pages/order/components/batchOrderList.vue",
+      "sha1": "8a6c5bab4552185dc3755bf30a45c4a63bda80ab"
+    },
+    {
+      "file": "pages/order/components/BegGoodsInfo.vue",
+      "sha1": "5a4a6bf903586981e869488c5997fc796121e57f"
+    },
+    {
+      "file": "pages/order/components/CancelBegOrder.vue",
+      "sha1": "3694ee30b58c86e8c834b1868148791c5c9d5509"
+    },
+    {
+      "file": "pages/order/components/goodsBar.vue",
+      "sha1": "914ce6fd83c13c5f94996b6a8df480032801ee3f"
+    },
+    {
+      "file": "pages/order/components/goodsInfo.vue",
+      "sha1": "55e78384badc71353b3c5325db9696f3ff103ba5"
+    },
+    {
+      "file": "pages/order/components/iconMap.js",
+      "sha1": "69de4ee2824148e94af7f9e4e9fb5204c159c651"
+    },
+    {
+      "file": "pages/order/components/marketOrderAction.vue",
+      "sha1": "49c4a29f1e3deed8e8703a9a4684e63bcd9d29e8"
+    },
+    {
+      "file": "pages/order/components/orderAction.vue",
+      "sha1": "b86699214f8bae59430045ddf126863a8c740f9e"
+    },
+    {
+      "file": "pages/order/components/orderItem.vue",
+      "sha1": "429750493c7192c9f31951c2ec5ed71239cd2c30"
+    },
+    {
+      "file": "pages/order/components/orderStatus.vue",
+      "sha1": "4e5e5cb0a53bb5c69b55600647438bd1b7201d65"
+    },
+    {
+      "file": "pages/order/components/orderStatusMap.js",
+      "sha1": "cec0fc7f08dfa06abe616354b6834cc2f33da164"
+    },
+    {
+      "file": "pages/order/components/payType.vue",
+      "sha1": "47b9a8f521eea617fc2bd632b065627c978095f3"
+    },
+    {
+      "file": "pages/order/components/payTypeRadio.vue",
+      "sha1": "d1c281a52cd2fb54f344cdc763598bb810342326"
+    },
+    {
+      "file": "pages/order/defaultDetail.vue",
+      "sha1": "995e12456fd39e9a7a26221e4abfcfb0066d6d06"
+    },
+    {
+      "file": "pages/order/list.vue",
+      "sha1": "6365624d438245b69383fa3aebfd056daf07af1b"
+    },
+    {
+      "file": "pages/order/marketDetail.vue",
+      "sha1": "2674a00d680a4b35f6125930c216095a4d1defeb"
+    },
+    {
+      "file": "pages/order/orderSubmit.vue",
+      "sha1": "a70c48bee07fa377ee1f49047faeec871470107f"
+    },
+    {
+      "file": "pages/order/regiftDetail.vue",
+      "sha1": "ba9416d1d7f4b26a1e06ee852075e5b9b7b853f0"
+    },
+    {
+      "file": "pages/product/box.vue",
+      "sha1": "aa234ed678218243d0959fb3c15ce54df95948f7"
+    },
+    {
+      "file": "pages/product/collection.vue",
+      "sha1": "49cd8bc4a536b033921c1c26e323dc782932e99a"
+    },
+    {
+      "file": "pages/rank/components/HeaderList.vue",
+      "sha1": "36863cc3e725197207f196a5b321896d50de8253"
+    },
+    {
+      "file": "pages/rank/masterRank.vue",
+      "sha1": "5a7d65c00e2d4f1c9acc5da5bb1ec171c14a7454"
+    },
+    {
+      "file": "pages/rank/rankListZaoMeng.vue",
+      "sha1": "986caaebd82e4394650ee73e6b9afc70eba3091c"
+    },
+    {
+      "file": "pages/rank/userBuy.vue",
+      "sha1": "8283a57f264598bc6f2d05864d4986c3eea1a3c1"
+    },
+    {
+      "file": "pages/rebate/leaderboard.vue",
+      "sha1": "cf14c9fd597a3fa619c90a7ced004a4870b26a79"
+    },
+    {
+      "file": "pages/rebate/rebate.vue",
+      "sha1": "c981caff140a91796e47993201170b9b4bda7e17"
+    },
+    {
+      "file": "pages/rebate/rebateInviteDetail.vue",
+      "sha1": "52183ad3c29f5f1e39f44efdf6c8b4922e0946f2"
+    },
+    {
+      "file": "pages/regift/record.vue",
+      "sha1": "cef65683d1444d645088265507dfc7142f850500"
+    },
+    {
+      "file": "pages/regift/regift.vue",
+      "sha1": "2329e2f9bf1df1a4329222db2f9c43074c0486a5"
+    },
+    {
+      "file": "pages/rules/rules.vue",
+      "sha1": "847a33eb307a5f7349d19ef29bc5adeb5d02ee07"
+    },
+    {
+      "file": "pages/shop/components/detail-list-screen.vue",
+      "sha1": "31c1e253ba9114d7fc9a8ca66b2e570123a54c03"
+    },
+    {
+      "file": "pages/shop/components/product-details-card.vue",
+      "sha1": "42768dac1efad7004cb9bf9686087d85d6316b1b"
+    },
+    {
+      "file": "pages/shop/components/shop-goods-action.vue",
+      "sha1": "1601bc6eda2fefa8d586a9a82f34987f777f3d14"
+    },
+    {
+      "file": "pages/shop/components/shop-goods-item.vue",
+      "sha1": "e917c0d6109e700a23e3ad5214650eab0e0f68ee"
+    },
+    {
+      "file": "pages/shop/detail/box.vue",
+      "sha1": "23e14dbb0f87b123b2398a3ef4d579189341ec77"
+    },
+    {
+      "file": "pages/shop/detail/collection.vue",
+      "sha1": "e65389cfbd62527e61f5c1dda2bff62528f5f1d3"
+    },
+    {
+      "file": "pages/shop/detail/goods.vue",
+      "sha1": "f2c480bf8d847442c3b228d28abcfeee5203f3d3"
+    },
+    {
+      "file": "pages/shop/detailList.vue",
+      "sha1": "5abd5a691c027a440a6b82e9ced3197d5fa0011e"
+    },
+    {
+      "file": "pages/shop/exchange.vue",
+      "sha1": "7a1f21c58dc68acadf1f081238d059e4dfedd0ef"
+    },
+    {
+      "file": "pages/shop/record.vue",
+      "sha1": "4266f5b35f8c3bc9d81117c5c6cfa8f7fa8219d9"
+    },
+    {
+      "file": "pages/shop/shop.vue",
+      "sha1": "6fbdb4a1f01add791626bd2524a00da644321049"
+    },
+    {
+      "file": "pages/wallet/wallet.vue",
+      "sha1": "3482e3c9b4e723399e7bf0a301a955cd4fa18abf"
+    },
+    {
+      "file": "pages/webview/webview-storage.vue",
+      "sha1": "441699ba964fd5a370abf9e40a8e47689c779c36"
+    },
+    {
+      "file": "pages/webview/webview.vue",
+      "sha1": "d171a07482c87cadb592013c680149be76b77b4d"
+    },
+    {
+      "file": "pages.json",
+      "sha1": "15eb29b6cdf27cf149e01a8a27d35885ffb39bdb"
+    },
+    {
+      "file": "store/index.js",
+      "sha1": "70c0de66473e4edc45a6c77394a87fa3765c0e77"
+    },
+    {
+      "file": "store/modules/config.js",
+      "sha1": "274eac29c0c2124e0f9b17fb339dbe7e8cdfd765"
+    },
+    {
+      "file": "store/modules/goods.js",
+      "sha1": "42e23ab64a78e360d89327bdfea017fa1bd7b043"
+    },
+    {
+      "file": "store/modules/lang.js",
+      "sha1": "bee870b6dd3e334fc26a3090c4d9294020bd5b74"
+    },
+    {
+      "file": "store/modules/order.js",
+      "sha1": "54dfc2df74c1cf5d2b6e9e55740201446f1d853c"
+    },
+    {
+      "file": "store/modules/push.js",
+      "sha1": "8c421431b55ca465af7fde66a0ec70211fce0aa1"
+    },
+    {
+      "file": "store/modules/user.js",
+      "sha1": "ae17ae24d74b048cd2d1100d7f53264027cac94c"
+    },
+    {
+      "file": "uni_modules/zhouWei-APPUpdate/js_sdk/appUpdate.js",
+      "sha1": "93bec8f0efe4b8402bdb6fa11546adcf3b415abb"
+    },
+    {
+      "file": "uni_modules/zhouWei-APPUpdate/package.json",
+      "sha1": "ba2415503d90c98295b4e69d6080c735e53d25a2"
+    },
+    {
+      "file": "utils/address.json",
+      "sha1": "ae5fea2f963f72ae1254e71bf64470c4f30cd1bb"
+    },
+    {
+      "file": "utils/autoUpdate.js",
+      "sha1": "1e2490b9f94735a0be072d11c4edabe4aa2a62fd"
+    },
+    {
+      "file": "utils/md5.js",
+      "sha1": "e0acc9f6d451501d952e0a14add1ebad695acf20"
+    },
+    {
+      "file": "utils/payUtil.js",
+      "sha1": "94ed5b2d39ca0dea413b22afba7e76ab643810cc"
+    },
+    {
+      "file": "utils/request.js",
+      "sha1": "1e22dc0b4fc845c8122c206639ff846375d089a1"
+    },
+    {
+      "file": "utils/tools.js",
+      "sha1": "3ec7524e3bf6330146e844e632e6a648b807d4ef"
+    },
+    {
+      "file": "utils/upload.js",
+      "sha1": "4553d3638763978a07c2beee71028d6ef178dffb"
+    }
+  ]
+}

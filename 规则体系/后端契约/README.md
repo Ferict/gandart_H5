@@ -61,6 +61,10 @@
 9. `completion-statement.md`
    - 抽取批次的完成声明
 
+补充说明：
+1. 本目录正文树已于 2026-04-25 完成物理迁入，不再只是入口 README。
+2. `contract-graph.json`、`_generated/contract-graph.json`、`verification-report.md`、`_generated/coverage-check.md` 中如果仍出现旧抽取路径，只表示历史抽取来源，不表示当前现行入口仍是旧目录。
+
 ## 4. 当前可直接使用的正式层
 
 当前可作为“项目已收进规则体系、可直接拿来做适配”的正式层固定为：
