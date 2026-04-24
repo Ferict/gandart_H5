@@ -1,0 +1,38 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/main.ts",
+    "src/App.vue",
+    "src/pages/**/*.vue",
+    "src/services/**/*.ts",
+    "src/composables/**/*.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,vue}",
+    "tests/**/*.{ts,tsx}",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "commitlint.config.cjs",
+    ".textlintrc.cjs",
+    "scripts/**/*.mjs"
+  ],
+  "ignoreFiles": ["src/stores/app.store.ts", ".textlintrc.cjs"],
+  "ignoreDependencies": [
+    "@dcloudio/uni-app-plus",
+    "@dcloudio/uni-components",
+    "@dcloudio/uni-h5",
+    "@dcloudio/uni-cli-shared",
+    "@dcloudio/uni-stacktracey",
+    "textlint-plugin-markdown",
+    "textlint-rule-no-todo"
+  ],
+  "ignoreBinaries": ["powershell"],
+  "ignore": [
+    "src/**/*.d.ts",
+    "src/**/.gitkeep",
+    "src/manifest.json",
+    "src/pages.json",
+    "shims-uni.d.ts"
+  ]
+}

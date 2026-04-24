@@ -1,0 +1,9 @@
+extends: substitution
+message: "统一术语：请用 '%s' 替代 '%s'。"
+level: warning
+ignorecase: true
+swap:
+  uniapp: uni-app
+  typescript: TypeScript
+  javascript: JavaScript
+  vscode: VS Code

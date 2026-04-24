@@ -1,0 +1,33 @@
+/*
+ * Aether Iconfont
+ *
+ * Current APP font backend is vendored from Bootstrap Icons v1.11.3.
+ * License: MIT. See THIRD_PARTY-NOTICE-bootstrap-icons.txt in this folder.
+ * Current guaranteed coverage is the shell P0 set plus migrated high-frequency page icons.
+ */
+
+@font-face {
+  font-family: AetherIconfont;
+  src:
+    url('./aether-iconfont.woff2') format('woff2'),
+    url('./aether-iconfont.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.aether-iconfont {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 400;
+  text-transform: none;
+  font-family: AetherIconfont, sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

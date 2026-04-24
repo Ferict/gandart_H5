@@ -1,0 +1,5 @@
+node_modules/
+dist/
+unpackage/
+垃圾桶/*
+!垃圾桶/README.md

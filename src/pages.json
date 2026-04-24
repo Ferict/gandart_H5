@@ -1,0 +1,30 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#F5F6F8"
+      }
+    },
+    {
+      "path": "pages/profile-asset-detail/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#F5F6F8"
+      }
+    },
+    {
+      "path": "pages/updating/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#F5F6F8"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#F5F6F8",
+    "backgroundTextStyle": "light"
+  }
+}

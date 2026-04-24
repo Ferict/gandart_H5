@@ -1,0 +1,7 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+垃圾桶/*
+!垃圾桶/README.md
