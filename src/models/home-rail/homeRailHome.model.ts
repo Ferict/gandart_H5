@@ -4,17 +4,17 @@
  * Out of scope: market query execution, result-window choreography, and image reveal state tracking.
  */
 
-import type { ContentTargetDto } from '../../contracts/content-api.contract'
+import type { ContentTargetRef, ContentTargetType } from '../content/contentTarget.model'
 
 export type HomeBannerTone = 'dawn' | 'azure' | 'ember'
 export type HomeMarketBadgeTone = 'new' | 'hot' | 'featured'
 export type HomeMarketVisualTone = 'ink' | 'mist' | 'aqua' | 'sand'
 export type HomePlaceholderIconKey = 'box' | 'cpu' | 'aperture' | 'hexagon' | 'triangle' | 'disc3'
-export type HomeContentTargetType = ContentTargetDto['targetType']
+export type HomeContentTargetType = ContentTargetType
 export type HomeMarketSortField = 'listedAt' | 'price' | 'tradeVolume24h' | 'holderCount'
 export type HomeMarketSortDirection = 'asc' | 'desc'
 
-export type HomeContentTargetRef = ContentTargetDto
+export type HomeContentTargetRef = ContentTargetRef
 
 export interface HomeNoticeBarConfig {
   label: string

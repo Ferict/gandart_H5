@@ -4,11 +4,10 @@
  * Out of scope: remote request orchestration, cache persistence, and page-level state handling.
  */
 import type {
-  ContentMarketBadgeType,
-  ContentMarketVisualTone,
-  ContentPlaceholderIconKey,
-  ContentResourceType,
-} from '../../contracts/content-api.contract'
+  HomeMarketBadgeTone,
+  HomeMarketVisualTone,
+  HomePlaceholderIconKey,
+} from '../home-rail/homeRailHome.model'
 
 export interface ContentResourceDetailStat {
   id: string
@@ -24,7 +23,7 @@ export interface ContentResourceDetailBadge {
 }
 
 export interface ContentResourceDetailContent {
-  resourceType: Extract<ContentResourceType, 'home_banner' | 'activity' | 'drop' | 'market_item'>
+  resourceType: 'home_banner' | 'activity' | 'drop' | 'market_item'
   resourceId: string
   title: string
   subtitle: string
@@ -32,20 +31,20 @@ export interface ContentResourceDetailContent {
   summary: string
   englishTitle: string
   imageUrl: string
-  placeholderIconKey: ContentPlaceholderIconKey
+  placeholderIconKey: HomePlaceholderIconKey
   priceLabel: string
   priceUnit: string
   priceValue: string
   progressRate: number
   progressLabel: string
-  visualTone: ContentMarketVisualTone | 'slate'
+  visualTone: HomeMarketVisualTone | 'slate'
   badges: ContentResourceDetailBadge[]
   stats: ContentResourceDetailStat[]
   relationNote: string
 }
 
 export const contentResourceBadgeToneMap: Record<
-  ContentMarketBadgeType,
+  HomeMarketBadgeTone,
   ContentResourceDetailBadge['tone']
 > = {
   new: 'rose',
