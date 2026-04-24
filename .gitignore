@@ -1,0 +1,29 @@
+# Dependency and tool caches
+node_modules/
+.hbuilderx/
+.idea/
+.vscode/
+
+# Build outputs
+dist/
+unpackage/
+coverage/
+.output/
+playwright-report/
+test-results/
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Local assistant/runtime folders
+.vscode-isolated/
+_codex_home_test/
+.tools/
+
+# Trash area remains tracked only for its README
+垃圾桶/*
+!垃圾桶/README.md

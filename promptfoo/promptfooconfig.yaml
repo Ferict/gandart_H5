@@ -1,0 +1,25 @@
+description: Tianyi rule smoke evals
+
+prompts:
+  - file://promptfoo/prompts/rule-smoke.prompt.md
+
+tests:
+  - description: 审查类请求必须引用现行规则入口与第三方接入边界
+    vars:
+      user_request: 请审查一个第三方依赖接入方案，并说明需要命中的仓库规则。
+    assert:
+      - type: icontains
+        value: AGENTS.md
+      - type: icontains
+        value: 规则体系/03-安全与边界规则.md
+      - type: icontains
+        value: 依赖与外链安全基线清单.md
+
+  - description: 执行类请求必须给出范围与验证
+    vars:
+      user_request: 请把 reviewdog 接入当前仓库，并说明验证方式。
+    assert:
+      - type: icontains
+        value: 允许修改范围
+      - type: icontains
+        value: 验证

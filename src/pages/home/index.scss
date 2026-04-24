@@ -1,0 +1,74 @@
+/**
+ * 文件版本：v0009
+ * 更新时间：2026-03-26 22:45:00
+ * Encoding: UTF-8
+ * 本次更新：首页壳层去除三页舞台残留，统一到单页与窄侧边栏口径
+ */
+
+.home-page {
+  width: 100%;
+  height: var(--home-global-stage-height, 100vh);
+  height: var(--home-global-stage-height, 100dvh);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--aether-page-background, #ffffff);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.home-stage-scale-shell {
+  width: 100%;
+  height: var(--home-global-stage-height, 100vh);
+  height: var(--home-global-stage-height, 100dvh);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--aether-page-background, #ffffff);
+  overflow: hidden;
+}
+
+.home-page.is-drawer-open {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.home-page.is-filter-open {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.home-page.is-global-stage-scaled {
+  overflow: hidden;
+  justify-content: flex-start;
+}
+
+.home-stage {
+  position: relative;
+  width: 100%;
+  height: var(--home-global-stage-height, 100vh);
+  height: var(--home-global-stage-height, 100dvh);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--aether-page-background, #ffffff);
+  padding: 0;
+  box-sizing: border-box;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.home-page.is-global-stage-scaled .home-stage {
+  width: 375px;
+  min-height: calc(var(--home-global-stage-height, 100vh) / var(--home-global-stage-scale, 1));
+  min-height: calc(var(--home-global-stage-height, 100dvh) / var(--home-global-stage-scale, 1));
+  transform: translateX(var(--home-global-stage-offset-x, 0))
+    scale(var(--home-global-stage-scale, 1));
+  transform-origin: top left;
+}
+
+.home-page.is-global-stage-scaled .home-stage-scale-shell {
+  min-height: var(--home-global-stage-height, 100vh);
+  min-height: var(--home-global-stage-height, 100dvh);
+}

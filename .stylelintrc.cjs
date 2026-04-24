@@ -1,0 +1,106 @@
+module.exports = {
+  extends: ['stylelint-config-standard-scss'],
+  overrides: [
+    {
+      files: ['**/*.vue'],
+      customSyntax: 'postcss-html',
+    },
+  ],
+  rules: {
+    'unit-no-unknown': [
+      true,
+      {
+        ignoreUnits: ['rpx'],
+      },
+    ],
+    'selector-type-no-unknown': [
+      true,
+      {
+        ignoreTypes: [
+          'page',
+          'uni-app',
+          'uni-page',
+          'uni-page-wrapper',
+          'uni-page-body',
+          'ad',
+          'audio',
+          'button',
+          'camera',
+          'canvas',
+          'cover-image',
+          'cover-view',
+          'editor',
+          'form',
+          'icon',
+          'image',
+          'input',
+          'label',
+          'live-player',
+          'live-pusher',
+          'map',
+          'match-media',
+          'movable-area',
+          'movable-view',
+          'navigator',
+          'official-account',
+          'open-data',
+          'picker',
+          'picker-view',
+          'picker-view-column',
+          'progress',
+          'rich-text',
+          'scroll-view',
+          'slider',
+          'swiper',
+          'swiper-item',
+          'switch',
+          'text',
+          'textarea',
+          'video',
+          'view',
+          'web-view',
+        ],
+      },
+    ],
+    'selector-pseudo-class-no-unknown': [
+      true,
+      {
+        ignorePseudoClasses: ['deep', 'global'],
+      },
+    ],
+    'selector-class-pattern': [
+      '^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:--[a-z0-9]+(?:-[a-z0-9]+)*)*$',
+      {
+        resolveNestedSelectors: true,
+      },
+    ],
+    'at-rule-no-unknown': null,
+    'scss/at-rule-no-unknown': true,
+    'declaration-block-no-duplicate-properties': [
+      true,
+      {
+        ignore: ['consecutive-duplicates-with-different-values'],
+      },
+    ],
+    'property-no-vendor-prefix': [
+      true,
+      {
+        ignoreProperties: ['-webkit-backdrop-filter', '-webkit-mask-image', '-webkit-mask-repeat'],
+      },
+    ],
+    'value-keyword-case': [
+      'lower',
+      {
+        ignoreKeywords: ['currentColor', 'optimizeLegibility'],
+      },
+    ],
+    'selector-not-notation': 'simple',
+    'scss/operator-no-newline-after': null,
+    'custom-property-empty-line-before': null,
+    'color-function-alias-notation': null,
+    'color-function-notation': null,
+    'alpha-value-notation': null,
+    'color-hex-length': null,
+    'no-descending-specificity': null,
+  },
+}

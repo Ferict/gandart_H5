@@ -1,0 +1,14 @@
+{
+  "name": "天异艺术",
+  "appid": "__UNI__AETHER_ART",
+  "description": "天异艺术 uni-app + Vue WebUI 正式应用配置",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "app-plus": {
+    "usingComponents": true
+  },
+  "h5": {
+    "title": "天异艺术"
+  }
+}
