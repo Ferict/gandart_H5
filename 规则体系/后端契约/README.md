@@ -62,6 +62,8 @@
    - 抽取批次的完成声明
 10. `p11.12.1-freeze.md`
     - `P11.12.1` 内部适配基线冻结记录
+11. `p11.12.2-delta-matrix.md`
+    - `P11.12.2` 当前前端内容域契约与项目级后端契约的差异矩阵
 
 补充说明：
 1. 本目录正文树已于 2026-04-25 完成物理迁入，不再只是入口 README。
@@ -91,6 +93,15 @@
 4. 当前可用于差异矩阵的稳定 transport 层：`api-inventory.md` 中 `status = confirmed` 的 122 个接口。
 5. 当前必须继续标识为待确认的层：68 个 `exported-unused` 接口、224 条 `unresolved` P3 accepted-risk、`contracts/inferred/*`。
 6. 当前不直接替代 [src/contracts/content-api.contract.ts](/H:/工作/天异/uniapp+vue新架构/src/contracts/content-api.contract.ts)；二者在 `P11.12` 完成前并存。
+
+## 4.2 P11.12.2 当前差异矩阵
+
+`P11.12.2` 已建立当前差异矩阵：
+
+1. 差异矩阵：[p11.12.2-delta-matrix.md](/H:/工作/天异/uniapp+vue新架构/规则体系/后端契约/p11.12.2-delta-matrix.md)
+2. 矩阵性质：迁移设计输入，不是代码改造结果。
+3. 核心结论：当前前端内容域是 5 个抽象聚合接口；项目级后端契约是 190 个旧 H5 具体业务 wrapper，不能一一直接替换。
+4. 迁移方向：保留当前 content port/view-model，对后端具体 wrapper 做 implementation/adapter 组合映射。
 
 ## 5. 必须明显标识为未确认的层
 
