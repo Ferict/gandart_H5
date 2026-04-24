@@ -16,7 +16,9 @@ export interface ExtInvitercompoundRequest {
 }
 
 export interface ExtInvitercompoundRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface ExtInvitercompoundData {

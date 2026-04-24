@@ -19,6 +19,7 @@ export interface BannerGetBannerListRequest {
 export interface BannerGetBannerListRequestParts {
   body?: {
     type?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 

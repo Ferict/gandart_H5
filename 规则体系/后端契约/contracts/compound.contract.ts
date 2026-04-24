@@ -19,6 +19,7 @@ export interface CompoundThemeinfoRequest {
 export interface CompoundThemeinfoRequestParts {
   body?: {
     thm?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -49,6 +50,7 @@ export interface CompoundMaterialRequestParts {
   body?: {
     play_id?: string | number;
     classify?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -71,7 +73,9 @@ export interface CompoundPlayInfoRequest {
 }
 
 export interface CompoundPlayInfoRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CompoundPlayInfoData = FrontendUnknown;
@@ -96,6 +100,7 @@ export interface CompoundSelectCollectionRequest {
 export interface CompoundSelectCollectionRequestParts {
   body?: {
     collection_ids?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -118,7 +123,9 @@ export interface CompoundSynthesizeNowRequest {
 }
 
 export interface CompoundSynthesizeNowRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface CompoundSynthesizeNowData {
@@ -146,6 +153,7 @@ export interface CompoundRecordInfoRequest {
 export interface CompoundRecordInfoRequestParts {
   body?: {
     record_id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -171,6 +179,7 @@ export interface CompoundRecordListRequest {
 export interface CompoundRecordListRequestParts {
   body?: {
     page?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 

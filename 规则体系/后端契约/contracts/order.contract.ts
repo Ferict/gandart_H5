@@ -7,11 +7,25 @@ export interface OrderTransport {
   batch_order_id?: string | number;
   num?: string | number;
   createtime?: string | number;
+  updatetime?: string | number;
+  order_status?: string | number;
+  order_type?: string | number;
+  surplus_time_text?: string;
+  goods_type?: string | number;
   goods_cover_image?: string;
   goods_name?: string;
-  collection_code?: string;
+  collection_code?: string | string[] | FrontendUnknown[];
   pay_way?: string | number;
+  price?: string | number;
+  total_price?: string | number;
   income_type?: string | string[];
+  card?: Array<{
+    card_sn?: string;
+    card_pwd?: string;
+    card_keys?: string;
+    show_pwd?: boolean | string | number;
+    [key: string]: FrontendUnknown;
+  }>;
   [key: string]: FrontendUnknown;
 }
 
@@ -30,7 +44,9 @@ export interface OrderGetOderListRequest {
 }
 
 export interface OrderGetOderListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderGetOderListResponse = FrontendApiResponse<FrontendPageData<FrontendUnknown>>;
@@ -65,6 +81,7 @@ export interface OrderCreateOrderRequestParts {
     pay_way?: FrontendUnknown;
     batch_id?: string | number;
     price?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -98,6 +115,7 @@ export interface OrderCreateMarketOrderRequestParts {
     market_goods_id?: string | number;
     pay_type?: string | number;
     pay_way?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -124,7 +142,9 @@ export interface OrderCreateMarketOrderPushRequest {
 }
 
 export interface OrderCreateMarketOrderPushRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderCreateMarketOrderPushData = FrontendUnknown;
@@ -222,6 +242,7 @@ export interface OrderChangeOrderStatusRequestParts {
     order_type?: string | number;
     status?: string | number;
     order_sn?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -259,6 +280,7 @@ export interface OrderDoPayRequestParts {
     pay_scene?: FrontendUnknown;
     returnurl?: FrontendUnknown;
     pay_password?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -284,7 +306,9 @@ export interface OrderSignUpDrawRequest {
 }
 
 export interface OrderSignUpDrawRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderSignUpDrawData = FrontendUnknown;
@@ -306,7 +330,9 @@ export interface OrderQueryDrawStatusRequest {
 }
 
 export interface OrderQueryDrawStatusRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderQueryDrawStatusData = FrontendUnknown;
@@ -328,7 +354,9 @@ export interface OrderQueryDramOrSignUpListRequest {
 }
 
 export interface OrderQueryDramOrSignUpListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderQueryDramOrSignUpListResponse = FrontendApiResponse<OrderTransport>;
@@ -355,6 +383,7 @@ export interface OrderFastCreateOrderRequestParts {
     goods_id?: string | number;
     key?: FrontendUnknown;
     pay_way?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -377,15 +406,16 @@ export const OrderBacthCreateOrderMeta: ApiOperationMeta = {
 };
 
 export interface OrderBacthCreateOrderRequest {
-  key?: FrontendUnknown;
   goods_id?: string | number;
+  key?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface OrderBacthCreateOrderRequestParts {
   body?: {
-    key?: FrontendUnknown;
     goods_id?: string | number;
+    key?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -411,6 +441,7 @@ export interface OrderCancelBatchOrderRequest {
 export interface OrderCancelBatchOrderRequestParts {
   body?: {
     batch_order_id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -460,6 +491,7 @@ export interface OrderCreateBatchPayOrderRequestParts {
     order_ids?: FrontendUnknown;
     batch_order_id?: string | number;
     pay_way?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -485,7 +517,9 @@ export interface OrderOrderGetOderListRequest {
 }
 
 export interface OrderOrderGetOderListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderGetOderListResponse = FrontendApiResponse<FrontendPageData<FrontendUnknown>>;
@@ -505,7 +539,9 @@ export interface OrderOrderCreateOrderRequest {
 }
 
 export interface OrderOrderCreateOrderRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderCreateOrderData = FrontendUnknown;
@@ -527,7 +563,9 @@ export interface OrderOrderCreateMarketOrderRequest {
 }
 
 export interface OrderOrderCreateMarketOrderRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderCreateMarketOrderData = FrontendUnknown;
@@ -572,7 +610,9 @@ export interface OrderOrderChangeOrderStatusRequest {
 }
 
 export interface OrderOrderChangeOrderStatusRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderChangeOrderStatusData = FrontendUnknown;
@@ -594,7 +634,9 @@ export interface OrderOrderDoPayRequest {
 }
 
 export interface OrderOrderDoPayRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderDoPayData = FrontendUnknown;
@@ -612,11 +654,21 @@ export const OrderOrderSignUpDrawMeta: ApiOperationMeta = {
 };
 
 export interface OrderOrderSignUpDrawRequest {
+  goods_id?: string | number;
+  goods_type?: string | number;
+  helpucode?: FrontendUnknown;
+  newuser?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface OrderOrderSignUpDrawRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+    goods_id?: string | number;
+    goods_type?: string | number;
+    helpucode?: FrontendUnknown;
+    newuser?: FrontendUnknown;
+  };
 }
 
 export type OrderOrderSignUpDrawData = FrontendUnknown;
@@ -638,7 +690,9 @@ export interface OrderOrderQueryDrawStatusRequest {
 }
 
 export interface OrderOrderQueryDrawStatusRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderQueryDrawStatusData = FrontendUnknown;
@@ -660,7 +714,9 @@ export interface OrderOrderQueryDramOrSignUpListRequest {
 }
 
 export interface OrderOrderQueryDramOrSignUpListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderQueryDramOrSignUpListResponse = FrontendApiResponse<OrderTransport>;
@@ -680,7 +736,9 @@ export interface OrderOrderOpenHfWalletRequest {
 }
 
 export interface OrderOrderOpenHfWalletRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderOpenHfWalletData = FrontendUnknown;
@@ -702,7 +760,9 @@ export interface OrderOrderGetWalletAddrRequest {
 }
 
 export interface OrderOrderGetWalletAddrRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderGetWalletAddrData = FrontendUnknown;
@@ -724,7 +784,9 @@ export interface OrderOrderCreateHuifuAccountOrderRequest {
 }
 
 export interface OrderOrderCreateHuifuAccountOrderRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type OrderOrderCreateHuifuAccountOrderData = FrontendUnknown;

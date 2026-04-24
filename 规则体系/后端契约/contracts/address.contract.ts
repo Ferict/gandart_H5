@@ -47,6 +47,7 @@ export interface AddressAddEditAddressRequestParts {
     s_name?: FrontendUnknown;
     s_phone?: FrontendUnknown;
     isdef?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -72,6 +73,7 @@ export interface AddressAddressDetailRequest {
 export interface AddressAddressDetailRequestParts {
   body?: {
     id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -97,6 +99,7 @@ export interface AddressAddressDeleteRequest {
 export interface AddressAddressDeleteRequestParts {
   body?: {
     id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 

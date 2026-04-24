@@ -16,7 +16,9 @@ export interface IntegralGetScoreListRequest {
 }
 
 export interface IntegralGetScoreListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralGetScoreListData = FrontendUnknown;
@@ -41,6 +43,7 @@ export interface IntegralGetMyShareDetailsRequest {
 export interface IntegralGetMyShareDetailsRequestParts {
   body?: {
     type?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -69,6 +72,7 @@ export interface IntegralShareSubRequest {
 export interface IntegralShareSubRequestParts {
   body?: {
     images?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -91,7 +95,9 @@ export interface IntegralGetGoodsListRequest {
 }
 
 export interface IntegralGetGoodsListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralGetGoodsListData = FrontendUnknown;
@@ -135,7 +141,9 @@ export interface IntegralGoodsDetailsApiRequest {
 }
 
 export interface IntegralGoodsDetailsApiRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralGoodsDetailsApiData = FrontendUnknown;
@@ -157,7 +165,9 @@ export interface IntegralHuodouOrderRequest {
 }
 
 export interface IntegralHuodouOrderRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralHuodouOrderData = FrontendUnknown;
@@ -179,7 +189,9 @@ export interface IntegralHuodouListRequest {
 }
 
 export interface IntegralHuodouListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralHuodouListData = FrontendUnknown;
@@ -201,7 +213,9 @@ export interface IntegralHuodouDetailRequest {
 }
 
 export interface IntegralHuodouDetailRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralHuodouDetailData = FrontendUnknown;
@@ -223,7 +237,9 @@ export interface IntegralGetScoreGuessListRequest {
 }
 
 export interface IntegralGetScoreGuessListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralGetScoreGuessListData = FrontendUnknown;
@@ -245,7 +261,9 @@ export interface IntegralGuessDetailRequest {
 }
 
 export interface IntegralGuessDetailRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralGuessDetailData = FrontendUnknown;
@@ -267,7 +285,9 @@ export interface IntegralGetMyScoreGuessListRequest {
 }
 
 export interface IntegralGetMyScoreGuessListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralGetMyScoreGuessListData = FrontendUnknown;
@@ -289,7 +309,9 @@ export interface IntegralJoinGuessRequest {
 }
 
 export interface IntegralJoinGuessRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralJoinGuessData = FrontendUnknown;
@@ -311,7 +333,9 @@ export interface IntegralGuessSuccessRequest {
 }
 
 export interface IntegralGuessSuccessRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralGuessSuccessData = FrontendUnknown;
@@ -333,7 +357,9 @@ export interface IntegralGetMyGuessRequest {
 }
 
 export interface IntegralGetMyGuessRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type IntegralGetMyGuessData = FrontendUnknown;

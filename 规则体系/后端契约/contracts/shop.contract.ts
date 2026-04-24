@@ -16,7 +16,9 @@ export interface ShopShopGoodsListRequest {
 }
 
 export interface ShopShopGoodsListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type ShopShopGoodsListData = FrontendUnknown;
@@ -38,7 +40,9 @@ export interface ShopShopCrystalDetailRequest {
 }
 
 export interface ShopShopCrystalDetailRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type ShopShopCrystalDetailData = FrontendUnknown;
@@ -60,7 +64,9 @@ export interface ShopShopExchangeRecordRequest {
 }
 
 export interface ShopShopExchangeRecordRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type ShopShopExchangeRecordData = FrontendUnknown;
@@ -85,6 +91,7 @@ export interface ShopShopGetGoodsInfoRequest {
 export interface ShopShopGetGoodsInfoRequestParts {
   body?: {
     goods_id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -116,6 +123,7 @@ export interface ShopShopExchangeRequestParts {
     number?: FrontendUnknown;
     address_id?: string | number;
     pay_password?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -149,6 +157,7 @@ export interface ShopShopGetECardPassRequestParts {
     pay_password?: FrontendUnknown;
     sn?: FrontendUnknown;
     order_id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 

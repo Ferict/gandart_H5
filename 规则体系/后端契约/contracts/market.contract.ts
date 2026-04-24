@@ -1,5 +1,25 @@
 import type { ApiOperationMeta, FrontendApiResponse, FrontendPageData, FrontendUnknown, WalletRedirectInfo } from './common.contract';
 
+export interface MarketCardItemTransport {
+  id?: string | number;
+  goods_type?: string | number;
+  flux?: string | number;
+  is_out?: string | number | boolean;
+  total_num?: string | number;
+  min_price?: string | number;
+  price?: string | number;
+  product?: {
+    id?: string | number;
+    listimg?: string;
+    name?: string;
+    [key: string]: FrontendUnknown;
+  };
+  [key: string]: FrontendUnknown;
+}
+
+export interface MarketBoxListData extends FrontendPageData<MarketCardItemTransport> {
+  data?: MarketCardItemTransport[];
+}
 
 // market.getMarketBoxList (POST /market/market/marketList)
 export const MarketGetMarketBoxListMeta: ApiOperationMeta = {
@@ -12,20 +32,30 @@ export const MarketGetMarketBoxListMeta: ApiOperationMeta = {
 };
 
 export interface MarketGetMarketBoxListRequest {
+  goods_type?: string | number;
+  page?: string | number;
+  list_rows?: FrontendUnknown;
+  series_id?: string | number;
+  new?: FrontendUnknown;
+  price?: string | number;
+  keywords?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface MarketGetMarketBoxListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+    goods_type?: string | number;
+    page?: string | number;
+    list_rows?: FrontendUnknown;
+    series_id?: string | number;
+    new?: FrontendUnknown;
+    price?: string | number;
+    keywords?: FrontendUnknown;
+  };
 }
 
-export interface MarketGetMarketBoxListData {
-  total?: string | number;
-  data?: FrontendUnknown;
-  [key: string]: FrontendUnknown;
-}
-
-export type MarketGetMarketBoxListResponse = FrontendApiResponse<MarketGetMarketBoxListData>;
+export type MarketGetMarketBoxListResponse = FrontendApiResponse<MarketBoxListData>;
 
 // market.ranking (POST /user/ranking)
 export const MarketRankingMeta: ApiOperationMeta = {
@@ -45,6 +75,7 @@ export interface MarketRankingRequest {
 export interface MarketRankingRequestParts {
   body?: {
     types?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -63,16 +94,26 @@ export const MarketGetMarketListMeta: ApiOperationMeta = {
 };
 
 export interface MarketGetMarketListRequest {
+  goods_type?: string | number;
+  page?: string | number;
+  list_rows?: FrontendUnknown;
+  series_id?: string | number;
+  keywords?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface MarketGetMarketListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+    goods_type?: string | number;
+    page?: string | number;
+    list_rows?: FrontendUnknown;
+    series_id?: string | number;
+    keywords?: FrontendUnknown;
+  };
 }
 
-export type MarketGetMarketListData = FrontendUnknown;
-
-export type MarketGetMarketListResponse = FrontendApiResponse<MarketGetMarketListData>;
+export type MarketGetMarketListResponse = FrontendApiResponse<MarketCardItemTransport[]>;
 
 // market.getMarketGoodsList (POST /market/market/getMarketGoodsListByGoodsId)
 export const MarketGetMarketGoodsListMeta: ApiOperationMeta = {
@@ -85,11 +126,23 @@ export const MarketGetMarketGoodsListMeta: ApiOperationMeta = {
 };
 
 export interface MarketGetMarketGoodsListRequest {
+  page?: string | number;
+  sort?: FrontendUnknown;
+  type?: string | number;
+  id?: string | number;
+  order?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface MarketGetMarketGoodsListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+    page?: string | number;
+    sort?: FrontendUnknown;
+    type?: string | number;
+    id?: string | number;
+    order?: FrontendUnknown;
+  };
 }
 
 export interface MarketGetMarketGoodsListData {
@@ -117,6 +170,7 @@ export interface MarketChangeMarketGoodsRequest {
 export interface MarketChangeMarketGoodsRequestParts {
   body?: {
     id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -144,6 +198,7 @@ export interface MarketGetMarketGoodsInfoRequestParts {
   body?: {
     id?: string | number;
     type?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 

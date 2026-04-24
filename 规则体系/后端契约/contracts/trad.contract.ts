@@ -41,7 +41,9 @@ export interface TradCreateTradOrderRequest {
 }
 
 export interface TradCreateTradOrderRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type TradCreateTradOrderData = FrontendUnknown;
@@ -88,7 +90,9 @@ export interface TradGetMyTradeListRequest {
 }
 
 export interface TradGetMyTradeListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface TradGetMyTradeListData {
@@ -115,7 +119,9 @@ export interface TradGetBegBuyListRequest {
 }
 
 export interface TradGetBegBuyListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface TradGetBegBuyListData {
@@ -167,7 +173,9 @@ export interface TradGetSellBegInfoRequest {
 }
 
 export interface TradGetSellBegInfoRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type TradGetSellBegInfoData = FrontendUnknown;
@@ -185,17 +193,18 @@ export const TradSellMeta: ApiOperationMeta = {
 };
 
 export interface TradSellRequest {
-  sell_data?: FrontendUnknown;
   pay_way?: FrontendUnknown;
+  sell_data?: FrontendUnknown;
   pay_password?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface TradSellRequestParts {
   body?: {
-    sell_data?: FrontendUnknown;
     pay_way?: FrontendUnknown;
+    sell_data?: FrontendUnknown;
     pay_password?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -221,7 +230,9 @@ export interface TradGetSellInfoRequest {
 }
 
 export interface TradGetSellInfoRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type TradGetSellInfoData = FrontendUnknown;

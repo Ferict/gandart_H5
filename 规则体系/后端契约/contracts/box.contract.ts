@@ -1,24 +1,31 @@
 import type { ApiOperationMeta, FrontendApiResponse, FrontendPageData, FrontendUnknown, WalletRedirectInfo } from './common.contract';
 
 
-// box.getBoxDetails (POST /box/blind_box/BoxDetail/ids/)
+// box.getBoxDetails (POST /box/blind_box/BoxDetail/ids/${id})
 export const BoxGetBoxDetailsMeta: ApiOperationMeta = {
   operationId: "box.getBoxDetails",
   method: "POST",
-  paths: ["/box/blind_box/BoxDetail/ids/"],
+  paths: ["/box/blind_box/BoxDetail/ids/${id}"],
   auth: false,
   status: "confirmed",
   evidence: ["api/box/index.js:10"],
 };
 
 export interface BoxGetBoxDetailsRequest {
+  id?: string | number;
   origin?: FrontendUnknown;
   crystal_goods_id?: string | number;
   [key: string]: FrontendUnknown;
 }
 
 export interface BoxGetBoxDetailsRequestParts {
-  body?: Record<string, never>;
+  path?: {
+    id?: string | number;
+  };
+  query?: {
+    origin?: FrontendUnknown;
+    crystal_goods_id?: string | number;
+  };
 }
 
 export type BoxGetBoxDetailsData = FrontendUnknown;
@@ -90,7 +97,9 @@ export interface BoxGetOpenRecordRequest {
 }
 
 export interface BoxGetOpenRecordRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface BoxGetOpenRecordData {

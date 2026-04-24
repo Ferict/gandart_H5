@@ -16,7 +16,9 @@ export interface SubscribeSubscribeRequest {
 }
 
 export interface SubscribeSubscribeRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type SubscribeSubscribeData = FrontendUnknown;

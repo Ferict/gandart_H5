@@ -2,14 +2,25 @@ import type { ApiOperationMeta, FrontendApiResponse, FrontendPageData, FrontendU
 
 export interface ProductTransport {
   id?: string | number;
+  batch_id?: string | number;
   goods_id?: string | number;
   goods_name?: string;
+  name?: string;
   goods_type?: string | number;
   main_image?: string;
   listimg?: string;
+  publisher?: {
+    company_logo?: string;
+    name?: string;
+    [key: string]: FrontendUnknown;
+  };
+  total_num?: string | number;
+  price?: string | number;
   collectionlist?: FrontendUnknown[];
   [key: string]: FrontendUnknown;
 }
+
+export type CalendarGoodsItemTransport = ProductTransport;
 
 export interface UserCollectionDetailData {
   product?: ProductTransport;
@@ -34,7 +45,9 @@ export interface CollectionGetCollectionListRequest {
 }
 
 export interface CollectionGetCollectionListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionGetCollectionListData = FrontendUnknown;
@@ -56,12 +69,12 @@ export interface CollectionGetCalenderListRequest {
 }
 
 export interface CollectionGetCalenderListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
-export type CollectionGetCalenderListData = FrontendUnknown;
-
-export type CollectionGetCalenderListResponse = FrontendApiResponse<CollectionGetCalenderListData>;
+export type CollectionGetCalenderListResponse = FrontendApiResponse<CalendarGoodsItemTransport[]>;
 
 // collection.getCollectionDetails (POST /box/collection/ProductDetail/ids/${id})
 export const CollectionGetCollectionDetailsMeta: ApiOperationMeta = {
@@ -82,6 +95,9 @@ export interface CollectionGetCollectionDetailsRequest {
 export interface CollectionGetCollectionDetailsRequestParts {
   path?: {
     id?: string | number;
+  };
+  query?: {
+    batch_id?: string | number;
   };
 }
 
@@ -104,7 +120,9 @@ export interface CollectionGetUserSeriesListRequest {
 }
 
 export interface CollectionGetUserSeriesListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionGetUserSeriesListData = FrontendUnknown;
@@ -126,7 +144,9 @@ export interface CollectionGetListDetailRequest {
 }
 
 export interface CollectionGetListDetailRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionGetListDetailData = FrontendUnknown;
@@ -148,7 +168,9 @@ export interface CollectionGetUserCollectionDetailsListRequest {
 }
 
 export interface CollectionGetUserCollectionDetailsListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionGetUserCollectionDetailsListData = FrontendUnknown;
@@ -229,6 +251,7 @@ export interface CollectionSellProductRequestParts {
     price?: string | number;
     pay_password?: FrontendUnknown;
     income_type?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -255,7 +278,9 @@ export interface CollectionGivingProductRequest {
 }
 
 export interface CollectionGivingProductRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionGivingProductData = FrontendUnknown;
@@ -277,7 +302,9 @@ export interface CollectionGivingProductOrderRequest {
 }
 
 export interface CollectionGivingProductOrderRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionGivingProductOrderData = FrontendUnknown;
@@ -299,7 +326,9 @@ export interface CollectionGetCompoundListRequest {
 }
 
 export interface CollectionGetCompoundListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionGetCompoundListData = FrontendUnknown;
@@ -394,7 +423,9 @@ export interface CollectionGetGiveRecordRequest {
 }
 
 export interface CollectionGetGiveRecordRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface CollectionGetGiveRecordData {
@@ -446,8 +477,9 @@ export interface CollectionGetSeriesListRequest {
 }
 
 export interface CollectionGetSeriesListRequestParts {
-  body?: {
+  query?: {
     type?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -473,6 +505,7 @@ export interface CollectionGetSelfSeriesRequest {
 export interface CollectionGetSelfSeriesRequestParts {
   body?: {
     type?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -498,6 +531,7 @@ export interface CollectionAddSelfSeriesRequest {
 export interface CollectionAddSelfSeriesRequestParts {
   body?: {
     series_id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -523,6 +557,7 @@ export interface CollectionRemoveSelfSeriesRequest {
 export interface CollectionRemoveSelfSeriesRequestParts {
   body?: {
     series_id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -570,7 +605,9 @@ export interface CollectionSearchUserCollectionRequest {
 }
 
 export interface CollectionSearchUserCollectionRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionSearchUserCollectionData = FrontendUnknown;
@@ -592,7 +629,9 @@ export interface CollectionGetDiscountBuyRequest {
 }
 
 export interface CollectionGetDiscountBuyRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionGetDiscountBuyData = FrontendUnknown;
@@ -614,7 +653,9 @@ export interface CollectionAntMycollectionRequest {
 }
 
 export interface CollectionAntMycollectionRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CollectionAntMycollectionData = FrontendUnknown;
@@ -641,6 +682,7 @@ export interface CollectionIsCollectRequestParts {
   body?: {
     types?: FrontendUnknown;
     id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -666,6 +708,7 @@ export interface CollectionLikeCollectionRequest {
 export interface CollectionLikeCollectionRequestParts {
   body?: {
     keyword?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -695,6 +738,7 @@ export interface CollectionUserCollectionDetailRequestParts {
     collection_id?: string | number;
     types?: FrontendUnknown;
     page?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -729,6 +773,7 @@ export interface CollectionMyConsignmentRequestParts {
     goods_type?: string | number;
     page?: string | number;
     keyword?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 

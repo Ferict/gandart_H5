@@ -21,6 +21,30 @@ export interface FrontendPageData<T = FrontendUnknown> {
 
 export type FrontendErrorCode = 400 | 401 | 702 | 710 | 3003 | 4003 | number;
 
+export interface FrontendConfigMap {
+  appLogo?: string;
+  appName?: string;
+  default_pay_type?: string | number;
+  h5_domain?: string;
+  qq_team_num?: string | number;
+  purchase_sale_details?: string | number | boolean;
+  service_image?: string;
+  comm_desc?: string;
+  draw_lots_notice?: string;
+  olduser_dayhelp_num?: string | number;
+  fastOrder_check?: string | number | boolean;
+  batchBuy_check?: string | number | boolean;
+  normal_check?: string | number | boolean;
+  synthetic_check?: string | number | boolean;
+  copyright?: FrontendUnknown;
+  [key: string]: FrontendUnknown;
+}
+
+export interface FrontendPageConfigItem {
+  content?: string;
+  [key: string]: FrontendUnknown;
+}
+
 export interface WalletRedirectInfo {
   redirect_url: string;
   [key: string]: FrontendUnknown;
@@ -106,6 +130,7 @@ export interface CommonGetMasterRankRequest {
 export interface CommonGetMasterRankRequestParts {
   body?: {
     page?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -159,12 +184,7 @@ export interface CommonGetConfigRequestParts {
   };
 }
 
-export interface CommonGetConfigData {
-  copyright?: FrontendUnknown;
-  [key: string]: FrontendUnknown;
-}
-
-export type CommonGetConfigResponse = FrontendApiResponse<CommonGetConfigData>;
+export type CommonGetConfigResponse = FrontendApiResponse<FrontendConfigMap>;
 
 // common.getFileInfo (POST /common/getAttachment)
 export const CommonGetFileInfoMeta: ApiOperationMeta = {
@@ -206,7 +226,9 @@ export interface CommonGetVersionRequest {
 }
 
 export interface CommonGetVersionRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface CommonGetVersionData {
@@ -255,7 +277,9 @@ export interface CommonGetRankingListRequest {
 }
 
 export interface CommonGetRankingListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface CommonGetRankingListData {
@@ -284,9 +308,7 @@ export interface CommonGetPageConfigRequestParts {
   body?: Record<string, never>;
 }
 
-export type CommonGetPageConfigData = FrontendUnknown;
-
-export type CommonGetPageConfigResponse = FrontendApiResponse<CommonGetPageConfigData>;
+export type CommonGetPageConfigResponse = FrontendApiResponse<FrontendPageConfigItem[]>;
 
 // common.getActiveActivities (POST /activity/accessNewActivities)
 export const CommonGetActiveActivitiesMeta: ApiOperationMeta = {
@@ -347,7 +369,9 @@ export interface CommonGetCaptRequest {
 }
 
 export interface CommonGetCaptRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CommonGetCaptData = FrontendUnknown;
@@ -369,7 +393,9 @@ export interface CommonGetTestRequest {
 }
 
 export interface CommonGetTestRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type CommonGetTestData = FrontendUnknown;

@@ -21,7 +21,9 @@ export interface UserOneLoginRequest {
 }
 
 export interface UserOneLoginRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type UserOneLoginData = FrontendUnknown;
@@ -39,11 +41,23 @@ export const UserLoginMeta: ApiOperationMeta = {
 };
 
 export interface UserLoginRequest {
+  account?: string | number;
+  password?: FrontendUnknown;
+  mobile?: FrontendUnknown;
+  captcha?: FrontendUnknown;
+  inviter_code?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface UserLoginRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+    account?: string | number;
+    password?: FrontendUnknown;
+    mobile?: FrontendUnknown;
+    captcha?: FrontendUnknown;
+    inviter_code?: FrontendUnknown;
+  };
 }
 
 export interface UserLoginData {
@@ -95,6 +109,7 @@ export interface UserSendSmsRequestParts {
     mobile?: FrontendUnknown;
     event?: FrontendUnknown;
     verify_token?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -113,11 +128,21 @@ export const UserRegisterMeta: ApiOperationMeta = {
 };
 
 export interface UserRegisterRequest {
+  mobile?: FrontendUnknown;
+  password?: FrontendUnknown;
+  code?: FrontendUnknown;
+  inviter_code?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface UserRegisterRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+    mobile?: FrontendUnknown;
+    password?: FrontendUnknown;
+    code?: FrontendUnknown;
+    inviter_code?: FrontendUnknown;
+  };
 }
 
 export interface UserRegisterData {
@@ -145,6 +170,7 @@ export interface UserUpdateUserInfoRequest {
 export interface UserUpdateUserInfoRequestParts {
   body?: {
     avatar?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -163,11 +189,17 @@ export const UserApplyCertAuthMeta: ApiOperationMeta = {
 };
 
 export interface UserApplyCertAuthRequest {
+  real_name?: FrontendUnknown;
+  id_card?: FrontendUnknown;
   [key: string]: FrontendUnknown;
 }
 
 export interface UserApplyCertAuthRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+    real_name?: FrontendUnknown;
+    id_card?: FrontendUnknown;
+  };
 }
 
 export type UserApplyCertAuthData = FrontendUnknown;
@@ -211,7 +243,9 @@ export interface UserBindBankRequest {
 }
 
 export interface UserBindBankRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type UserBindBankData = FrontendUnknown;
@@ -233,7 +267,9 @@ export interface UserSetActionPwdRequest {
 }
 
 export interface UserSetActionPwdRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type UserSetActionPwdData = FrontendUnknown;
@@ -255,7 +291,9 @@ export interface UserResetLoginPwdRequest {
 }
 
 export interface UserResetLoginPwdRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type UserResetLoginPwdData = FrontendUnknown;
@@ -277,7 +315,9 @@ export interface UserSearchUserRequest {
 }
 
 export interface UserSearchUserRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type UserSearchUserData = FrontendUnknown;
@@ -299,7 +339,9 @@ export interface UserApplyIssuerRequest {
 }
 
 export interface UserApplyIssuerRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type UserApplyIssuerData = FrontendUnknown;
@@ -346,6 +388,7 @@ export interface UserCehckPayPasswordRequest {
 export interface UserCehckPayPasswordRequestParts {
   body?: {
     pay_password?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -376,6 +419,7 @@ export interface UserFlowDocRequestParts {
   body?: {
     uc_id?: string | number;
     page?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -445,7 +489,9 @@ export interface UserBeiYaoListRequest {
 }
 
 export interface UserBeiYaoListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type UserBeiYaoListData = FrontendUnknown;
@@ -470,6 +516,7 @@ export interface UserCommisonRankRequest {
 export interface UserCommisonRankRequestParts {
   body?: {
     type?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 

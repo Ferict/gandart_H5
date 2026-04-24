@@ -38,7 +38,9 @@ export interface NoticeGetNoticeListRequest {
 }
 
 export interface NoticeGetNoticeListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface NoticeGetNoticeListData {
@@ -48,22 +50,25 @@ export interface NoticeGetNoticeListData {
 
 export type NoticeGetNoticeListResponse = FrontendApiResponse<NoticeGetNoticeListData>;
 
-// notice.getNoticeDetails (POST /index/afficheDetail/ids/)
+// notice.getNoticeDetails (POST /index/afficheDetail/ids/${id})
 export const NoticeGetNoticeDetailsMeta: ApiOperationMeta = {
   operationId: "notice.getNoticeDetails",
   method: "POST",
-  paths: ["/index/afficheDetail/ids/"],
+  paths: ["/index/afficheDetail/ids/${id}"],
   auth: false,
   status: "confirmed",
   evidence: ["api/notice/index.js:33"],
 };
 
 export interface NoticeGetNoticeDetailsRequest {
+  id?: string | number;
   [key: string]: FrontendUnknown;
 }
 
 export interface NoticeGetNoticeDetailsRequestParts {
-  body?: Record<string, never>;
+  path?: {
+    id?: string | number;
+  };
 }
 
 export type NoticeGetNoticeDetailsData = FrontendUnknown;
@@ -85,7 +90,9 @@ export interface NoticeGetMessageListRequest {
 }
 
 export interface NoticeGetMessageListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type NoticeGetMessageListData = FrontendUnknown;
@@ -176,7 +183,9 @@ export interface NoticeGetNewsListRequest {
 }
 
 export interface NoticeGetNewsListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface NoticeGetNewsListData {
@@ -226,7 +235,9 @@ export interface NoticeGetWallListRequest {
 }
 
 export interface NoticeGetWallListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export interface NoticeGetWallListData {
@@ -251,7 +262,9 @@ export interface NoticeSendRumorRequest {
 }
 
 export interface NoticeSendRumorRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type NoticeSendRumorData = FrontendUnknown;
@@ -273,7 +286,9 @@ export interface NoticeSendCommentRequest {
 }
 
 export interface NoticeSendCommentRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type NoticeSendCommentData = FrontendUnknown;
@@ -320,7 +335,9 @@ export interface NoticeGetRumorCommentRequest {
 }
 
 export interface NoticeGetRumorCommentRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type NoticeGetRumorCommentData = FrontendUnknown;
@@ -342,7 +359,9 @@ export interface NoticeGetRumorReplyRequest {
 }
 
 export interface NoticeGetRumorReplyRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type NoticeGetRumorReplyData = FrontendUnknown;

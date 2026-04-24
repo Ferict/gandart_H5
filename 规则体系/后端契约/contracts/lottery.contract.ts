@@ -1,5 +1,23 @@
 import type { ApiOperationMeta, FrontendApiResponse, FrontendPageData, FrontendUnknown, WalletRedirectInfo } from './common.contract';
 
+export interface LotteryInfoData {
+  id?: string | number;
+  remaining?: string | number;
+  type?: string | number;
+  display_lottery_log?: string | number | boolean;
+  content?: FrontendUnknown;
+  [key: string]: FrontendUnknown;
+}
+
+export interface LotteryStatisticsItem {
+  lottery_image?: string;
+  [key: string]: FrontendUnknown;
+}
+
+export interface LotteryRecordPage extends FrontendPageData<FrontendUnknown> {
+  data?: FrontendUnknown[];
+  last_page?: string | number;
+}
 
 // lottery.lotteryInfoApi (POST /lottery/info)
 export const LotteryLotteryInfoApiMeta: ApiOperationMeta = {
@@ -19,15 +37,11 @@ export interface LotteryLotteryInfoApiRequest {
 export interface LotteryLotteryInfoApiRequestParts {
   body?: {
     id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
-export interface LotteryLotteryInfoApiData {
-  content?: FrontendUnknown;
-  [key: string]: FrontendUnknown;
-}
-
-export type LotteryLotteryInfoApiResponse = FrontendApiResponse<LotteryLotteryInfoApiData>;
+export type LotteryLotteryInfoApiResponse = FrontendApiResponse<LotteryInfoData>;
 
 // lottery.lotteryStartApi (POST /lottery/start)
 export const LotteryLotteryStartApiMeta: ApiOperationMeta = {
@@ -49,6 +63,7 @@ export interface LotteryLotteryStartApiRequestParts {
   body?: {
     lotteryId?: string | number;
     number?: FrontendUnknown;
+    [key: string]: FrontendUnknown;
   };
 }
 
@@ -74,12 +89,11 @@ export interface LotteryLotteryStatisticsRequest {
 export interface LotteryLotteryStatisticsRequestParts {
   body?: {
     lottery_id?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
-export type LotteryLotteryStatisticsData = FrontendUnknown;
-
-export type LotteryLotteryStatisticsResponse = FrontendApiResponse<LotteryLotteryStatisticsData>;
+export type LotteryLotteryStatisticsResponse = FrontendApiResponse<LotteryStatisticsItem[]>;
 
 // lottery.lotteryRecord (POST /lottery/record)
 export const LotteryLotteryRecordMeta: ApiOperationMeta = {
@@ -103,9 +117,8 @@ export interface LotteryLotteryRecordRequestParts {
     type?: string | number;
     lottery_id?: string | number;
     page?: string | number;
+    [key: string]: FrontendUnknown;
   };
 }
 
-export type LotteryLotteryRecordData = FrontendUnknown;
-
-export type LotteryLotteryRecordResponse = FrontendApiResponse<LotteryLotteryRecordData>;
+export type LotteryLotteryRecordResponse = FrontendApiResponse<LotteryRecordPage>;

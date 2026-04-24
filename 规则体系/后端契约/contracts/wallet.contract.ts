@@ -30,7 +30,9 @@ export interface WalletGetWalletInfoRequest {
 }
 
 export interface WalletGetWalletInfoRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletGetWalletInfoData = FrontendUnknown;
@@ -74,7 +76,9 @@ export interface WalletVerifyMobileCodeForLLRequest {
 }
 
 export interface WalletVerifyMobileCodeForLLRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletVerifyMobileCodeForLLData = FrontendUnknown;
@@ -96,7 +100,9 @@ export interface WalletSupplementInfoRequest {
 }
 
 export interface WalletSupplementInfoRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletSupplementInfoData = FrontendUnknown;
@@ -140,7 +146,9 @@ export interface WalletOrderSmsCheckRequest {
 }
 
 export interface WalletOrderSmsCheckRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletOrderSmsCheckData = FrontendUnknown;
@@ -162,7 +170,9 @@ export interface WalletRechargeRequest {
 }
 
 export interface WalletRechargeRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletRechargeData = FrontendUnknown;
@@ -184,7 +194,9 @@ export interface WalletWithdrawalRequest {
 }
 
 export interface WalletWithdrawalRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletWithdrawalData = FrontendUnknown;
@@ -206,7 +218,9 @@ export interface WalletGetWithdrawalRequest {
 }
 
 export interface WalletGetWithdrawalRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletGetWithdrawalData = FrontendUnknown;
@@ -228,7 +242,9 @@ export interface WalletGetWalletDetailListRequest {
 }
 
 export interface WalletGetWalletDetailListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletGetWalletDetailListData = FrontendUnknown;
@@ -250,7 +266,9 @@ export interface WalletGetLLBankListRequest {
 }
 
 export interface WalletGetLLBankListRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletGetLLBankListData = FrontendUnknown;
@@ -272,7 +290,9 @@ export interface WalletSetLlDeaultBankRequest {
 }
 
 export interface WalletSetLlDeaultBankRequestParts {
-  body?: Record<string, never>;
+  body?: {
+    [key: string]: FrontendUnknown;
+  };
 }
 
 export type WalletSetLlDeaultBankData = FrontendUnknown;
