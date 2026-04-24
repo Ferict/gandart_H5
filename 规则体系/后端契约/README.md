@@ -64,6 +64,8 @@
     - `P11.12.1` 内部适配基线冻结记录
 11. `p11.12.2-delta-matrix.md`
     - `P11.12.2` 当前前端内容域契约与项目级后端契约的差异矩阵
+12. `p11.12.3-bridge-architecture.md`
+    - `P11.12.3` 全量前端现用接口与后端契约接驳架构口径
 
 补充说明：
 1. 本目录正文树已于 2026-04-25 完成物理迁入，不再只是入口 README。
@@ -102,6 +104,15 @@
 2. 矩阵性质：迁移设计输入，不是代码改造结果。
 3. 核心结论：当前前端内容域是 5 个抽象聚合接口；项目级后端契约是 190 个旧 H5 具体业务 wrapper，不能一一直接替换。
 4. 迁移方向：保留当前 content port/view-model，对后端具体 wrapper 做 implementation/adapter 组合映射。
+
+## 4.3 P11.12.3 当前接驳架构
+
+`P11.12.3` 已把后续接口结构改造收敛为全量接驳架构：
+
+1. 接驳架构：[p11.12.3-bridge-architecture.md](/H:/工作/天异/uniapp+vue新架构/规则体系/后端契约/p11.12.3-bridge-architecture.md)
+2. 架构性质：实现和迁移口径，不是新的后端 contract 正文。
+3. 核心结论：不能让页面直连 190 个后端 wrapper；必须通过 backend implementation、DTO adapter、runtime/service 和 view-model 接到 UI。
+4. 后续入口：先做全仓现用接口盘点，再做 provider/mock 过渡和分线迁移。
 
 ## 5. 必须明显标识为未确认的层
 
