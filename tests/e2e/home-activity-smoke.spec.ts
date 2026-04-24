@@ -26,7 +26,12 @@ test('activity tab keeps core interactions stable', async ({ page }) => {
     )
     await expect(page.locator('.home-activity-panel')).toBeVisible()
     await expect(page.locator('.home-activity-header-title')).toBeVisible()
+    await expect(page.locator('.home-activity-section-head')).toBeVisible()
+    await expect(page.locator('.home-activity-section-title')).toBeVisible()
+    await expect(page.locator('.home-activity-notice-list')).toBeVisible()
     await ensureRealNoticeCards()
+    await expect(noticeCards.first().locator('.home-activity-notice-title-row')).toBeVisible()
+    await expect(noticeCards.first().locator('.home-activity-notice-meta')).toBeVisible()
   }
 
   const assertRouteChangedFromActivity = async () => {
@@ -59,6 +64,7 @@ test('activity tab keeps core interactions stable', async ({ page }) => {
   }
   await ensureRealNoticeCards()
   await expect(page.locator('.home-activity-notice-empty-state:not(.is-error)')).toHaveCount(0)
+  await expect(page.locator('.home-activity-notice-list')).toBeVisible()
 
   const searchTrigger = page.locator('.home-activity-section-action-entry').first()
   await searchTrigger.click()
@@ -86,6 +92,10 @@ test('activity tab keeps core interactions stable', async ({ page }) => {
     await expect(page.locator('.home-activity-notice-empty-state:not(.is-error)')).toHaveCount(0)
   }
 
+  const activityFooter = page.locator('.home-list-loading-footer')
+  if (await activityFooter.count()) {
+    await expect(activityFooter.first()).toBeVisible()
+  }
   await expect(page.locator('.home-list-loading-footer.is-error')).toHaveCount(0)
 
   const dateFilterTrigger = page.locator('.home-activity-section-action-entry').nth(1)
@@ -121,6 +131,8 @@ test('activity tab keeps core interactions stable', async ({ page }) => {
   expect(firstNoticeIconBox.width).toBeGreaterThanOrEqual(48)
   expect(firstNoticeIconBox.height).toBeGreaterThanOrEqual(48)
   await expect(firstNoticeCard.locator('.home-activity-notice-title')).toBeVisible()
+  await expect(firstNoticeCard.locator('.home-activity-notice-title-row')).toBeVisible()
+  await expect(firstNoticeCard.locator('.home-activity-notice-meta')).toBeVisible()
 
   await noticeCards.first().click()
   await assertRouteChangedFromActivity()

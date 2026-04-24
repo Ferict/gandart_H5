@@ -12,6 +12,16 @@ test('home 页面能正常渲染关键内容并保持市场交互稳定', async 
     (fragment) => window.location.hash.includes(fragment),
     '/pages/home/index'
   )
+  await expect(page.locator('.home-panel')).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-banner-carousel')).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-banner-entry').first()).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-notice-hit')).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-notice-bar')).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-notice-title').first()).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-featured-layout')).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-featured-info-card')).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-featured-visual')).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.home-market-results-stage')).toBeVisible({ timeout: 15000 })
   await expect(page.getByText('公告：')).toBeVisible({ timeout: 15000 })
   await expect(page.getByText('藏品市场')).toBeVisible({ timeout: 15000 })
   await expect(page.locator('img[src*="tianyi.svg"]').first()).toBeVisible({ timeout: 15000 })
@@ -62,6 +72,7 @@ test('home 页面能正常渲染关键内容并保持市场交互稳定', async 
     })
     .toBeGreaterThan(0)
   await expect(page.locator('.home-market-card-name').first()).toBeVisible()
+  await expect(page.locator('.home-market-results-stage')).toBeVisible()
   await expect(page.locator('.home-list-loading-footer.is-error')).toHaveCount(0)
 
   expect(pageErrors).toEqual([])
