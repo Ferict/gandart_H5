@@ -28,7 +28,7 @@
 | user.login | userinfo.is_exist | pages/login/login.vue | Level B | pages/login/login.vue:287 login |
 | user.register | userinfo.is_exist | pages/login/register.vue | Level B | pages/login/register.vue:253 register |
 | user.register | userinfo.token | pages/login/register.vue | Level B | pages/login/register.vue:256 register |
-| lottery.lotteryInfoApi | content | pages/lottery/lottery - 副本.vue | Level B | pages/lottery/lottery - 副本.vue:79 lotteryInfoApi<br>pages/lottery/lottery.vue:150 lotteryInfoApi |
+| lottery.lotteryInfoApi | content | pages/lottery/lottery - 副本.vue | Level B | pages/lottery/lottery - 副本.vue:79 lotteryInfoApi<br>pages/lottery/lottery.vue:150 lotteryInfoApi<br>pages/lottery/lottery.vue:150 |
 | trad.getBegBuyList | data | pages/market/components/BegBuyList.vue | Level B | pages/market/components/BegBuyList.vue:106 getBegBuyList |
 | trad.getBegBuyList | per_page | pages/market/components/BegBuyList.vue | Level B | pages/market/components/BegBuyList.vue:110 getBegBuyList |
 | trad.getBegBuyList | total | pages/market/components/BegBuyList.vue | Level B | pages/market/components/BegBuyList.vue:113 getBegBuyList |
@@ -82,6 +82,73 @@
 | draw.draw | $primitive:string | pages/activity/draw.vue | Level B | pages/activity/draw.vue:258 |
 | draw.drawRecord | $array | pages/activity/draw.vue | Level B | pages/activity/draw.vue:247 |
 | draw.drawLog | $array | pages/activity/record.vue | Level B | pages/activity/record.vue:45 |
+| collection.getCalenderList | id | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | batch_id | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | goods_type | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | listimg | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | name | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | publisher.company_logo | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | publisher.name | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | total_num | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | price | components/w-index-collection/w-index-collection.vue | Level B | components/w-index-collection/w-index-collection.vue:20 |
+| market.getMarketList | id | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.id | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | goods_type | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.goods_type | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | flux | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.flux | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | is_out | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.is_out | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | total_num | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.total_num | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | min_price | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.min_price | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | price | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.price | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | product.id | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.product.id | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | product.listimg | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.product.listimg | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | product.name | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | data.product.name | pages/market/components/marketCard.vue | Level B | pages/market/components/marketCard.vue:2 |
+| order.getOrderDetails | order_status | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | order_type | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | surplus_time_text | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | updatetime | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | goods_type | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | price | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | total_price | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | goods_cover_image | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | goods_name | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | collection_code | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | num | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | order_sn | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | pay_way | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | card | pages/order/defaultDetail.vue | Level B | pages/order/defaultDetail.vue:39 |
+| lottery.lotteryInfoApi | id | pages/lottery/lottery.vue | Level B | pages/lottery/lottery.vue:32 |
+| lottery.lotteryInfoApi | remaining | pages/lottery/lottery.vue | Level B | pages/lottery/lottery.vue:32 |
+| lottery.lotteryInfoApi | type | pages/lottery/lottery.vue | Level B | pages/lottery/lottery.vue:32 |
+| lottery.lotteryInfoApi | display_lottery_log | pages/lottery/lottery.vue | Level B | pages/lottery/lottery.vue:32 |
+| lottery.lotteryStatistics | $array | pages/lottery/lottery.vue | Level B | pages/lottery/lottery.vue:138 |
+| lottery.lotteryStatistics | lottery_image | pages/lottery/lottery.vue | Level B | pages/lottery/lottery.vue:14 |
+| lottery.lotteryRecord | data | pages/lottery/record.vue | Level B | pages/lottery/record.vue:96 |
+| lottery.lotteryRecord | last_page | pages/lottery/record.vue | Level B | pages/lottery/record.vue:99 |
+| common.getConfig | appLogo | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | appName | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | default_pay_type | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | h5_domain | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | qq_team_num | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | purchase_sale_details | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | service_image | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | comm_desc | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | draw_lots_notice | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | olduser_dayhelp_num | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | fastOrder_check | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | batchBuy_check | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | normal_check | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getConfig | synthetic_check | store/modules/config.js | Level B | store/modules/config.js:41 |
+| common.getPageConfig | $array | store/modules/config.js | Level B | store/modules/config.js:93 |
+| common.getPageConfig | content | store/modules/config.js | Level B | store/modules/config.js:96 |
 | collection.getUserCollectionDetails | product | pages/myCollection/collectionDetails.vue | Level B | pages/myCollection/collectionDetails.vue:62 |
 | collection.getUserCollectionDetails | types | pages/myCollection/collectionDetails.vue | Level B | pages/myCollection/collectionDetails.vue:62 |
 | collection.getUserCollectionDetails | user_hash | pages/myCollection/collectionDetails.vue | Level B | pages/myCollection/collectionDetails.vue:62 |

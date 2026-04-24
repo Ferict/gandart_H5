@@ -15,7 +15,7 @@
 | banner.getBannerList | wrapper | - | api/banner/index.js:11 getBannerList |
 | banner.getBannerList | endpoint variant | /banner/show/getBanner | api/banner/index.js:11 getBannerList |
 | box.getBoxDetails | wrapper | - | api/box/index.js:10 getBoxDetails |
-| box.getBoxDetails | endpoint variant | /box/blind_box/BoxDetail/ids/ | api/box/index.js:10 getBoxDetails |
+| box.getBoxDetails | endpoint variant | /box/blind_box/BoxDetail/ids/${id} | api/box/index.js:10 getBoxDetails |
 | box.openBox | wrapper | - | api/box/index.js:22 openBox |
 | box.openBox | endpoint variant | /user_collection/user_collection/openbox | api/box/index.js:22 openBox |
 | box.openBoxs | wrapper | - | api/box/index.js:32 openBoxs |
@@ -197,7 +197,7 @@
 | notice.getNoticeList | wrapper | - | api/notice/index.js:21 getNoticeList |
 | notice.getNoticeList | endpoint variant | /index/afficheList | api/notice/index.js:21 getNoticeList |
 | notice.getNoticeDetails | wrapper | - | api/notice/index.js:33 getNoticeDetails |
-| notice.getNoticeDetails | endpoint variant | /index/afficheDetail/ids/ | api/notice/index.js:33 getNoticeDetails |
+| notice.getNoticeDetails | endpoint variant | /index/afficheDetail/ids/${id} | api/notice/index.js:33 getNoticeDetails |
 | notice.getMessageList | wrapper | - | api/notice/index.js:44 getMessageList |
 | notice.getMessageList | endpoint variant | /user/newList | api/notice/index.js:44 getMessageList |
 | notice.readMessage | wrapper | - | api/notice/index.js:57 readMessage |
@@ -425,15 +425,15 @@
 | collection.getSelfSeries | request field | body.type | pages/market/categoryManager.vue:83 getSelfSeries |
 | collection.addSelfSeries | request field | body.series_id | pages/market/categoryManager.vue:93 addSelfSeries |
 | collection.removeSelfSeries | request field | body.series_id | pages/market/categoryManager.vue:102 removeSelfSeries |
-| order.bacthCreateOrder | request field | body.key | pages/market/components/batchConfirm.vue:112 bacthCreateOrder |
 | order.bacthCreateOrder | request field | body.goods_id | pages/market/components/batchConfirm.vue:112 bacthCreateOrder |
+| order.bacthCreateOrder | request field | body.key | pages/market/components/batchConfirm.vue:112 bacthCreateOrder |
 | market.getMarketGoodsInfo | request field | body.id | pages/market/marketGoodsList.vue:371 getMarketGoodsInfo<br>pages/market/sellInfo.vue:102 getMarketGoodsInfo |
 | market.getMarketGoodsInfo | request field | body.type | pages/market/marketGoodsList.vue:371 getMarketGoodsInfo<br>pages/market/sellInfo.vue:102 getMarketGoodsInfo |
 | order.fastCreateOrder | request field | body.goods_id | pages/market/marketGoodsList.vue:304 fastCreateOrder |
 | order.fastCreateOrder | request field | body.key | pages/market/marketGoodsList.vue:304 fastCreateOrder |
 | order.fastCreateOrder | request field | body.pay_way | pages/market/marketGoodsList.vue:304 fastCreateOrder |
-| trad.sell | request field | body.sell_data | pages/market/sellBegBuy.vue:225 sell |
 | trad.sell | request field | body.pay_way | pages/market/sellBegBuy.vue:225 sell |
+| trad.sell | request field | body.sell_data | pages/market/sellBegBuy.vue:225 sell |
 | trad.sell | request field | body.pay_password | pages/market/sellBegBuy.vue:225 sell |
 | user.cehckPayPassword | request field | body.pay_password | pages/my/actionPwd/getCode.vue:212 cehckPayPassword |
 | address.address_detail | request field | body.id | pages/my/address/edit.vue:131 address_detail |
@@ -476,7 +476,7 @@
 | shop.shop.exchange | request field | body.number | pages/shop/exchange.vue:189 exchange |
 | shop.shop.exchange | request field | body.address_id | pages/shop/exchange.vue:189 exchange |
 | shop.shop.exchange | request field | body.pay_password | pages/shop/exchange.vue:189 exchange |
-| collection.getSeriesList | request field | body.type | store/modules/goods.js:32 getSeriesList<br>store/modules/goods.js:35 getSeriesList |
+| collection.getSeriesList | request field | query.type | store/modules/goods.js:32 getSeriesList<br>store/modules/goods.js:35 getSeriesList |
 | order.doPay | request field | body.pay_type | utils/payUtil.js:49 doPay |
 | order.doPay | request field | body.order_number | utils/payUtil.js:49 doPay |
 | order.doPay | request field | body.order_type | utils/payUtil.js:49 doPay |
@@ -484,42 +484,209 @@
 | order.doPay | request field | body.pay_scene | utils/payUtil.js:49 doPay |
 | order.doPay | request field | body.returnurl | utils/payUtil.js:49 doPay |
 | order.doPay | request field | body.pay_password | utils/payUtil.js:49 doPay |
+| address.add_edit_address | request field | body.* | api/address/index.js:19 add_edit_address |
+| address.address_detail | request field | body.* | api/address/index.js:28 address_detail |
+| address.address_delete | request field | body.* | api/address/index.js:37 address_delete |
+| banner.getBannerList | request field | body.* | api/banner/index.js:11 getBannerList |
+| box.getBoxDetails | request field | path.id | api/box/index.js:10 getBoxDetails |
 | box.getBoxDetails | request field | query.origin | api/box/index.js:10 getBoxDetails |
 | box.getBoxDetails | request field | query.crystal_goods_id | api/box/index.js:10 getBoxDetails |
 | box.openBox | request field | body.openid | api/box/index.js:22 openBox |
 | box.openBoxs | request field | body.openid | api/box/index.js:32 openBoxs |
+| box.getOpenRecord | request field | body.* | api/box/index.js:49 getOpenRecord |
+| collection.getCollectionList | request field | body.* | api/collection/index.js:9 getCollectionList |
+| collection.getCalenderList | request field | body.* | api/collection/index.js:19 getCalenderList |
 | collection.getCollectionDetails | request field | path.id | api/collection/index.js:29 getCollectionDetails |
 | collection.getCollectionDetails | request field | query.batch_id | api/collection/index.js:29 getCollectionDetails |
+| collection.getUserSeriesList | request field | body.* | api/collection/index.js:41 getUserSeriesList |
+| collection.getListDetail | request field | body.* | api/collection/index.js:50 getListDetail |
+| collection.getUserCollectionDetailsList | request field | body.* | api/collection/index.js:60 getUserCollectionDetailsList |
 | collection.getUserCollectionDetails | request field | path.id | api/collection/index.js:70 getUserCollectionDetails |
 | collection.getSellConfig | request field | body.price | api/collection/index.js:79 getSellConfig |
 | collection.getSellConfig | request field | body.user_collection_id | api/collection/index.js:79 getSellConfig |
+| collection.sellProduct | request field | body.* | api/collection/index.js:92 sellProduct |
+| collection.givingProduct | request field | body.* | api/collection/index.js:108 givingProduct |
+| collection.givingProductOrder | request field | body.* | api/collection/index.js:117 givingProductOrder |
+| collection.getCompoundList | request field | body.* | api/collection/index.js:127 getCompoundList |
 | collection.getCompoundDetails | request field | body.box_id | api/collection/index.js:137 getCompoundDetails |
 | collection.buildCollection | request field | body.* | api/collection/index.js:149 buildCollection |
 | collection.getCompoundRecord | request field | body.* | api/collection/index.js:158 getCompoundRecord |
+| collection.getGiveRecord | request field | body.* | api/collection/index.js:168 getGiveRecord |
 | collection.getMoveRecord | request field | body.user_collection_id | api/collection/index.js:178 getMoveRecord |
+| collection.getSeriesList | request field | query.* | api/collection/index.js:193 getSeriesList |
+| collection.getSelfSeries | request field | body.* | api/collection/index.js:207 getSelfSeries |
+| collection.addSelfSeries | request field | body.* | api/collection/index.js:221 addSelfSeries |
+| collection.removeSelfSeries | request field | body.* | api/collection/index.js:237 removeSelfSeries |
 | collection.getSeriesGoodsList | request field | body.series_id | api/collection/index.js:251 getSeriesGoodsList |
+| collection.searchUserCollection | request field | body.* | api/collection/index.js:266 searchUserCollection |
+| collection.getDiscountBuy | request field | body.* | api/collection/index.js:279 getDiscountBuy |
+| collection.antMycollection | request field | body.* | api/collection/index.js:288 antMycollection |
+| collection.isCollect | request field | body.* | api/collection/index.js:297 isCollect |
+| collection.likeCollection | request field | body.* | api/collection/index.js:307 likeCollection |
+| collection.user_collection_Detail | request field | body.* | api/collection/index.js:316 user_collection_Detail |
+| collection.myConsignment | request field | body.* | api/collection/index.js:325 myConsignment |
 | common.getUserRank | request field | body.user_id | api/common/index.js:16 getUserRank |
+| common.getMasterRank | request field | body.* | api/common/index.js:27 getMasterRank |
 | common.setClickNum | request field | body.id | api/common/index.js:36 setClickNum |
 | common.getConfig | request field | body.key | api/common/index.js:50 getConfig |
 | common.getFileInfo | request field | body.url | api/common/index.js:66 getFileInfo |
+| common.getVersion | request field | body.* | api/common/index.js:80 getVersion |
+| common.getRankingList | request field | body.* | api/common/index.js:99 getRankingList |
+| common.getCapt | request field | body.* | api/common/index.js:147 getCapt |
+| common.getTest | request field | body.* | api/common/index.js:157 getTest |
+| compound.themeinfo | request field | body.* | api/compound/index.js:4 themeinfo |
+| compound.material | request field | body.* | api/compound/index.js:13 material |
+| compound.playInfo | request field | body.* | api/compound/index.js:22 playInfo |
+| compound.selectCollection | request field | body.* | api/compound/index.js:31 selectCollection |
+| compound.synthesizeNow | request field | body.* | api/compound/index.js:40 synthesizeNow |
+| compound.recordInfo | request field | body.* | api/compound/index.js:49 recordInfo |
+| compound.recordList | request field | body.* | api/compound/index.js:58 recordList |
 | draw.getDraw | request field | body.id | api/draw/index.js:5 getDraw |
 | draw.draw | request field | body.id | api/draw/index.js:15 draw |
 | draw.drawLog | request field | body.id | api/draw/index.js:26 drawLog |
 | draw.drawRecord | request field | body.id | api/draw/index.js:37 drawRecord |
+| ext.invitercompound | request field | body.* | api/ext/index.js:4 invitercompound |
+| integral.get_score_list | request field | body.* | api/integral/index.js:4 get_score_list |
+| integral.get_my_share_details | request field | body.* | api/integral/index.js:15 get_my_share_details |
+| integral.shareSub | request field | body.* | api/integral/index.js:25 shareSub |
+| integral.getGoodsList | request field | body.* | api/integral/index.js:34 getGoodsList |
+| integral.goodsDetailsApi | request field | body.* | api/integral/index.js:51 goodsDetailsApi |
+| integral.huodouOrder | request field | body.* | api/integral/index.js:60 huodouOrder |
+| integral.huodouList | request field | body.* | api/integral/index.js:69 huodouList |
+| integral.huodouDetail | request field | body.* | api/integral/index.js:78 huodouDetail |
+| integral.getScoreGuessList | request field | body.* | api/integral/index.js:90 getScoreGuessList |
+| integral.guess_detail | request field | body.* | api/integral/index.js:99 guess_detail |
+| integral.get_my_score_guess_list | request field | body.* | api/integral/index.js:108 get_my_score_guess_list |
+| integral.join_guess | request field | body.* | api/integral/index.js:117 join_guess |
+| integral.guess_success | request field | body.* | api/integral/index.js:126 guess_success |
+| integral.get_my_guess | request field | body.* | api/integral/index.js:135 get_my_guess |
+| lottery.lotteryInfoApi | request field | body.* | api/lottery/index.js:4 lotteryInfoApi |
+| lottery.lotteryStartApi | request field | body.* | api/lottery/index.js:13 lotteryStartApi |
+| lottery.lotteryStatistics | request field | body.* | api/lottery/index.js:22 lotteryStatistics |
+| lottery.lotteryRecord | request field | body.* | api/lottery/index.js:31 lotteryRecord |
+| market.getMarketBoxList | request field | body.* | api/market/index.js:9 getMarketBoxList |
+| market.ranking | request field | body.* | api/market/index.js:22 ranking |
+| market.getMarketList | request field | body.* | api/market/index.js:34 getMarketList |
+| market.getMarketGoodsList | request field | body.* | api/market/index.js:44 getMarketGoodsList |
+| market.changeMarketGoods | request field | body.* | api/market/index.js:53 changeMarketGoods |
+| market.getMarketGoodsInfo | request field | body.* | api/market/index.js:63 getMarketGoodsInfo |
 | market.getMarketDetails | request field | path.id | api/market/index.js:72 getMarketDetails |
 | news.getNoticeList | request field | body.type | api/news/index.js:21 getNoticeList |
 | news.getDetails | request field | body.id | api/news/index.js:33 getDetails |
+| notice.getNoticeList | request field | body.* | api/notice/index.js:21 getNoticeList |
+| notice.getNoticeDetails | request field | path.id | api/notice/index.js:33 getNoticeDetails |
+| notice.getMessageList | request field | body.* | api/notice/index.js:44 getMessageList |
 | notice.readMessage | request field | body.id | api/notice/index.js:57 readMessage |
+| notice.getNewsList | request field | body.* | api/notice/index.js:94 getNewsList |
 | notice.getNewsDetails | request field | body.news_id | api/notice/index.js:103 getNewsDetails |
+| notice.getWallList | request field | body.* | api/notice/index.js:116 getWallList |
+| notice.sendRumor | request field | body.* | api/notice/index.js:126 sendRumor |
+| notice.sendComment | request field | body.* | api/notice/index.js:137 sendComment |
 | notice.getRumorDetails | request field | body.id | api/notice/index.js:151 getRumorDetails |
+| notice.getRumorComment | request field | body.* | api/notice/index.js:165 getRumorComment |
+| notice.getRumorReply | request field | body.* | api/notice/index.js:180 getRumorReply |
+| order.getOderList | request field | body.* | api/order/index.js:10 getOderList |
+| order.createOrder | request field | body.* | api/order/index.js:20 createOrder |
+| order.createMarketOrder | request field | body.* | api/order/index.js:30 createMarketOrder<br>pages/order/orderSubmit.vue:207 |
+| order.createMarketOrderPush | request field | body.* | api/order/index.js:38 createMarketOrderPush |
 | order.getOrderDetails | request field | path.id | api/order/index.js:48 getOrderDetails |
 | order.getRegiftOrderDetails | request field | path.id | api/order/index.js:62 getRegiftOrderDetails |
 | order.getMarketOrderDetails | request field | body.order_id | api/order/index.js:72 getMarketOrderDetails |
+| order.changeOrderStatus | request field | body.* | api/order/index.js:86 changeOrderStatus |
+| order.doPay | request field | body.* | api/order/index.js:112 doPay |
+| order.signUpDraw | request field | body.* | api/order/index.js:125 signUpDraw |
+| order.queryDrawStatus | request field | body.* | api/order/index.js:138 queryDrawStatus |
+| order.queryDramOrSignUpList | request field | body.* | api/order/index.js:150 queryDramOrSignUpList |
+| order.fastCreateOrder | request field | body.* | api/order/index.js:161 fastCreateOrder<br>pages/market/marketGoodsList.vue:304 |
+| order.bacthCreateOrder | request field | body.* | api/order/index.js:175 bacthCreateOrder |
+| order.cancelBatchOrder | request field | body.* | api/order/index.js:185 cancelBatchOrder |
+| order.createBatchPayOrder | request field | body.* | api/order/index.js:204 createBatchPayOrder |
+| order.order.getOderList | request field | body.* | api/order/order.js:9 getOderList |
+| order.order.createOrder | request field | body.* | api/order/order.js:19 createOrder |
+| order.order.createMarketOrder | request field | body.* | api/order/order.js:29 createMarketOrder |
 | order.order.getOrderDetails | request field | path.id | api/order/order.js:41 getOrderDetails |
+| order.order.changeOrderStatus | request field | body.* | api/order/order.js:56 changeOrderStatus |
+| order.order.doPay | request field | body.* | api/order/order.js:77 doPay |
+| order.order.signUpDraw | request field | body.* | api/order/order.js:90 signUpDraw |
+| order.order.queryDrawStatus | request field | body.* | api/order/order.js:103 queryDrawStatus |
+| order.order.queryDramOrSignUpList | request field | body.* | api/order/order.js:115 queryDramOrSignUpList |
+| order.order.openHfWallet | request field | body.* | api/order/order.js:124 openHfWallet |
+| order.order.getWalletAddr | request field | body.* | api/order/order.js:131 getWalletAddr |
+| order.order.CreateHuifuAccountOrder | request field | body.* | api/order/order.js:141 CreateHuifuAccountOrder |
+| shop.shop.goodsList | request field | body.* | api/shop/shop.js:5 goodsList |
+| shop.shop.crystalDetail | request field | body.* | api/shop/shop.js:14 crystalDetail |
+| shop.shop.exchangeRecord | request field | body.* | api/shop/shop.js:22 exchangeRecord |
+| shop.shop.getGoodsInfo | request field | body.* | api/shop/shop.js:33 getGoodsInfo |
+| shop.shop.exchange | request field | body.* | api/shop/shop.js:44 exchange |
+| shop.shop.getECardPass | request field | body.* | api/shop/shop.js:53 getECardPass |
+| subscribe.subscribe | request field | body.* | api/subscribe/index.js:7 subscribe |
 | trad.getTradInfo | request field | body.collection_id | api/trad/index.js:5 getTradInfo |
+| trad.createTradOrder | request field | body.* | api/trad/index.js:17 createTradOrder |
 | trad.getMyBegInfo | request field | body.order_id | api/trad/index.js:26 getMyBegInfo |
+| trad.getMyTradeList | request field | body.* | api/trad/index.js:36 getMyTradeList |
+| trad.getBegBuyList | request field | body.* | api/trad/index.js:45 getBegBuyList |
 | trad.cancelBegBuy | request field | body.order_id | api/trad/index.js:54 cancelBegBuy |
+| trad.getSellBegInfo | request field | body.* | api/trad/index.js:64 getSellBegInfo |
+| trad.sell | request field | body.* | api/trad/index.js:73 sell |
+| trad.getSellInfo | request field | body.* | api/trad/index.js:82 getSellInfo |
+| user.oneLogin | request field | body.* | api/user/index.js:9 oneLogin |
+| user.login | request field | body.* | api/user/index.js:23 login |
+| user.sendSms | request field | body.* | api/user/index.js:49 sendSms |
+| user.register | request field | body.* | api/user/index.js:63 register |
+| user.updateUserInfo | request field | body.* | api/user/index.js:75 updateUserInfo |
+| user.applyCertAuth | request field | body.* | api/user/index.js:87 applyCertAuth |
+| user.bindBank | request field | body.* | api/user/index.js:111 bindBank |
+| user.setActionPwd | request field | body.* | api/user/index.js:123 setActionPwd |
+| user.resetLoginPwd | request field | body.* | api/user/index.js:135 resetLoginPwd |
+| user.searchUser | request field | body.* | api/user/index.js:147 searchUser |
+| user.applyIssuer | request field | body.* | api/user/index.js:159 applyIssuer |
+| user.cehckPayPassword | request field | body.* | api/user/index.js:182 cehckPayPassword |
+| user.flowDoc | request field | body.* | api/user/index.js:191 flowDoc |
 | user.delAccount | request field | body.payPassword | api/user/index.js:204 delAccount |
+| user.bei_yao_list | request field | body.* | api/user/index.js:224 bei_yao_list |
+| user.commison_rank | request field | body.* | api/user/index.js:232 commison_rank |
+| wallet.getWalletInfo | request field | body.* | api/wallet/index.js:10 getWalletInfo |
+| wallet.verifyMobileCodeForLL | request field | body.* | api/wallet/index.js:38 verifyMobileCodeForLL |
+| wallet.supplementInfo | request field | body.* | api/wallet/index.js:53 supplementInfo |
+| wallet.orderSmsCheck | request field | body.* | api/wallet/index.js:80 orderSmsCheck |
+| wallet.recharge | request field | body.* | api/wallet/index.js:92 recharge |
+| wallet.withdrawal | request field | body.* | api/wallet/index.js:105 withdrawal |
+| wallet.getWithdrawal | request field | body.* | api/wallet/index.js:118 getWithdrawal |
+| wallet.getWalletDetailList | request field | body.* | api/wallet/index.js:130 getWalletDetailList |
+| wallet.getLLBankList | request field | body.* | api/wallet/index.js:143 getLLBankList |
+| wallet.setLlDeaultBank | request field | body.* | api/wallet/index.js:156 setLlDeaultBank |
+| user.login | request field | body.account | pages/login/login.vue:126 |
+| user.login | request field | body.password | pages/login/login.vue:127 |
+| user.login | request field | body.mobile | pages/login/login.vue:130 |
+| user.login | request field | body.captcha | pages/login/login.vue:132 |
+| user.login | request field | body.inviter_code | pages/login/login.vue:274 |
+| user.register | request field | body.mobile | pages/login/register.vue:106 |
+| user.register | request field | body.password | pages/login/register.vue:107 |
+| user.register | request field | body.code | pages/login/register.vue:108 |
+| user.register | request field | body.inviter_code | pages/login/register.vue:138 |
+| user.applyCertAuth | request field | body.real_name | pages/certification/components/certificationForm.vue:49 |
+| user.applyCertAuth | request field | body.id_card | pages/certification/components/certificationForm.vue:50 |
+| market.getMarketBoxList | request field | body.goods_type | pages/market/market.vue:48 |
+| market.getMarketBoxList | request field | body.page | pages/market/market.vue:48 |
+| market.getMarketBoxList | request field | body.list_rows | pages/market/market.vue:48 |
+| market.getMarketBoxList | request field | body.series_id | pages/market/market.vue:48 |
+| market.getMarketBoxList | request field | body.new | pages/market/market.vue:48 |
+| market.getMarketBoxList | request field | body.price | pages/market/market.vue:48 |
+| market.getMarketBoxList | request field | body.keywords | pages/market/search.vue:50 |
+| market.getMarketList | request field | body.goods_type | pages/market/market.vue:48 |
+| market.getMarketList | request field | body.page | pages/market/market.vue:48 |
+| market.getMarketList | request field | body.list_rows | pages/market/market.vue:48 |
+| market.getMarketList | request field | body.series_id | pages/market/market.vue:48 |
+| market.getMarketList | request field | body.keywords | pages/market/search.vue:50 |
+| market.getMarketGoodsList | request field | body.page | pages/market/marketGoodsList.vue:184 |
+| market.getMarketGoodsList | request field | body.sort | pages/market/marketGoodsList.vue:184 |
+| market.getMarketGoodsList | request field | body.type | pages/market/marketGoodsList.vue:184 |
+| market.getMarketGoodsList | request field | body.id | pages/market/marketGoodsList.vue:184 |
+| market.getMarketGoodsList | request field | body.order | pages/market/marketGoodsList.vue:401 |
+| order.order.signUpDraw | request field | body.goods_id | components/z-draw-actionV2/z-draw-actionV2.vue:184 |
+| order.order.signUpDraw | request field | body.goods_type | components/z-draw-actionV2/z-draw-actionV2.vue:184 |
+| order.order.signUpDraw | request field | body.helpucode | components/z-draw-actionV2/z-draw-actionV2.vue:188 |
+| order.order.signUpDraw | request field | body.newuser | components/z-draw-actionV2/z-draw-actionV2.vue:188 |
 | notice.getNoticeList | response field | data | components/w-notice/w-notice.vue:45 getNoticeList<br>pages/notice/components/notice-list.vue:144 getNoticeList |
 | order.createOrder | response field | order_sn | components/w-product-action/order-submit-pop.vue:149 createOrder<br>pages/order/orderSubmit.vue:201 createOrder |
 | order.createOrder | response field | order_id | components/w-product-action/order-submit-pop.vue:150 createOrder<br>pages/order/orderSubmit.vue:202 createOrder |
@@ -544,7 +711,7 @@
 | user.login | response field | userinfo.is_exist | pages/login/login.vue:287 login |
 | user.register | response field | userinfo.is_exist | pages/login/register.vue:253 register |
 | user.register | response field | userinfo.token | pages/login/register.vue:256 register |
-| lottery.lotteryInfoApi | response field | content | pages/lottery/lottery - 副本.vue:79 lotteryInfoApi<br>pages/lottery/lottery.vue:150 lotteryInfoApi |
+| lottery.lotteryInfoApi | response field | content | pages/lottery/lottery - 副本.vue:79 lotteryInfoApi<br>pages/lottery/lottery.vue:150 lotteryInfoApi<br>pages/lottery/lottery.vue:150 |
 | trad.getBegBuyList | response field | data | pages/market/components/BegBuyList.vue:106 getBegBuyList |
 | trad.getBegBuyList | response field | per_page | pages/market/components/BegBuyList.vue:110 getBegBuyList |
 | trad.getBegBuyList | response field | total | pages/market/components/BegBuyList.vue:113 getBegBuyList |
@@ -598,6 +765,73 @@
 | draw.draw | response field | $primitive:string | pages/activity/draw.vue:258 |
 | draw.drawRecord | response field | $array | pages/activity/draw.vue:247 |
 | draw.drawLog | response field | $array | pages/activity/record.vue:45 |
+| collection.getCalenderList | response field | id | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | response field | batch_id | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | response field | goods_type | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | response field | listimg | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | response field | name | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | response field | publisher.company_logo | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | response field | publisher.name | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | response field | total_num | components/w-index-collection/w-index-collection.vue:20 |
+| collection.getCalenderList | response field | price | components/w-index-collection/w-index-collection.vue:20 |
+| market.getMarketList | response field | id | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.id | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | goods_type | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.goods_type | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | flux | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.flux | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | is_out | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.is_out | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | total_num | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.total_num | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | min_price | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.min_price | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | price | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.price | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | product.id | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.product.id | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | product.listimg | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.product.listimg | pages/market/components/marketCard.vue:2 |
+| market.getMarketList | response field | product.name | pages/market/components/marketCard.vue:2 |
+| market.getMarketBoxList | response field | data.product.name | pages/market/components/marketCard.vue:2 |
+| order.getOrderDetails | response field | order_status | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | order_type | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | surplus_time_text | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | updatetime | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | goods_type | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | price | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | total_price | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | goods_cover_image | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | goods_name | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | collection_code | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | num | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | order_sn | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | pay_way | pages/order/defaultDetail.vue:39 |
+| order.getOrderDetails | response field | card | pages/order/defaultDetail.vue:39 |
+| lottery.lotteryInfoApi | response field | id | pages/lottery/lottery.vue:32 |
+| lottery.lotteryInfoApi | response field | remaining | pages/lottery/lottery.vue:32 |
+| lottery.lotteryInfoApi | response field | type | pages/lottery/lottery.vue:32 |
+| lottery.lotteryInfoApi | response field | display_lottery_log | pages/lottery/lottery.vue:32 |
+| lottery.lotteryStatistics | response field | $array | pages/lottery/lottery.vue:138 |
+| lottery.lotteryStatistics | response field | lottery_image | pages/lottery/lottery.vue:14 |
+| lottery.lotteryRecord | response field | data | pages/lottery/record.vue:96 |
+| lottery.lotteryRecord | response field | last_page | pages/lottery/record.vue:99 |
+| common.getConfig | response field | appLogo | store/modules/config.js:41 |
+| common.getConfig | response field | appName | store/modules/config.js:41 |
+| common.getConfig | response field | default_pay_type | store/modules/config.js:41 |
+| common.getConfig | response field | h5_domain | store/modules/config.js:41 |
+| common.getConfig | response field | qq_team_num | store/modules/config.js:41 |
+| common.getConfig | response field | purchase_sale_details | store/modules/config.js:41 |
+| common.getConfig | response field | service_image | store/modules/config.js:41 |
+| common.getConfig | response field | comm_desc | store/modules/config.js:41 |
+| common.getConfig | response field | draw_lots_notice | store/modules/config.js:41 |
+| common.getConfig | response field | olduser_dayhelp_num | store/modules/config.js:41 |
+| common.getConfig | response field | fastOrder_check | store/modules/config.js:41 |
+| common.getConfig | response field | batchBuy_check | store/modules/config.js:41 |
+| common.getConfig | response field | normal_check | store/modules/config.js:41 |
+| common.getConfig | response field | synthetic_check | store/modules/config.js:41 |
+| common.getPageConfig | response field | $array | store/modules/config.js:93 |
+| common.getPageConfig | response field | content | store/modules/config.js:96 |
 | collection.getUserCollectionDetails | response field | product | pages/myCollection/collectionDetails.vue:62 |
 | collection.getUserCollectionDetails | response field | types | pages/myCollection/collectionDetails.vue:62 |
 | collection.getUserCollectionDetails | response field | user_hash | pages/myCollection/collectionDetails.vue:62 |

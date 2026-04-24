@@ -2,11 +2,22 @@
 
 | Gate | Status | Finding |
 | --- | --- | --- |
-| Extractor Auditor | completed-with-regression-rule | Generator strips comments before import parsing, detects default request imports, and excludes JS collection methods from response fields. |
-| Inventory Auditor | completed-with-regression-rule | Every wrapper has status, auth precheck value, path variant, and per-variant evidence. |
-| Request Shape Auditor | completed-with-regression-rule | Request ledger records location as path/query/body/header and downgrades call-site-only evidence to Level B. |
-| Response Dataflow Auditor | completed-with-regression-rule | Response evidence is scoped to the matched `.then(...)` block and runtime derived fields are separated. |
-| Domain Contract Auditor | completed-with-regression-rule | Known high-risk domains have explicit overrides or unresolved risk entries. |
-| Consistency/Handoff Auditor | completed-with-regression-rule | Handoff separates active confirmed usage from exported-unused contracts and inferred contracts. |
+| Extractor Auditor | closed | No live-call pollution found; comment/template/local-method/direct-request fixtures are covered by verification. |
+| Inventory Auditor | closed | 190 wrappers have status/auth/path variants; collection.sellProduct and collection.isCollect branch conditions are verified. |
+| Request Shape Auditor | closed | Variable-object request fields, pass-through bodies, query/path locations, and dynamic body.* risks are recorded. |
+| Response Dataflow Auditor | closed | Homepage, market, order detail, lottery, and config response consumption fields are mapped to operation-level evidence. |
+| Domain Contract Auditor | closed | Path id/query fixes, wallet dual redirect, user hide_mobile separation, collection detail root, and draw export separation are verified. |
+| Consistency/Handoff Auditor | closed | Missing exports/direct requests backlink to unresolved lifecycle entries; handoff wording scopes response reliance to field evidence. |
 
-Current unresolved counts: P1=0, P2=0, P3=224.
+## Six-Agent Manual Review Closure
+
+| Finding | Closure |
+| --- | --- |
+| Branch condition truncation | Closed by balanced condition extraction and explicit verification for collection.sellProduct / collection.isCollect. |
+| Path id omissions | Closed for box.getBoxDetails and notice.getNoticeDetails; RequestParts include path/query where sourced from wrapper. |
+| Request object omissions | Closed for login/register/certification/market/draw signup and pass-through wrappers; unresolved dynamic spreads remain body.* Level C. |
+| Response dataflow gaps | Closed for getCalenderList, market lists, order details, lottery, getConfig and getPageConfig with Level B frontend-consumption evidence. |
+| Missing export lifecycle gaps | Closed by unresolved backlinks in operation-usage-guide.md for 8 draw missing exports and the direct address request. |
+| Handoff over-broad confirmed wording | Closed by limiting direct response reliance to fields present in field-usage-index.md / confidence.md. |
+
+Current unresolved counts: P1=0, P2=0, P3=218.

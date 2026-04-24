@@ -8,7 +8,7 @@
 | address.address_detail | address | POST | /user/address_detail (default; api/address/index.js:28 address_detail) | false | confirmed | api/address/index.js:28 address_detail |
 | address.address_delete | address | POST | /user/delUserAddress (default; api/address/index.js:37 address_delete) | false | confirmed | api/address/index.js:37 address_delete |
 | banner.getBannerList | banner | POST | /banner/show/getBanner (default; api/banner/index.js:11 getBannerList) | false | confirmed | api/banner/index.js:11 getBannerList |
-| box.getBoxDetails | box | POST | /box/blind_box/BoxDetail/ids/ (default; api/box/index.js:10 getBoxDetails) | false | confirmed | api/box/index.js:10 getBoxDetails |
+| box.getBoxDetails | box | POST | /box/blind_box/BoxDetail/ids/${id} (default; api/box/index.js:10 getBoxDetails) | false | confirmed | api/box/index.js:10 getBoxDetails |
 | box.openBox | box | POST | /user_collection/user_collection/openbox (default; api/box/index.js:22 openBox) | false | confirmed | api/box/index.js:22 openBox |
 | box.openBoxs | box | POST | /user_collection/user_collection/openBoxs (default; api/box/index.js:32 openBoxs) | false | confirmed | api/box/index.js:32 openBoxs |
 | box.getOpenRecord | box | POST | /box/blind_box/openlog (default; api/box/index.js:49 getOpenRecord) | false | confirmed | api/box/index.js:49 getOpenRecord |
@@ -20,7 +20,7 @@
 | collection.getUserCollectionDetailsList | collection | POST | /user_collection/user_collection/ListGoodsDetail (default; api/collection/index.js:60 getUserCollectionDetailsList) | false | exported-unused | api/collection/index.js:60 getUserCollectionDetailsList |
 | collection.getUserCollectionDetails | collection | POST | /user_collection/user_collection/detail/ids/${id} (default; api/collection/index.js:70 getUserCollectionDetails) | false | confirmed | api/collection/index.js:70 getUserCollectionDetails |
 | collection.getSellConfig | collection | POST | /user_collection/user_collection/show_resale_money (default; api/collection/index.js:79 getSellConfig) | false | confirmed | api/collection/index.js:79 getSellConfig |
-| collection.sellProduct | collection | POST | /user_collection/user_collection/resale (default; api/collection/index.js:94 sellProduct)<br>/user_collection/user_collection/batch_resale (user_collection_id.split(','; api/collection/index.js:97 sellProduct) | false | confirmed | api/collection/index.js:92 sellProduct |
+| collection.sellProduct | collection | POST | /user_collection/user_collection/resale (default; api/collection/index.js:94 sellProduct)<br>/user_collection/user_collection/batch_resale (user_collection_id.split(',').length > 1; api/collection/index.js:97 sellProduct) | false | confirmed | api/collection/index.js:92 sellProduct |
 | collection.givingProduct | collection | POST | /user_collection/user_collection/reGift (default; api/collection/index.js:108 givingProduct) | false | exported-unused | api/collection/index.js:108 givingProduct |
 | collection.givingProductOrder | collection | POST | /user_collection/user_collection/reGiftOrder (default; api/collection/index.js:117 givingProductOrder) | false | exported-unused | api/collection/index.js:117 givingProductOrder |
 | collection.getCompoundList | collection | POST | /user_collection/user_collection/BoxCollectionList (default; api/collection/index.js:127 getCompoundList) | false | exported-unused | api/collection/index.js:127 getCompoundList |
@@ -37,7 +37,7 @@
 | collection.searchUserCollection | collection | POST | /user_collection/exchange/usercollectionList (default; api/collection/index.js:266 searchUserCollection) | false | exported-unused | api/collection/index.js:266 searchUserCollection |
 | collection.getDiscountBuy | collection | POST | /box.Collection/getCollectionEarlyPurchaseCoupons (default; api/collection/index.js:279 getDiscountBuy) | false | exported-unused | api/collection/index.js:279 getDiscountBuy |
 | collection.antMycollection | collection | POST | /user_collection/user_collection/antMycollection (default; api/collection/index.js:288 antMycollection) | false | confirmed | api/collection/index.js:288 antMycollection |
-| collection.isCollect | collection | POST | /user_collection/user_collection/dellike (let url = type == 1; api/collection/index.js:297 isCollect)<br>/user_collection/user_collection/addlike (else of (let url = type == 1); api/collection/index.js:298 isCollect) | false | confirmed | api/collection/index.js:297 isCollect |
+| collection.isCollect | collection | POST | /user_collection/user_collection/dellike (type == 1; api/collection/index.js:297 isCollect)<br>/user_collection/user_collection/addlike (type != 1; api/collection/index.js:298 isCollect) | false | confirmed | api/collection/index.js:297 isCollect |
 | collection.likeCollection | collection | POST | /user_collection/user_collection/likeCollection (default; api/collection/index.js:307 likeCollection) | false | confirmed | api/collection/index.js:307 likeCollection |
 | collection.user_collection_Detail | collection | POST | /user_collection/user_collection/getDetail (default; api/collection/index.js:316 user_collection_Detail) | false | confirmed | api/collection/index.js:316 user_collection_Detail |
 | collection.myConsignment | collection | POST | /order/order/myConsignment (default; api/collection/index.js:325 myConsignment) | false | confirmed | api/collection/index.js:325 myConsignment |
@@ -98,7 +98,7 @@
 | news.getDetails | news | POST | /activity/detail (default; api/news/index.js:33 getDetails) | false | exported-unused | api/news/index.js:33 getDetails |
 | notice.getNoticeClasses | notice | POST | /index/affichetypelist (default; api/notice/index.js:10 getNoticeClasses) | false | confirmed | api/notice/index.js:10 getNoticeClasses |
 | notice.getNoticeList | notice | POST | /index/afficheList (default; api/notice/index.js:21 getNoticeList) | false | confirmed | api/notice/index.js:21 getNoticeList |
-| notice.getNoticeDetails | notice | POST | /index/afficheDetail/ids/ (default; api/notice/index.js:33 getNoticeDetails) | false | confirmed | api/notice/index.js:33 getNoticeDetails |
+| notice.getNoticeDetails | notice | POST | /index/afficheDetail/ids/${id} (default; api/notice/index.js:33 getNoticeDetails) | false | confirmed | api/notice/index.js:33 getNoticeDetails |
 | notice.getMessageList | notice | POST | /user/newList (default; api/notice/index.js:44 getMessageList) | false | exported-unused | api/notice/index.js:44 getMessageList |
 | notice.readMessage | notice | POST | /user/readMsgById (default; api/notice/index.js:57 readMessage) | false | exported-unused | api/notice/index.js:57 readMessage |
 | notice.readAllMessage | notice | POST | /user/oneKeyRead (default; api/notice/index.js:72 readAllMessage) | false | exported-unused | api/notice/index.js:72 readAllMessage |
@@ -157,7 +157,7 @@
 | trad.sell | trad | POST | /market/trade/sell (default; api/trad/index.js:73 sell) | false | confirmed | api/trad/index.js:73 sell |
 | trad.getSellInfo | trad | POST | /market/trade/tradingInformation (default; api/trad/index.js:82 getSellInfo) | false | confirmed | api/trad/index.js:82 getSellInfo |
 | user.oneLogin | user | POST | /user/aliPhoneOauth (default; api/user/index.js:9 oneLogin) | false | exported-unused | api/user/index.js:9 oneLogin |
-| user.login | user | POST | /user/login (loginType==1; api/user/index.js:24 login)<br>/user/LoginForMobile (else of (loginType==1); api/user/index.js:24 login) | false | confirmed | api/user/index.js:23 login |
+| user.login | user | POST | /user/login (loginType==1; api/user/index.js:24 login)<br>/user/LoginForMobile (loginType != 1; api/user/index.js:24 login) | false | confirmed | api/user/index.js:23 login |
 | user.getUserInfo | user | POST | /user/getUserInfo (default; api/user/index.js:37 getUserInfo) | false | confirmed | api/user/index.js:37 getUserInfo |
 | user.sendSms | user | POST | /sms/send (default; api/user/index.js:49 sendSms) | false | confirmed | api/user/index.js:49 sendSms |
 | user.register | user | POST | /user/register (default; api/user/index.js:63 register) | false | confirmed | api/user/index.js:63 register |

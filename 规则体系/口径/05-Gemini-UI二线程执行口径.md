@@ -131,6 +131,9 @@ Gemini 二线程必须按以下数据口径工作：
 6. 后端契约读取只认：
    - [规则体系/后端契约/README.md](/H:/工作/天异/uniapp+vue新架构/规则体系/后端契约/README.md)
    - [06-项目后端契约现行使用口径.md](/H:/工作/天异/uniapp+vue新架构/规则体系/口径/06-项目后端契约现行使用口径.md)
+   - `operation-usage-guide.md`
+   - `field-usage-index.md`
+   - `frontend-consumption-index.md`
 7. 主线通讯只认：
    - [规则体系/二线通讯/README.md](/H:/工作/天异/uniapp+vue新架构/规则体系/二线通讯/README.md)
    - [规则体系/二线通讯/给二线.md](/H:/工作/天异/uniapp+vue新架构/规则体系/二线通讯/给二线.md)
