@@ -18,6 +18,16 @@
 3. `updatingContent.ts`
 4. `UpdatingPriorityDrawPage.vue`
 5. `updatingPriorityDrawContent.ts`
+6. `runtime/`
+
+## 当前 page-local runtime
+
+1. `runtime/priority-draw.port.ts`
+2. `runtime/priority-draw.mock.ts`
+3. `runtime/priority-draw.adapter.ts`
+4. `runtime/priority-draw.model.ts`
+5. `runtime/priority-draw.service.ts`
+6. `runtime/usePriorityDrawRuntime.ts`
 
 ## 不应放入的内容
 
