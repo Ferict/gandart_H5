@@ -57,7 +57,7 @@ export type ContentPlaceholderIconKey =
 export type ContentMarketBadgeType = 'new' | 'hot' | 'featured'
 export type ContentMarketVisualTone = 'ink' | 'mist' | 'aqua' | 'sand'
 export type ContentActivityEntryTone = 'dark' | 'light' | 'soft'
-export type ContentProfileCategoryId = 'collections' | 'blindBoxes' | 'certificates'
+export type ContentProfileCategoryId = 'collections' | 'blindBoxes'
 export type ContentServiceEntryId = 'orders' | 'auth' | 'wallet' | 'invite' | 'community'
 export type ContentServiceEntryTone = 'cyan' | 'green' | 'amber' | 'rose' | 'slate'
 export type ContentServiceHubIndicatorTone = 'cyan' | 'green' | 'amber' | 'rose' | 'red'
@@ -663,7 +663,7 @@ export const CONTENT_API_FIELD_OWNERSHIP = {
     'ContentSceneDto.sceneId / version / updatedAt / blocks',
     'ContentResourceDto.resourceType / resourceId / title / subtitle / status / updatedAt / summary / asset / payload / relations',
     'ContentListDto.resourceType / page / pageSize / total / items',
-    'ContentTargetDto.targetType / targetId / provider / target.params.category / target.params.subCategory',
+    'ContentTargetDto.targetType / targetId / provider / target.params.category / target.params.subCategory / target.params.seriesId',
   ],
   backendContentDisplayMetadataFields:
     CONTENT_API_DISPLAY_METADATA_FIELDS.backendContentDisplayMetadata,
@@ -679,7 +679,7 @@ export const CONTENT_API_FIELD_OWNERSHIP = {
 
 export const CONTENT_API_FIELD_BOUNDARY_NOTES = {
   targetParams:
-    'target.params.category / target.params.subCategory 只为 profile_asset 跳转提供目标资源上下文，不是可自由扩展的新后端业务字段。',
+    'target.params.category / target.params.subCategory / target.params.seriesId 只为 profile_asset 跳转提供目标资源上下文，不是可自由扩展的新后端业务字段；资格证不作为一级分类。',
   targetProvider:
     'ContentTargetDto.provider 是内容来源标记，例如 home、activity；它不是运行时 provider，也不是 mock/http 切换开关。',
   routeQuery: 'route.query.* 只停留在前端路由层，永远不是正式内容域 contract 字段。',
@@ -716,10 +716,12 @@ export interface ContentProfileAssetTargetDto {
   provider?: string
   /** 个人资产详情需要的目标上下文，只允许这里列出的字段。 */
   params: {
-    /** 一级分类，必须使用 ContentProfileCategoryId 的正式值，用于详情页恢复资产所在分类。 */
+    /** 一级分类，必须使用 ContentProfileCategoryId 的正式值；资格证归入 collections 下的系列/二级分类。 */
     category: ContentProfileCategoryId
-    /** 二级分类，可选；不传表示没有二级分类上下文，不能临时扩展为其他业务参数。 */
+    /** 二级分类，可选；旧前端对应 series_name，不传表示没有二级分类上下文。 */
     subCategory?: string
+    /** 系列 ID，可选；旧前端对应 series_id，只作为 profile_asset 目标上下文。 */
+    seriesId?: string
   }
 }
 
@@ -934,10 +936,12 @@ export interface ContentAssetPayloadDto {
 }
 
 export interface ContentProfileAssetPayloadDto {
-  /** 一级资产分类，只能使用 ContentProfileCategoryId。 */
+  /** 一级资产分类，只能使用 ContentProfileCategoryId；资格证不得作为一级分类。 */
   categoryId: ContentProfileCategoryId
-  /** 二级资产分类展示文本。 */
+  /** 二级资产分类展示文本；旧前端个人资产口径对应 series_name。 */
   subCategory: string
+  /** 系列 ID，可选；旧前端个人资产口径对应 series_id。 */
+  seriesId?: string
   /** 获得时间，推荐 ISO 8601 字符串。 */
   acquiredAt: string
   /** 当前用户持有数量。 */
@@ -1256,7 +1260,7 @@ export interface ContentProfileSummaryBlockDto {
   blockType: 'profile_summary'
   /** 当前用户展示名，身份来自外部鉴权上下文。 */
   displayName: string
-  /** 当前用户地址或账号展示文本，不作为 content API 身份参数。 */
+  /** 当前用户区块链地址展示文本；旧前端个人中心来源为 userInfo.ntf_url，不作为 content API 身份参数。 */
   address: string
   /** 当前用户摘要，可选。 */
   summary?: string
@@ -1277,11 +1281,11 @@ export interface ContentProfileSummaryBlockDto {
 }
 
 export interface ContentProfileAssetCategoryDto {
-  /** 一级分类 ID，只能使用 ContentProfileCategoryId。 */
+  /** 一级分类 ID，只能使用 ContentProfileCategoryId；资格证归入 collections 下的二级分类/系列。 */
   categoryId: ContentProfileCategoryId
   /** 一级分类展示名。 */
   categoryName: string
-  /** 二级分类列表；没有二级分类时返回空数组。 */
+  /** 二级分类列表；旧前端对应系列名列表，没有二级分类时返回空数组。 */
   subCategories: string[]
 }
 
@@ -1292,9 +1296,11 @@ export interface ContentProfileAssetItemDto {
   title: string
   /** 获得时间，推荐 ISO 8601 字符串。 */
   acquiredAt: string
-  /** 二级分类展示文本。 */
+  /** 二级分类展示文本；旧前端个人资产口径对应 series_name。 */
   subCategory: string
-  /** 一级分类 ID。 */
+  /** 系列 ID，可选；旧前端个人资产口径对应 series_id。 */
+  seriesId?: string
+  /** 一级分类 ID；资格证不得作为一级分类。 */
   categoryId: ContentProfileCategoryId
   /** 当前用户持有数量。 */
   holdingsCount: number
@@ -1586,10 +1592,12 @@ export interface ContentNoticeListWireQueryDto {
 export interface ContentProfileAssetListWireQueryDto {
   /** 固定为 profile_asset，表示当前用户个人资产列表。 */
   resourceType: 'profile_asset'
-  /** 可选。一级分类 ID；不筛选一级分类时不传。 */
+  /** 可选。一级分类 ID；只允许 collections / blindBoxes，不筛选一级分类时不传。 */
   categoryId?: string
-  /** 可选。二级分类；不筛选二级分类时不传。 */
+  /** 可选。二级分类展示名；旧前端对应 series_name，不筛选二级分类时不传。 */
   subCategory?: string
+  /** 可选。系列 ID；旧前端对应 series_id，不筛选系列时不传。 */
+  seriesId?: string
   /** 可选。搜索关键词；不搜索时不传。 */
   keyword?: string
   /** 必填。页码，当前正式口径从 1 开始。 */
@@ -1655,10 +1663,12 @@ export interface ContentNoticeListRequestDto {
 export interface ContentProfileAssetListRequestDto {
   /** 固定为 profile_asset。前端内部字段，wire query 同名传给后端。 */
   resourceType: 'profile_asset'
-  /** 可选。一级分类 ID。前端内部字段，wire query 同名传给后端。 */
+  /** 可选。一级分类 ID。只允许 collections / blindBoxes；资格证不作为一级分类。 */
   categoryId?: string
-  /** 可选。二级分类。前端内部字段，wire query 同名传给后端。 */
+  /** 可选。二级分类展示名；旧前端对应 series_name。 */
   subCategory?: string
+  /** 可选。系列 ID；旧前端对应 series_id。 */
+  seriesId?: string
   /** 可选。搜索关键词。前端内部字段，wire query 同名传给后端。 */
   keyword?: string
   /** 必填。页码，当前正式口径从 1 开始。 */

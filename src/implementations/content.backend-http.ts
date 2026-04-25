@@ -329,6 +329,20 @@ const yuanToCent = (value: unknown): number => Math.round((firstNumber(value) ??
 const normalizeId = (fallback: string, ...values: unknown[]): string =>
   firstString(...values) ?? fallback
 
+const resolveLegacyProfileBlockchainAddress = (userInfo: Record<string, unknown>): string =>
+  // 旧前端个人中心展示 `ntf_url`，这里不回退到 user id、手机号或藏品合约字段。
+  firstString(
+    userInfo.ntf_url,
+    userInfo.nft_url,
+    userInfo.wallet_address,
+    userInfo.walletAddress,
+    userInfo.chain_address,
+    userInfo.chainAddress,
+    userInfo.blockchain_address,
+    userInfo.blockchainAddress,
+    userInfo.address
+  ) ?? ''
+
 const createBasicTarget = (
   targetType: ContentGenericTargetDto['targetType'],
   targetId: string
@@ -666,7 +680,14 @@ const normalizeLegacyActivityEntry = (
 }
 
 const isContentProfileCategoryId = (value: string): value is ContentProfileCategoryId =>
-  value === 'collections' || value === 'blindBoxes' || value === 'certificates'
+  value === 'collections' || value === 'blindBoxes'
+
+const isLegacyProfileCertificateType = (value: unknown): boolean => {
+  const normalizedType = readString(value)?.toLowerCase()
+  return (
+    normalizedType === '3' || normalizedType === 'certificate' || normalizedType === 'credential'
+  )
+}
 
 const resolveProfileCategoryId = (
   fallback: string | undefined,
@@ -679,13 +700,6 @@ const resolveProfileCategoryId = (
   const normalizedType = readString(legacyType)?.toLowerCase()
   if (normalizedType === '2' || normalizedType === 'box' || normalizedType === 'blindbox') {
     return 'blindBoxes'
-  }
-  if (
-    normalizedType === '3' ||
-    normalizedType === 'certificate' ||
-    normalizedType === 'credential'
-  ) {
-    return 'certificates'
   }
 
   return 'collections'
@@ -721,7 +735,12 @@ const normalizeLegacyProfileAssetItem = (
   )
   const payload: ContentProfileAssetPayloadDto = {
     categoryId,
-    subCategory: firstString(item.series_name, item.type_name, input.subCategory) ?? '默认分区',
+    subCategory:
+      firstString(item.series_name, input.subCategory) ??
+      (isLegacyProfileCertificateType(item.goods_type)
+        ? '资格证'
+        : (firstString(item.type_name) ?? '默认分区')),
+    seriesId: firstString(item.series_id, item.seriesId),
     acquiredAt,
     holdingsCount: Math.max(Math.round(firstNumber(item.num, item.count, item.holdings) ?? 1), 1),
     currency: 'CNY',
@@ -859,16 +878,11 @@ const profileAssetCategories: ContentProfileAssetCategoryDto[] = [
   {
     categoryId: 'collections',
     categoryName: '资产',
-    subCategories: ['全部'],
+    subCategories: ['全部', '资格证'],
   },
   {
     categoryId: 'blindBoxes',
     categoryName: '盲盒',
-    subCategories: ['全部'],
-  },
-  {
-    categoryId: 'certificates',
-    categoryName: '资格证',
     subCategories: ['全部'],
   },
 ]
@@ -1125,6 +1139,7 @@ export const createContentBackendHttpImplementation = (
     }
 
     const userInfo = isObjectRecord(userResponse.envelope.data) ? userResponse.envelope.data : {}
+    const profileBlockchainAddress = resolveLegacyProfileBlockchainAddress(userInfo)
     const assetPage = extractPageItems(assetResponse.envelope.data, 1, 9)
     const assets = assetPage.items
       .map((item, index) =>
@@ -1147,13 +1162,7 @@ export const createContentBackendHttpImplementation = (
           displayName:
             firstString(userInfo.nickname, userInfo.username, userInfo.name, userInfo.mobile) ??
             '当前用户',
-          address:
-            firstString(
-              userInfo.user_hash,
-              userInfo.wallet_address,
-              userInfo.address,
-              userInfo.mobile
-            ) ?? '',
+          address: profileBlockchainAddress,
           summary: firstString(userInfo.summary, userInfo.desc),
           currency: 'CNY',
           totalValueInCent: yuanToCent(
@@ -1168,11 +1177,7 @@ export const createContentBackendHttpImplementation = (
           ),
           networkLabel: firstString(userInfo.network_label) ?? '天异链路',
           statusLabel: firstString(userInfo.status_label) ?? '已连接',
-          qrPayload: firstString(
-            userInfo.invitation_code,
-            userInfo.invite_code,
-            userInfo.user_hash
-          ),
+          qrPayload: firstString(userInfo.qr_payload, userInfo.qrPayload, profileBlockchainAddress),
         },
         {
           blockType: 'profile_assets',
@@ -1326,7 +1331,15 @@ export const createContentBackendHttpImplementation = (
       }
 
       if (input.categoryId && input.categoryId !== 'all') {
-        requestPayload.type = input.categoryId
+        requestPayload.type =
+          input.categoryId === 'collections'
+            ? 2
+            : input.categoryId === 'blindBoxes'
+              ? 1
+              : input.categoryId
+      }
+      if (input.seriesId) {
+        requestPayload.series_id = input.seriesId
       }
       if (input.subCategory && input.subCategory !== '全部') {
         requestPayload.sub_type = input.subCategory

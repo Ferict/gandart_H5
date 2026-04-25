@@ -36,16 +36,15 @@ const profileShell: HomeRailProfileContent = {
   assets: {
     collections: [],
     blindBoxes: [],
-    certificates: [],
   },
 }
 
 const isProfileCategoryKey = (value: string): value is ProfileCategoryKey => {
-  return value === 'collections' || value === 'blindBoxes' || value === 'certificates'
+  return value === 'collections' || value === 'blindBoxes'
 }
 
 const isContentProfileCategoryId = (value: string): value is ContentProfileCategoryId => {
-  return value === 'collections' || value === 'blindBoxes' || value === 'certificates'
+  return value === 'collections' || value === 'blindBoxes'
 }
 
 const formatCurrencyValue = (priceInCent: number): string => {
@@ -84,6 +83,7 @@ export const adaptHomeRailProfileTargetDto = (
     }
 
     const normalizedSubCategory = target.params?.subCategory?.trim()
+    const normalizedSeriesId = target.params?.seriesId?.trim()
     return {
       targetType: 'profile_asset',
       targetId: target.targetId,
@@ -91,6 +91,7 @@ export const adaptHomeRailProfileTargetDto = (
       params: {
         category: targetCategory,
         ...(normalizedSubCategory ? { subCategory: normalizedSubCategory } : {}),
+        ...(normalizedSeriesId ? { seriesId: normalizedSeriesId } : {}),
       },
     }
   }
@@ -150,6 +151,7 @@ export const adaptHomeRailProfileAssetListItemDto = (
     name: item.title,
     date: payload.acquiredAt || item.updatedAt,
     subCategory: payload.subCategory,
+    ...(payload.seriesId ? { seriesId: payload.seriesId } : {}),
     holdingsCount: payload.holdingsCount,
     priceUnit: resolveCurrencyUnit(payload.currency),
     price: Math.round(payload.priceInCent / 100),
@@ -174,7 +176,6 @@ export const adaptHomeRailProfileAssetsBlockDto = (
   const assetMap: Record<ProfileCategoryKey, ProfileAssetItem[]> = {
     collections: [],
     blindBoxes: [],
-    certificates: [],
   }
 
   if (!block) {
@@ -191,6 +192,7 @@ export const adaptHomeRailProfileAssetsBlockDto = (
       name: item.title,
       date: item.acquiredAt,
       subCategory: item.subCategory,
+      ...(item.seriesId ? { seriesId: item.seriesId } : {}),
       holdingsCount: item.holdingsCount,
       priceUnit: resolveCurrencyUnit(item.currency),
       price: Math.round(item.priceInCent / 100),
@@ -236,6 +238,5 @@ export const createHomeRailProfileContentShell = (): HomeRailProfileContent => (
   assets: {
     collections: profileShell.assets.collections.map((item) => ({ ...item })),
     blindBoxes: profileShell.assets.blindBoxes.map((item) => ({ ...item })),
-    certificates: profileShell.assets.certificates.map((item) => ({ ...item })),
   },
 })

@@ -14,7 +14,10 @@ import { resolvePriceSymbol } from '../../utils/priceSymbol.util'
 const PROFILE_CATEGORY_META: Record<ProfileCategoryKey, { label: string; englishLabel: string }> = {
   collections: { label: '资产', englishLabel: 'COLLECTION' },
   blindBoxes: { label: '盲盒', englishLabel: 'BLIND BOX' },
-  certificates: { label: '资格证', englishLabel: 'CREDENTIAL' },
+}
+
+const normalizeProfileAssetDetailCategoryId = (value?: string): ProfileCategoryKey => {
+  return value === 'blindBoxes' ? 'blindBoxes' : 'collections'
 }
 
 export interface ProfileAssetDetailAdapterResource {
@@ -59,7 +62,9 @@ export const adaptProfileAssetDetailContent = (
   resource: ProfileAssetDetailAdapterResource,
   fallbackCategoryId: ProfileCategoryKey = 'collections'
 ): ProfileAssetDetailContent => {
-  const categoryId = (resource.payload.categoryId || fallbackCategoryId) as ProfileCategoryKey
+  const categoryId = normalizeProfileAssetDetailCategoryId(
+    resource.payload.categoryId || fallbackCategoryId
+  )
   const categoryMeta = PROFILE_CATEGORY_META[categoryId]
 
   return {

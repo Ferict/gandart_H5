@@ -3,6 +3,7 @@
  * Out of scope: global provider bootstrap policy, page rendering, and formal content-domain calls.
  */
 import { adaptPriorityDrawArchive } from './priority-draw.adapter'
+import { hydratePriorityDrawArchiveFromLegacyLottery } from './priority-draw.legacy-lottery'
 import { priorityDrawMockPort } from './priority-draw.mock'
 import type { PriorityDrawEventViewModel } from './priority-draw.model'
 import type { PriorityDrawPort } from './priority-draw.port'
@@ -19,4 +20,15 @@ export const resetPriorityDrawPort = () => {
 
 export const resolvePriorityDrawEventListSnapshot = (): PriorityDrawEventViewModel[] => {
   return adaptPriorityDrawArchive(activePriorityDrawPort.getArchive())
+}
+
+export const loadPriorityDrawEventListSnapshot = async (): Promise<
+  PriorityDrawEventViewModel[]
+> => {
+  const archive = activePriorityDrawPort.getArchive()
+  const hydratedArchive = activePriorityDrawPort.hydrateArchive
+    ? await activePriorityDrawPort.hydrateArchive(archive)
+    : await hydratePriorityDrawArchiveFromLegacyLottery(archive)
+
+  return adaptPriorityDrawArchive(hydratedArchive)
 }

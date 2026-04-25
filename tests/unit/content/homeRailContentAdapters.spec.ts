@@ -602,7 +602,6 @@ describe('home rail content adapters', () => {
         },
       ],
       blindBoxes: [],
-      certificates: [],
     })
   })
 

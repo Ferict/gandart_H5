@@ -15,6 +15,7 @@ export const adaptContentTarget = (target: ContentTargetDto): ContentTargetRef =
       params: {
         category: target.params.category,
         ...(target.params.subCategory ? { subCategory: target.params.subCategory } : {}),
+        ...(target.params.seriesId ? { seriesId: target.params.seriesId } : {}),
       },
     }
   }
@@ -39,6 +40,7 @@ export const cloneContentTargetRef = (target?: ContentTargetRef): ContentTargetR
       params: {
         category: target.params.category,
         ...(target.params.subCategory ? { subCategory: target.params.subCategory } : {}),
+        ...(target.params.seriesId ? { seriesId: target.params.seriesId } : {}),
       },
     }
   }

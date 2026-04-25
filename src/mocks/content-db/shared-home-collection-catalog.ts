@@ -36,7 +36,7 @@ export interface SharedHomeCollectionRecord {
   updatedAt: string
   summary: string
   profileCategoryId: ContentProfileCategoryId
-  profileSubCategory: '数字艺术' | '3D组件' | '音乐现场'
+  profileSubCategory: '数字艺术' | '3D组件' | '音乐现场' | '资格证'
   acquiredAt?: string
   linkedMarketItemId: string
 }
@@ -407,8 +407,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     acquiredAt: '2024.10.18',
     linkedMarketItemId: 'C-16',
   },
@@ -429,8 +429,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     linkedMarketItemId: 'C-17',
   },
   {
@@ -452,8 +452,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     acquiredAt: '2024.10.19',
     linkedMarketItemId: 'C-18',
   },
@@ -560,8 +560,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     acquiredAt: '2024.10.23',
     linkedMarketItemId: 'C-23',
   },
@@ -603,8 +603,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     acquiredAt: '2024.10.24',
     linkedMarketItemId: 'C-25',
   },

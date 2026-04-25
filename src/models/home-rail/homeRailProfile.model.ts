@@ -26,6 +26,7 @@ export interface ProfileAssetItem {
   name: string
   date: string
   subCategory: string
+  seriesId?: string
   holdingsCount: number
   priceUnit: string
   price: number

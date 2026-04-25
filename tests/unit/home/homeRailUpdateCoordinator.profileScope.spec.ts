@@ -52,7 +52,6 @@ const createProfileSceneResolved = (
     assets: {
       collections: [],
       blindBoxes: [],
-      certificates: [],
     },
   },
   meta: {

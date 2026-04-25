@@ -34,7 +34,7 @@ export const useProfileAssetDetailRouteState = (): UseProfileAssetDetailRouteSta
   const routeSource = computed(() => routeQuery.value.source.trim() || 'profile-asset-detail')
 
   const resolveCategory = (value: string): ProfileCategoryKey => {
-    if (value === 'blindBoxes' || value === 'certificates') {
+    if (value === 'blindBoxes') {
       return value
     }
 

@@ -66,11 +66,6 @@ const PRESET_BY_CATEGORY: Record<ProfileCategoryKey, Partial<AssetDetailUiPreset
     primaryActionText: '挂售资产',
     secondaryActionText: '转移仓位',
   },
-  certificates: {
-    collectionLabel: '权益凭证档案',
-    primaryActionText: '挂售资产',
-    secondaryActionText: '申请更新',
-  },
 }
 
 const PRESET_BY_ITEM: Record<string, Partial<AssetDetailUiPreset>> = {

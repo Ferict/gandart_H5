@@ -196,7 +196,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -232,7 +231,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -312,7 +310,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -418,7 +415,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -447,7 +443,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -501,7 +496,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {

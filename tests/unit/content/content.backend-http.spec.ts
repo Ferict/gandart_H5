@@ -283,7 +283,8 @@ describe('content.backend-http provider', () => {
                   id: 'user_1',
                   nickname: '测试用户',
                   mobile: '13800000000',
-                  user_hash: '0xabc',
+                  ntf_url: 'BC-USER-ADDR-001',
+                  user_hash: '0xcollectionhash',
                   total_money: '234.00',
                   collection_num: '7',
                   invitation_code: 'INVITE-001',
@@ -348,10 +349,10 @@ describe('content.backend-http provider', () => {
     expect(profile.data?.blocks[0]).toMatchObject({
       blockType: 'profile_summary',
       displayName: '测试用户',
-      address: '0xabc',
+      address: 'BC-USER-ADDR-001',
       totalValueInCent: 23400,
       holdingsCount: 7,
-      qrPayload: 'INVITE-001',
+      qrPayload: 'BC-USER-ADDR-001',
     })
   })
 

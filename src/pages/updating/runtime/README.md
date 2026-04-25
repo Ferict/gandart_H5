@@ -19,6 +19,12 @@
 4. `priority-draw.model.ts`
 5. `priority-draw.service.ts`
 6. `usePriorityDrawRuntime.ts`
+7. `asset-merge.port.ts`
+8. `asset-merge.mock.ts`
+9. `asset-merge.adapter.ts`
+10. `asset-merge.model.ts`
+11. `asset-merge.service.ts`
+12. `useAssetMergeRuntime.ts`
 
 ## 不应放入的内容
 

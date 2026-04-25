@@ -31,7 +31,7 @@ const resolveProfileCategoryKey = (value?: string): ProfileCategoryKey | undefin
     return undefined
   }
 
-  if (value === 'collections' || value === 'blindBoxes' || value === 'certificates') {
+  if (value === 'collections' || value === 'blindBoxes') {
     return value
   }
 

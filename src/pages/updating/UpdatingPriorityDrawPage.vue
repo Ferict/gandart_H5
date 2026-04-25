@@ -1,16 +1,24 @@
 <!--
 Responsibility: render the retained priority-draw module page that replaces the generic
 construction placeholder for the current activity entry target.
-Out of scope: real activity-domain fetching, draw action execution, and formal contract wiring.
+Out of scope: draw action execution, payment/asset consumption confirmation, and formal contract wiring.
 -->
 <template>
   <page-meta :page-style="pageMetaStyle" />
-  <SecondaryPageFrame route-source="updating-priority-draw" title="优先抽签" @back="emit('back')">
-    <template #topbar-right>
+  <SecondaryPageFrame
+    route-source="updating-priority-draw"
+    :title="frameTitle"
+    :show-share="Boolean(selectedEvent)"
+    :has-action-rail="Boolean(selectedEvent)"
+    :action-rail-occupied-height="112"
+    @back="handleFrameBack"
+    @share="handleShareTap"
+  >
+    <template v-if="!selectedEvent" #topbar-right>
       <HomeInteractiveTarget
         class="priority-draw-topbar-history"
         interaction-mode="compact"
-        label="查看抽签记录"
+        label="查看抽奖记录"
         @activate="handleHistoryTap"
       >
         <view class="priority-draw-topbar-history-visual">
@@ -20,7 +28,9 @@ Out of scope: real activity-domain fetching, draw action execution, and formal c
     </template>
 
     <view class="priority-draw-page-content">
-      <view v-if="priorityDrawEventList.length" class="priority-draw-event-list">
+      <UpdatingPriorityDrawDetailPanel v-if="selectedEvent" :event="selectedEvent" />
+
+      <view v-else-if="priorityDrawEventList.length" class="priority-draw-event-list">
         <HomeInteractiveTarget
           v-for="event in priorityDrawEventList"
           :key="event.id"
@@ -64,7 +74,7 @@ Out of scope: real activity-domain fetching, draw action execution, and formal c
                   <text class="priority-draw-card-time-copy">{{ event.timeRange }}</text>
                 </view>
                 <text class="priority-draw-card-joined-copy">
-                  {{ event.participants }} 人报名
+                  热度 {{ event.participants.toLocaleString('zh-CN') }}
                 </text>
               </view>
 
@@ -91,50 +101,197 @@ Out of scope: real activity-domain fetching, draw action execution, and formal c
 
       <view v-else class="priority-draw-empty-state">
         <AetherIcon name="sliders-horizontal" :size="32" :stroke-width="1.5" tone="subtle" />
-        <text class="priority-draw-empty-copy">当前暂无可参与的抽签活动</text>
+        <text class="priority-draw-empty-copy">当前暂无可参与的抽奖活动</text>
       </view>
 
-      <view v-if="priorityDrawEventList.length" class="priority-draw-archive-footer">
+      <view
+        v-if="!selectedEvent && priorityDrawEventList.length"
+        class="priority-draw-archive-footer"
+      >
         <view class="priority-draw-archive-line" />
         <text class="priority-draw-archive-copy">没有更多活动了</text>
         <view class="priority-draw-archive-line" />
       </view>
     </view>
+
+    <template v-if="selectedEvent" #action-rail>
+      <HomeInteractiveTarget
+        class="priority-draw-detail-action"
+        :label="primaryActionLabel"
+        :disabled="isPrimaryActionDisabled"
+        @activate="handlePrimaryAction"
+      >
+        <view
+          class="priority-draw-detail-action-visual"
+          :class="{ 'is-disabled': isPrimaryActionDisabled }"
+        >
+          <AetherIcon :name="primaryActionIcon" :size="16" :stroke-width="2.3" />
+          <text class="priority-draw-detail-action-copy">{{ primaryActionLabel }}</text>
+        </view>
+      </HomeInteractiveTarget>
+    </template>
   </SecondaryPageFrame>
+
+  <UpdatingPriorityDrawResultModal
+    :open="isResultModalOpen"
+    :result="activeResult"
+    @close="handleResultModalClose"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import AetherIcon from '../../components/AetherIcon.vue'
 import HomeInteractiveTarget from '../../components/HomeInteractiveTarget.vue'
 import SecondaryPageFrame from '../../components/SecondaryPageFrame.vue'
 import { useResponsiveRailLayout } from '../../composables/useResponsiveRailLayout'
-import {
-  priorityDrawEventList,
-  type PriorityDrawCoverTone,
-  type PriorityDrawEventViewModel,
-} from './updatingPriorityDrawContent'
+import type { AetherIconName } from '../../models/ui/aetherIcon.model'
+import UpdatingPriorityDrawDetailPanel from './UpdatingPriorityDrawDetailPanel.vue'
+import UpdatingPriorityDrawResultModal from './UpdatingPriorityDrawResultModal.vue'
+import { usePriorityDrawRuntime } from './runtime/usePriorityDrawRuntime'
+import type {
+  PriorityDrawCoverTone,
+  PriorityDrawEventViewModel,
+  PriorityDrawResultViewModel,
+} from './runtime/priority-draw.model'
 
 const emit = defineEmits<{
   back: []
 }>()
 
 const { runtimeContext } = useResponsiveRailLayout()
+const { priorityDrawEventList, refreshPriorityDrawEventList } = usePriorityDrawRuntime()
+const selectedEventId = ref<string | null>(null)
+const isProcessing = ref(false)
+const enteredEventIds = ref<string[]>([])
+const isResultModalOpen = ref(false)
+const activeResult = ref<PriorityDrawResultViewModel | null>(null)
+
+const selectedEvent = computed(() => {
+  if (!selectedEventId.value) {
+    return null
+  }
+
+  return priorityDrawEventList.value.find((event) => event.id === selectedEventId.value) ?? null
+})
+
+onShow(() => {
+  void refreshPriorityDrawEventList()
+})
+
+const hasEnteredSelectedEvent = computed(() => {
+  if (!selectedEvent.value) {
+    return false
+  }
+
+  return enteredEventIds.value.includes(selectedEvent.value.id)
+})
+
+const frameTitle = computed(() => (selectedEvent.value ? '活动详情' : '优先抽奖'))
+
+const primaryActionLabel = computed(() => {
+  const event = selectedEvent.value
+  if (!event) {
+    return ''
+  }
+
+  if (event.status === 'UPCOMING') {
+    return '预约提醒'
+  }
+
+  if (event.status === 'ENDED') {
+    return '查看结果'
+  }
+
+  if (!event.isEligible) {
+    return '暂未满足条件'
+  }
+
+  if (isProcessing.value) {
+    return '提交中'
+  }
+
+  if (hasEnteredSelectedEvent.value) {
+    return '查看报名结果'
+  }
+
+  return '参与抽奖'
+})
+
+const primaryActionIcon = computed<AetherIconName>(() => {
+  const event = selectedEvent.value
+  if (!event) {
+    return 'zap'
+  }
+
+  if (event.status === 'UPCOMING') {
+    return 'calendar-days'
+  }
+
+  if (event.status === 'ENDED') {
+    return 'award'
+  }
+
+  if (!event.isEligible) {
+    return 'shield-alert'
+  }
+
+  if (isProcessing.value) {
+    return 'loader-2'
+  }
+
+  if (hasEnteredSelectedEvent.value) {
+    return 'shield-check'
+  }
+
+  return 'zap'
+})
+
+const isPrimaryActionDisabled = computed(() => {
+  const event = selectedEvent.value
+  return Boolean(event && event.status === 'LIVE' && !event.isEligible)
+})
 
 const pageMetaStyle = computed(() => {
   const viewportHeight = runtimeContext.value.viewportHeight
   const height = viewportHeight > 0 ? `${viewportHeight}px` : '100vh'
-  return `height:${height};min-height:${height};overflow:hidden;background:#ffffff;`
+  return `height:${height};min-height:${height};overflow:hidden;background:var(--aether-page-background,#fafafa);`
 })
 
 const handleHistoryTap = () => {
   uni.showToast({
-    title: '抽签记录暂未开放',
+    title: '抽奖记录暂未开放',
     icon: 'none',
   })
 }
 
 const handleEventTap = (event: PriorityDrawEventViewModel) => {
+  selectedEventId.value = event.id
+}
+
+const handleFrameBack = () => {
+  if (selectedEventId.value) {
+    selectedEventId.value = null
+    return
+  }
+
+  emit('back')
+}
+
+const handleShareTap = () => {
+  uni.showToast({
+    title: '分享暂未开放',
+    icon: 'none',
+  })
+}
+
+const handlePrimaryAction = () => {
+  const event = selectedEvent.value
+  if (!event) {
+    return
+  }
+
   if (event.status === 'UPCOMING') {
     uni.showToast({
       title: '活动暂未开始',
@@ -143,10 +300,28 @@ const handleEventTap = (event: PriorityDrawEventViewModel) => {
     return
   }
 
-  uni.showToast({
-    title: event.status === 'ENDED' ? '结果详情暂未开放' : '当前暂不支持参与',
-    icon: 'none',
-  })
+  if (event.status === 'ENDED' || hasEnteredSelectedEvent.value) {
+    activeResult.value = event.result
+    isResultModalOpen.value = true
+    return
+  }
+
+  if (!event.isEligible || isProcessing.value) {
+    return
+  }
+
+  isProcessing.value = true
+  setTimeout(() => {
+    isProcessing.value = false
+    enteredEventIds.value = [...new Set([...enteredEventIds.value, event.id])]
+    activeResult.value = event.result
+    isResultModalOpen.value = true
+  }, 800)
+}
+
+const handleResultModalClose = () => {
+  isResultModalOpen.value = false
+  activeResult.value = null
 }
 
 const resolveCardClass = (event: PriorityDrawEventViewModel) => {
@@ -219,7 +394,7 @@ const resolveEventActionLabel = (event: PriorityDrawEventViewModel) => {
 }
 
 :deep(.secondary-page-frame) {
-  background: #ffffff;
+  background: var(--aether-page-background, #fafafa);
 }
 
 .priority-draw-page-content {
@@ -575,5 +750,43 @@ const resolveEventActionLabel = (event: PriorityDrawEventViewModel) => {
   letter-spacing: 0.08em;
   color: #64748b;
   transform: scale(0.84);
+}
+
+.priority-draw-detail-action {
+  display: block;
+  width: 100%;
+  border-radius: 18px;
+}
+
+.priority-draw-detail-action-visual {
+  min-height: 52px;
+  border-radius: 18px;
+  background: var(--aether-surface-inverse, #111111);
+  color: #ffffff;
+  box-shadow: var(--aether-shadow-overlay-float, 0 0 24px rgba(15, 23, 42, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+.priority-draw-detail-action.is-entry-active .priority-draw-detail-action-visual {
+  transform: scale(0.985);
+}
+
+.priority-draw-detail-action-visual.is-disabled {
+  background: var(--aether-surface-tertiary, #f1f5f9);
+  color: #94a3b8;
+  box-shadow: none;
+}
+
+.priority-draw-detail-action-copy {
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
 }
 </style>

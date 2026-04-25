@@ -6,6 +6,7 @@
 export type {
   PriorityDrawCoverTone,
   PriorityDrawEventViewModel,
+  PriorityDrawResultViewModel,
   PriorityDrawStatus,
 } from './runtime/priority-draw.model'
 import { resolvePriorityDrawEventListSnapshot } from './runtime/priority-draw.service'

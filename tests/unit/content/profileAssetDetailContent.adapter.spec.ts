@@ -119,7 +119,7 @@ describe('profileAssetDetailContent adapter', () => {
     })
   })
 
-  it('falls back to the requested category when payload omits categoryId', () => {
+  it('normalizes a legacy certificates fallback category into collections', () => {
     expect(
       adaptProfileAssetDetailContent(
         {
@@ -139,12 +139,12 @@ describe('profileAssetDetailContent adapter', () => {
             visualTone: 'mist',
           },
         },
-        'certificates'
+        'certificates' as 'collections'
       )
     ).toMatchObject({
-      categoryId: 'certificates',
-      categoryLabel: '资格证',
-      categoryEnglishLabel: 'CREDENTIAL',
+      categoryId: 'collections',
+      categoryLabel: '资产',
+      categoryEnglishLabel: 'COLLECTION',
       priceUnit: '$',
     })
   })

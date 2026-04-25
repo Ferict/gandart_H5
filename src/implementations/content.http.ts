@@ -329,6 +329,7 @@ export const createContentHttpImplementation = (
           resourceType: input.resourceType,
           categoryId: input.categoryId,
           subCategory: input.subCategory,
+          seriesId: input.seriesId,
           keyword: input.keyword,
           page: input.page,
           pageSize: input.pageSize,

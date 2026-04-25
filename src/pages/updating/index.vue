@@ -6,6 +6,7 @@ Out of scope: content-domain fetching, provider transport, and long-term busines
 
 <template>
   <UpdatingPriorityDrawPage v-if="isPriorityDrawModule" @back="handleBack" />
+  <UpdatingAssetMergePage v-else-if="isAssetMergeModule" @back="handleBack" />
   <ConstructionPlaceholder
     v-else
     :title="page.title"
@@ -21,6 +22,7 @@ Out of scope: content-domain fetching, provider transport, and long-term busines
 import { computed, reactive } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import ConstructionPlaceholder from '../../components/ConstructionPlaceholder.vue'
+import UpdatingAssetMergePage from './UpdatingAssetMergePage.vue'
 import UpdatingPriorityDrawPage from './UpdatingPriorityDrawPage.vue'
 import { runUpdatingBackNavigation } from './updatingBackNavigation'
 import { resolveUpdatingContent } from './updatingContent'
@@ -37,16 +39,23 @@ const defaultPage = {
 
 const page = reactive({ ...defaultPage })
 const isPriorityDrawModule = computed(() => page.moduleId === 'UPD-ACT-PRIORITY-DRAW')
+const isAssetMergeModule = computed(() => page.moduleId === 'UPD-ACT-ASSET-MERGE')
 
 onLoad((query) => {
   const routeQuery = parseUpdatingRouteQuery(query as Record<string, unknown>)
   const { moduleId, title, englishTitle, statusLabel, source } = routeQuery
 
   page.moduleId = moduleId || defaultPage.moduleId
-  page.title = isPriorityDrawModule.value ? '优先抽签' : title || defaultPage.title
+  page.title = isPriorityDrawModule.value
+    ? '优先抽奖'
+    : isAssetMergeModule.value
+      ? '资产合成'
+      : title || defaultPage.title
   page.englishTitle = isPriorityDrawModule.value
     ? 'Priority_Draw'
-    : englishTitle || defaultPage.englishTitle
+    : isAssetMergeModule.value
+      ? 'Protocol_Merge'
+      : englishTitle || defaultPage.englishTitle
   page.statusLabel = statusLabel || defaultPage.statusLabel
 
   const resolvedContent = resolveUpdatingContent(page.moduleId, source)

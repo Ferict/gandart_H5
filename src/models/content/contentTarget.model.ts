@@ -4,7 +4,7 @@
  * Out of scope: wire-contract field validation, route URL assembly, and provider bootstrap policy.
  */
 
-export type ContentTargetProfileCategoryKey = 'collections' | 'blindBoxes' | 'certificates'
+export type ContentTargetProfileCategoryKey = 'collections' | 'blindBoxes'
 
 export type ContentTargetType =
   | 'notice'
@@ -24,6 +24,7 @@ export type ContentTargetType =
 export interface ContentTargetParams {
   category?: ContentTargetProfileCategoryKey
   subCategory?: string
+  seriesId?: string
 }
 
 export interface ContentTargetRefBase {
@@ -39,6 +40,7 @@ export interface ContentProfileAssetTargetRef {
   params: {
     category: ContentTargetProfileCategoryKey
     subCategory?: string
+    seriesId?: string
   }
 }
 

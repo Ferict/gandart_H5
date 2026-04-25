@@ -24,9 +24,9 @@ describe('useProfileAssetDetailRouteState', () => {
     expect(routeState.routeSource.value).toBe('profile')
     expect(routeState.resolveCurrentDetailRoute()).toEqual({
       itemId: 'C-10',
-      category: 'certificates',
+      category: 'collections',
     })
-    expect(routeState.currentDetailRouteSignature.value).toBe('C-10::certificates')
+    expect(routeState.currentDetailRouteSignature.value).toBe('C-10::collections')
   })
 
   it('falls back to collections when the route category is unsupported', () => {

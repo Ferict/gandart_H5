@@ -14,6 +14,7 @@
 ## 当前内容
 
 1. `priority-draw.ts`
+2. `asset-merge.ts`
 
 ## 不应放入的内容
 

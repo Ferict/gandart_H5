@@ -128,3 +128,52 @@
   2. 三线如果还有规则审查修正，必须先确认不与通讯迁移、P11.12 口径和二线源码混批。
   3. 所有提交后回传 commit hash、提交范围、验证命令和剩余脏链。
 - 是否需要正式化：是；本条需要在主线最终收口报告中登记为多线并行提交边界。
+
+### 2026-04-25 19:55 - 三线 -> 主线/二线 - 个人中心资格证分类口径已收口
+
+- 类型：通知 / 回传
+- 关联对象：`规则体系/口径/10-用户最终要求口径.md`、`src/contracts/content-api.contract.ts`、`src/models/content/contentTarget.model.ts`、`src/implementations/content.backend-http.ts`
+- 消息：
+  1. 用户已裁定：个人中心“资格证”后端没有独立大分类，后续改成“藏品/资产”下面的小分类；旧前端对应“系列”层，即 `series_id` / `series_name`。
+  2. 现行口径已写入 `规则体系/口径/10-用户最终要求口径.md` 第 10 节。
+  3. 当前前端实现契约已收口：`ContentProfileCategoryId` 只保留 `collections` / `blindBoxes`，不再包含 `certificates`。
+  4. `profile_asset` 相关目标、列表和详情可以使用 `subCategory` 承接旧 `series_name`，使用可选 `seriesId` 承接旧 `series_id`。
+  5. 旧 mock / adapter 中原 `certificates` 口径已归一到 `categoryId=collections`、`subCategory=资格证`。
+- 需要对方处理：
+  1. 主线接真实后端时，不得再发明或恢复 `categoryId=certificates`；资格证类资产统一按 `collections + series/subCategory` 接。
+  2. 主线如对接旧前端系列接口，优先把 `series_id` 映射到 `seriesId`，把 `series_name` 映射到 `subCategory` 或展示层 seriesName。
+  3. 二线如继续保留“资格证”入口，只能放在“资产/藏品”分组下作为二级筛选或系列入口，不要在页面状态、模板或视觉结构中重新做一级 tab。
+  4. 二线遇到仍需要独立资格证大类的设计稿时，按字段缺口回传，不要自行改契约或绕过本口径。
+- 是否需要正式化：是，已正式化到 `规则体系/口径/10-用户最终要求口径.md` 和 `src/contracts/content-api.contract.ts`。
+
+### 2026-04-25 21:03 - 三线 -> 主线/二线 - 首页 banner 走 getBanner 口径已收口
+
+- 类型：通知 / 回传
+- 关联对象：`规则体系/口径/10-用户最终要求口径.md`、`规则体系/后端契约/operation-usage-guide.md`、`src/implementations/content.backend-http.ts`、`src/pages/home/components/home/HomeRailHomeBannerCarouselSection.vue`
+- 消息：
+  1. 用户已裁定：首页 banner 接线走旧后端 `getBanner`，对应项目级后端契约 `banner.getBannerList`。
+  2. 旧前端首页 `<w-swiper>` 当前是注释状态，不再作为“旧首页正在展示 banner”的证据；但旧系统存在正式 wrapper、`w-swiper` 调用和已注册页面消费证据，因此该接口按“真实存在、可作为新前端首页 banner 来源”处理。
+  3. 当前测试环境 `getBanner` 可能返回空列表；空列表只表示当前无 banner 数据，不表示接口不存在，也不得改回用首页藏品轮播或盲盒列表冒充 banner。
+  4. 旧请求层以 `code=1` 为成功；主线接 `backend-http` 时需要兼容 legacy 成功包，不能用当前内容域 `code=0` 成功口径直接判旧接口失败。
+  5. 现行口径已写入 `规则体系/口径/10-用户最终要求口径.md` 第 11 节，并同步更新 `operation-usage-guide.md` 的 `banner.getBannerList` 用途说明。
+- 需要对方处理：
+  1. 主线接真实后端首页 banner 时，优先走 `banner.getBannerList` 的 backend-http adapter 映射，不新增第二套首页 banner wrapper。
+  2. 主线需要把旧 `code=1` 成功包归一到当前内容域 envelope，再输出 `banner_carousel.items`。
+  3. 二线 UI 只消费 `homeBannerItems` 或等价稳定 view-model，不直接读取旧 wrapper 响应，也不要把空 banner 私自替换成藏品轮播。
+  4. 如后端后续确认 `getBanner` 已废弃，必须先回写后端契约、用户最终要求口径和通讯，再改前端接线。
+- 是否需要正式化：是，已正式化到 `规则体系/口径/10-用户最终要求口径.md` 和 `规则体系/后端契约/operation-usage-guide.md`。
+
+### 2026-04-25 21:41 - 三线 -> 主线/二线 - 后端维护接口契约交接文档已新增
+
+- 类型：通知 / 回传
+- 关联对象：`规则体系/后端契约/后端维护接口契约交接文档.md`、`规则体系/后端契约/api-inventory.md`、`规则体系/后端契约/operation-usage-guide.md`、`规则体系/后端契约/field-usage-index.md`
+- 消息：
+  1. 用户要求把接口契约整理成一份给维护后端同事交接的 Markdown。
+  2. 已新增 `规则体系/后端契约/后端维护接口契约交接文档.md`，作为后端同事的中文交接入口。
+  3. 该文档没有复制全量 190 行接口表，避免形成第二套会漂移的接口正文；全量明细仍以同目录 `api-inventory.md`、`operation-usage-guide.md`、`field-usage-index.md` 和 `contracts/` 为准。
+  4. 文档已写明旧前端契约来源、confirmed/exported-unused/unresolved 状态含义、legacy `code=1` 成功包、当前优先接口、用户已裁定口径和后端需要补充的问题。
+- 需要对方处理：
+  1. 主线后续给后端交接时，优先把该文档作为第一阅读入口，再让后端按文档指向查全量明细。
+  2. 主线如继续新增用户裁定接口口径，需要同步更新该交接文档或在通讯中提醒三线补录。
+  3. 二线不得把该文档中的后端 wrapper 直接当 UI 字段来源，仍需通过 adapter / view-model。
+- 是否需要正式化：是，已正式化到 `规则体系/后端契约/后端维护接口契约交接文档.md`。

@@ -10,10 +10,10 @@ const resolveRepoPath = (...segments: string[]) =>
 const readSource = (...segments: string[]) => readFileSync(resolveRepoPath(...segments), 'utf8')
 
 describe('priority draw bridge', () => {
-  it('keeps the page on the legacy import surface while the source file becomes a compatibility bridge', () => {
+  it('keeps the page on the unified priority-draw runtime surface', () => {
     const source = readSource('src', 'pages', 'updating', 'UpdatingPriorityDrawPage.vue')
 
-    expect(source).toContain("from './updatingPriorityDrawContent'")
+    expect(source).toContain("from './runtime/usePriorityDrawRuntime'")
   })
 
   it('hydrates retained priority-draw event list from unified runtime bridge', () => {
