@@ -263,7 +263,7 @@ describe('homeRailPersistentCacheIntegration.service', () => {
             date: '2026-04-03T00:00:00.000Z',
             subCategory: 'default',
             holdingsCount: 1,
-            priceUnit: '楼',
+            priceUnit: '￥',
             price: 10,
             editionCode: 'A-1',
             issueCount: 1,
