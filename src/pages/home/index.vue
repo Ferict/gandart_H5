@@ -105,13 +105,12 @@ const pageRuntimeStyle = computed<CSSProperties>(() => {
     '--home-global-stage-scale': `${stageScale}`,
     '--home-global-stage-offset-x': `${stageOffsetX}px`,
     '--home-stage-shell-height': compensatedHeight,
-    '--aether-page-background': '#ffffff',
   } as CSSProperties
 })
 const pageMetaStyle = computed(() => {
   const viewportHeight = runtimeContext.value.viewportHeight
   const height = viewportHeight > 0 ? `${viewportHeight}px` : '100vh'
-  return `height:${height};min-height:${height};background:#ffffff;`
+  return `height:${height};min-height:${height};background:var(--aether-page-background,#fafafa);`
 })
 
 const {

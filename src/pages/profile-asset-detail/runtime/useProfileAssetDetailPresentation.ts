@@ -43,7 +43,7 @@ const DEFAULT_PRESET: AssetDetailUiPreset = {
   owner: '0x8A...3F92',
   contract: '0x7F2...C4A1',
   chain: '0xE4...9AC1',
-  tokenStandard: 'ERC-721',
+  tokenStandard: 'BSN',
   fiatText: '≈ ￥8,542.10',
   archiveNote: '该资产已通过链上索引映射，当前为个人中心持有态。',
   descriptionNote: '当前页仅完成 UI 落地，交易与分享动作由主控后续接入。',

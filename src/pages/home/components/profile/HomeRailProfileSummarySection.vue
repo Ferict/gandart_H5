@@ -210,7 +210,7 @@ const emit = defineEmits<{
 .home-profile-summary-unit {
   font-size: 12px;
   line-height: 16px;
-  font-weight: 800;
+  font-weight: 600;
   color: #111111;
 }
 
@@ -221,7 +221,7 @@ const emit = defineEmits<{
 .home-profile-summary-main {
   font-size: 24px;
   line-height: 24px;
-  font-weight: 900;
+  font-weight: 600;
   color: #111111;
 }
 

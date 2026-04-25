@@ -100,21 +100,9 @@ const shouldShowMenu = computed(() => !hasRightSlot.value && !props.showShare &&
   grid-template-columns: 24px minmax(0, 1fr) 24px;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid transparent;
-  background-image: var(
-    --aether-glass-background-image,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.82))
-  );
-  -webkit-backdrop-filter: blur(8px) saturate(1.2);
-  backdrop-filter: blur(8px) saturate(1.2);
+  border-bottom: none;
+  background: #fafafa;
   box-shadow: 0 0 0 rgba(15, 23, 42, 0);
-}
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .secondary-page-topbar {
-    background-color: var(--aether-glass-fallback-bg, rgba(255, 255, 255, 0.96));
-    background-image: none;
-  }
 }
 
 .secondary-page-topbar-hit,
@@ -155,8 +143,8 @@ const shouldShowMenu = computed(() => !hasRightSlot.value && !props.showShare &&
 .secondary-page-topbar-title {
   max-width: 100%;
   color: #111111;
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 18px;
+  line-height: 22px;
   font-weight: 500;
   letter-spacing: -0.02em;
   white-space: nowrap;

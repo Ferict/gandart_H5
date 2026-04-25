@@ -10,12 +10,25 @@
   --aether-font-latin-slab:
     'HarmonyOS Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC',
     'Source Han Sans SC', 'Source Han Sans CN', 'Heiti SC', 'SimHei', system-ui, sans-serif;
-  --aether-page-background: #ffffff;
-  --aether-panel-background: #ffffff;
-  --aether-surface-primary: #ffffff;
-  --aether-surface-secondary: #ffffff;
-  --aether-surface-tertiary: #ffffff;
-  --aether-surface-accent-soft: #ffffff;
+  --aether-color-light-background-page: #fafafa;
+  --aether-color-light-background-panel: #ffffff;
+  --aether-color-light-background-surface: #ffffff;
+  --aether-color-light-background-surface-soft: #f6f7f9;
+  --aether-color-light-background-muted: #f1f5f9;
+  --aether-color-light-background-inverse: #111111;
+  --aether-color-dark-background-page: #0b0f14;
+  --aether-color-dark-background-panel: #111827;
+  --aether-color-dark-background-surface: #141c27;
+  --aether-color-dark-background-surface-soft: #1b2532;
+  --aether-color-dark-background-muted: #243142;
+  --aether-color-dark-background-inverse: #f8fafc;
+  --aether-page-background: var(--aether-color-light-background-page);
+  --aether-panel-background: var(--aether-color-light-background-panel);
+  --aether-surface-primary: var(--aether-color-light-background-surface);
+  --aether-surface-secondary: var(--aether-color-light-background-surface-soft);
+  --aether-surface-tertiary: var(--aether-color-light-background-muted);
+  --aether-surface-accent-soft: var(--aether-color-light-background-surface-soft);
+  --aether-surface-inverse: var(--aether-color-light-background-inverse);
   --aether-border-subtle: #dce6ef;
   --aether-shadow-surface-sm: 0 0 12px rgba(15, 23, 42, 0.05);
   --aether-shadow-surface-md: 0 0 20px rgba(15, 23, 42, 0.06);
@@ -57,9 +70,20 @@
 }
 
 page {
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
   color: #111111;
   font-family: var(--aether-font-system, system-ui, sans-serif);
+}
+
+page[data-aether-theme='dark'],
+[data-aether-theme='dark'] {
+  --aether-page-background: var(--aether-color-dark-background-page);
+  --aether-panel-background: var(--aether-color-dark-background-panel);
+  --aether-surface-primary: var(--aether-color-dark-background-surface);
+  --aether-surface-secondary: var(--aether-color-dark-background-surface-soft);
+  --aether-surface-tertiary: var(--aether-color-dark-background-muted);
+  --aether-surface-accent-soft: var(--aether-color-dark-background-surface-soft);
+  --aether-surface-inverse: var(--aether-color-dark-background-inverse);
 }
 
 view,

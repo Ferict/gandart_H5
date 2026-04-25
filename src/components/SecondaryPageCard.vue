@@ -55,7 +55,7 @@ const hasHead = computed(() => Boolean(props.title || props.icon || hasHeadRight
 <style scoped lang="scss">
 .secondary-page-card {
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--aether-surface-primary, #ffffff);
   box-shadow: var(--aether-shadow-surface-sm, 0 0 12px rgba(15, 23, 42, 0.05));
   box-sizing: border-box;
   display: flex;
@@ -64,7 +64,7 @@ const hasHead = computed(() => Boolean(props.title || props.icon || hasHeadRight
 }
 
 .secondary-page-card.surface-muted {
-  background: #f9fbfd;
+  background: var(--aether-surface-secondary, #f6f7f9);
 }
 
 .secondary-page-card.padding-default {

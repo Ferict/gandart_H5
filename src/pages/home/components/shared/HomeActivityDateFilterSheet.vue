@@ -250,7 +250,7 @@ const {
   max-width: 343px;
   border-radius: var(--aether-surface-radius-xl, 24px);
   border: 1px solid #f3f4f6;
-  background: #ffffff;
+  background: var(--aether-surface-primary, #ffffff);
   box-shadow: var(--aether-shadow-overlay-sheet, 0 0 32px rgba(15, 23, 42, 0.08));
   padding: 16px;
   box-sizing: border-box;
@@ -420,7 +420,7 @@ const {
 
 .home-activity-filter-day-button.is-selected,
 .home-activity-filter-day-button.is-single-day {
-  background: #111111;
+  background: var(--aether-surface-inverse, #111111);
   color: #ffffff;
   box-shadow: var(--aether-shadow-soft-xs, 0 0 16px rgba(15, 23, 42, 0.04));
 }
@@ -484,14 +484,14 @@ const {
 
 .home-activity-filter-action.is-secondary {
   flex: 1 1 0;
-  background: #ffffff;
+  background: var(--aether-surface-primary, #ffffff);
   box-shadow: var(--aether-shadow-soft-xs, 0 0 16px rgba(15, 23, 42, 0.04));
 }
 
 .home-activity-filter-action.is-primary {
   flex: 1.8 1 0;
   border-color: transparent;
-  background: #111111;
+  background: var(--aether-surface-inverse, #111111);
   box-shadow: var(--aether-shadow-overlay-float, 0 0 24px rgba(15, 23, 42, 0.08));
 }
 

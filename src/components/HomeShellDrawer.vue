@@ -207,7 +207,7 @@ const { drawerEntries, handleEntryActivate } = useHomeShellDrawerRuntime({
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .home-shell-drawer-panel {
-    background: var(--aether-page-background, #ffffff);
+    background: var(--aether-page-background, #fafafa);
   }
 }
 
@@ -489,13 +489,13 @@ const { drawerEntries, handleEntryActivate } = useHomeShellDrawerRuntime({
 @media (hover: hover) and (pointer: fine) {
   .home-shell-drawer-item-entry:hover .home-shell-drawer-item {
     transform: translateX(-2px);
-    background: #ffffff;
+    background: var(--aether-surface-primary, #ffffff);
     box-shadow: var(--aether-shadow-surface-md, 0 0 24px rgba(15, 23, 42, 0.05));
   }
 
   .home-shell-drawer-item-entry:hover .home-shell-drawer-icon-shell {
     color: #22d3ee;
-    background: #111111;
+    background: var(--aether-surface-inverse, #111111);
   }
 
   .home-shell-drawer-item-entry:hover .home-shell-drawer-chevron {

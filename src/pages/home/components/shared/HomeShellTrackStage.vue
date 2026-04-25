@@ -286,7 +286,7 @@ useHomeTrackStageLifecycle({
   height: var(--home-stage-shell-height, var(--home-stage-height, 100dvh));
   min-height: var(--home-stage-shell-height, var(--home-stage-height, 100vh));
   min-height: var(--home-stage-shell-height, var(--home-stage-height, 100dvh));
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -324,7 +324,7 @@ useHomeTrackStageLifecycle({
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
 }
 
 .home-page-grid {
@@ -346,7 +346,7 @@ useHomeTrackStageLifecycle({
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
   box-sizing: border-box;
 }
 
@@ -373,7 +373,7 @@ useHomeTrackStageLifecycle({
   width: 100%;
   box-sizing: border-box;
   display: block;
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
 }
 
 .home-track-refresh-rail {

@@ -180,7 +180,7 @@ const handleOpenDrawer = (openDrawer?: () => void) => {
   width: 100%;
   min-height: 100dvh;
   height: 100dvh;
-  background: #ffffff;
+  background: var(--aether-page-background, #fafafa);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -220,7 +220,7 @@ const handleOpenDrawer = (openDrawer?: () => void) => {
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--aether-panel-background, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;

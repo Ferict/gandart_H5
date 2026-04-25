@@ -192,7 +192,7 @@ const {
 const pageMetaStyle = computed(() => {
   const viewportHeight = runtimeContext.value.viewportHeight
   const height = viewportHeight > 0 ? `${viewportHeight}px` : '100vh'
-  return `height:${height};min-height:${height};overflow:hidden;background:#ffffff;`
+  return `height:${height};min-height:${height};overflow:hidden;background:var(--aether-page-background,#fafafa);`
 })
 
 const prepareDetailPageForPageOpen = () => {
