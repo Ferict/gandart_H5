@@ -1,4 +1,9 @@
-# Confidence
+﻿# Confidence
+
+> 文档类型：后端契约字段置信度索引
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录字段证据置信度，用于 P11.12 接驳判断候选字段是否可靠，不表示字段已进入稳定 UI 依赖。
 
 | operationId | direction | fieldPath | confidence | evidence |
 | --- | --- | --- | --- | --- |

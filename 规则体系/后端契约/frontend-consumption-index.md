@@ -1,4 +1,9 @@
-# Frontend Consumption Index
+﻿# Frontend Consumption Index
+
+> 文档类型：后端契约前端消费索引
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录旧前端页面、组件和脚本的字段消费证据，用于判断当前接驳字段缺口。
 
 本文件列出旧前端页面、组件、template、script 中实际消费的对象字段。它用于补齐“页面需要什么字段”的接入视角，但默认不等于 confirmed 后端响应字段。
 

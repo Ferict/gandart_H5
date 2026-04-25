@@ -1,4 +1,9 @@
-# Evidence Index
+﻿# Evidence Index
+
+> 文档类型：后端契约证据索引
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件汇总 wrapper、字段和路径证据，用于追溯契约抽取依据。
 
 | operationId | type | field/path | evidence |
 | --- | --- | --- | --- |

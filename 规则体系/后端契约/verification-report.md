@@ -1,4 +1,9 @@
-# Verification Report
+﻿# Verification Report
+
+> 文档类型：后端契约验证报告
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录契约抽取和覆盖校验结果，用于证明抽取产物质量，不代表真实后端已联调通过。
 
 Generated at: `2026-04-24T18:19:07.580Z`
 Verified at: `2026-04-24T18:19:17.292Z`

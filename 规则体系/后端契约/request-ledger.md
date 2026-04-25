@@ -1,4 +1,9 @@
-# Request Ledger
+﻿# Request Ledger
+
+> 文档类型：后端契约请求字段台账
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录旧前端请求字段来源和证据置信度，用于接驳时确认请求 DTO 候选。
 
 | operationId | fieldPath | location | sourceKind | evidenceKind | confidence | evidence |
 | --- | --- | --- | --- | --- | --- | --- |

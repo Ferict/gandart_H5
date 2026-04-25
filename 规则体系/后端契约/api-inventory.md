@@ -1,4 +1,9 @@
-# API Inventory
+﻿# API Inventory
+
+> 文档类型：后端契约资料
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件列出项目级后端契约 wrapper 清单、状态和证据入口，是后端契约资料的一部分，不是 UI view-model 或真实 API 落地文件。
 
 | operationId | domain | method | path variants | auth | status | evidence |
 | --- | --- | --- | --- | --- | --- | --- |

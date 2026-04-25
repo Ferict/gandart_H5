@@ -1,4 +1,9 @@
-# Unresolved Issues
+﻿# Unresolved Issues
+
+> 文档类型：后端契约未确认项清单
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录仍待确认、待补证或接受风险的后端契约问题，不得直接作为已签收字段依据。
 
 | id | severity | status | affected operations | affected fields | frontend impact | close condition | evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |

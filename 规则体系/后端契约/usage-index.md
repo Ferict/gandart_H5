@@ -1,4 +1,9 @@
-# Usage Index
+﻿# Usage Index
+
+> 文档类型：后端契约调用使用索引
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录旧前端脚本调用与 wrapper 解析结果，用于区分 live call 和非消费线索。
 
 Only script/JS calls are counted as live calls. Template event names, comments, strings, route text, and local method definitions are excluded.
 

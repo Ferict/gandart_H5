@@ -1,4 +1,9 @@
-# Enum And Error Codes
+﻿# Enum And Error Codes
+
+> 文档类型：后端契约枚举与错误码索引
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录旧前端请求包装层可见的枚举和错误码线索，仅作接驳参考。
 
 ## Frontend request envelope error codes
 

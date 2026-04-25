@@ -1,4 +1,9 @@
-# Dataflow Ledger
+﻿# Dataflow Ledger
+
+> 文档类型：后端契约数据流台账
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录旧前端响应字段数据流证据，用于接驳审查和字段候选判断。
 
 ## Response fields
 

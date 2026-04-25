@@ -1,4 +1,9 @@
-# Contract Graph Schema
+﻿# Contract Graph Schema
+
+> 文档类型：后端契约图谱结构说明
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件说明契约图谱生成结构和字段含义，用于理解抽取产物，不作为页面消费入口。
 
 The graph is the single source of truth for generated contracts and evidence documents.
 

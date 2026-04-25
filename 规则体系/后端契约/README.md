@@ -61,11 +61,17 @@
 9. `usage-index.md`
    - 消费侧证据索引
 10. `unresolved.md`
-   - 未确认、待补证、接受风险项总表
+
+- 未确认、待补证、接受风险项总表
+
 11. `handoff-guide.md`
-   - 迁移前抽取产物的交接说明
+
+- 迁移前抽取产物的交接说明
+
 12. `completion-statement.md`
-   - 抽取批次的完成声明
+
+- 抽取批次的完成声明
+
 13. `p11.12.1-freeze.md`
     - `P11.12.1` 内部适配基线冻结记录
 14. `p11.12.2-delta-matrix.md`
@@ -74,8 +80,10 @@
     - `P11.12.3` 全量前端现用接口与后端契约接驳架构口径
 
 补充说明：
+
 1. 本目录正文树已于 2026-04-25 完成物理迁入，不再只是入口 README。
 2. `contract-graph.json`、`_generated/contract-graph.json`、`verification-report.md`、`_generated/coverage-check.md` 中如果仍出现旧抽取路径，只表示历史抽取来源，不表示当前现行入口仍是旧目录。
+3. 本目录承载“后端契约资料”，不承载真实 API 接口落地文件；真实 API 接口仍按 [05-接口与联调规则.md](/H:/工作/天异/uniapp+vue新架构/规则体系/05-接口与联调规则.md) 落到当前前端实现契约、port、implementation、service、handoff 和验证链。
 
 ## 4. 当前可直接使用的正式层
 
@@ -119,6 +127,26 @@
 2. 架构性质：实现和迁移口径，不是新的后端 contract 正文。
 3. 核心结论：不能让页面直连 190 个后端 wrapper；必须通过 backend implementation、DTO adapter、runtime/service 和 view-model 接到 UI。
 4. 后续入口：先做全仓现用接口盘点，再做 provider/mock 过渡和分线迁移。
+
+## 4.3.1 P11.12 口径与真实 API 的关系
+
+`P11.12` 后续固定区分三份口径和真实 API 接口：
+
+1. 后端口径：[06-项目后端契约现行使用口径.md](/H:/工作/天异/uniapp+vue新架构/规则体系/口径/06-项目后端契约现行使用口径.md)
+   - 只回答“后端契约怎么读、后端证据怎么理解”。
+2. 前端改造后口径：[08-P11.12前端改造口径.md](/H:/工作/天异/uniapp+vue新架构/规则体系/口径/08-P11.12前端改造口径.md)
+   - 只回答“当前前端 UI 和 view-model 改造后要吃什么”。
+3. 需要后端补充口径：[09-P11.12需后端补充口径.md](/H:/工作/天异/uniapp+vue新架构/规则体系/口径/09-P11.12需后端补充口径.md)
+   - 只回答“需要后端补充、确认或会议拍板什么”。
+4. 真实 API 接口
+   - 不写在上述口径里，仍按 [05-接口与联调规则.md](/H:/工作/天异/uniapp+vue新架构/规则体系/05-接口与联调规则.md) 落到 `src/contracts`、`src/ports`、`src/implementations`、`src/services/content`、`backend-handoff` 和验证链。
+
+阅读规则：
+
+1. 判断后端契约和后端证据时，读后端口径。
+2. 判断前端改造后要吃什么时，读前端改造后口径。
+3. 判断缺什么、要问后端什么、要开什么会时，读需要后端补充口径。
+4. 判断真实 API 是否落地时，查当前前端实现契约、port、implementation、service、handoff 和验证链，不查口径文件。
 
 ## 4.4 P11.12.3A0 最新版契约迁入状态
 

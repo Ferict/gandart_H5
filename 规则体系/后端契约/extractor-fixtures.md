@@ -1,4 +1,9 @@
-# Extractor Fixtures
+﻿# Extractor Fixtures
+
+> 文档类型：后端契约抽取验证用例
+> 状态：active
+> 更新时间：2026-04-25
+> 说明：本文件记录契约抽取器的判定用例和预期结果，用于维护抽取质量。
 
 | Fixture | Expected result |
 | --- | --- |
