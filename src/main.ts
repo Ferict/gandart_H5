@@ -11,10 +11,9 @@ import { createContentBackendHttpImplementation } from './implementations/conten
 import { createContentHttpImplementation } from './implementations/content.http'
 import { contentMockImplementation } from './implementations/content.mock'
 import { setContentPort } from './services/content/content.service'
+import { resolveContentProviderName } from './services/content/contentProviderBootstrap.service'
 import { initializeHomeRailPersistentCacheIntegration } from './services/home-rail/homeRailPersistentCacheIntegration.service'
 import './uni.scss'
-
-type ContentProvider = 'mock' | 'http' | 'backend-http'
 
 type RuntimeEnv = {
   PROD?: boolean
@@ -30,7 +29,7 @@ const resolveRuntimeEnv = (): RuntimeEnv => {
 
 const setupContentProvider = () => {
   const env = resolveRuntimeEnv()
-  const provider = (env.VITE_CONTENT_PROVIDER?.trim().toLowerCase() as ContentProvider) || 'mock'
+  const provider = resolveContentProviderName(env.VITE_CONTENT_PROVIDER)
   if (provider === 'http') {
     const baseUrl = env.VITE_CONTENT_API_BASE_URL?.trim()
     if (!baseUrl) {

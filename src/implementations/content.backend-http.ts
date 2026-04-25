@@ -50,6 +50,11 @@ interface LegacyBackendResponse {
   serverTime?: unknown
 }
 
+interface LegacyBackendRequestResult {
+  envelope: LegacyBackendResponse
+  headers: Record<string, string>
+}
+
 interface ExtractedPageItems {
   items: unknown[]
   total?: number
@@ -150,7 +155,7 @@ const requestBackend = async (
   method: ContentApiHttpMethod,
   url: string,
   payload?: Record<string, unknown>
-): Promise<{ envelope: LegacyBackendResponse; headers: Record<string, string> }> => {
+): Promise<LegacyBackendRequestResult> => {
   return new Promise((resolve, reject) => {
     uni.request({
       method,
@@ -224,6 +229,11 @@ const createContentEnvelope = <T>(
   serverTime: typeof raw.serverTime === 'string' ? raw.serverTime : new Date().toISOString(),
   data,
 })
+
+const findFailedLegacyResponse = (
+  ...responses: LegacyBackendRequestResult[]
+): LegacyBackendRequestResult | undefined =>
+  responses.find((response) => resolveEnvelopeCode(response.envelope) !== 0)
 
 const readString = (value: unknown): string | undefined => {
   if (typeof value === 'string') {
@@ -453,6 +463,65 @@ const normalizeLegacyMarketSummary = (
   }
 }
 
+type MarketSortInput = Extract<ContentListRequestDto, { resourceType: 'market_item' }>['sort']
+
+const normalizeSortableTimestamp = (value: string): number => {
+  const parsed = Date.parse(value)
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+const sortMarketListItems = (
+  items: ContentListItemDtoBase<'market_item'>[],
+  sort: MarketSortInput
+): ContentListItemDtoBase<'market_item'>[] => {
+  const field = sort?.field ?? 'listedAt'
+  const direction = sort?.direction === 'asc' ? 1 : -1
+
+  return items
+    .map((item, index) => ({ item, index }))
+    .sort((left, right) => {
+      const leftValue =
+        field === 'priceInCent'
+          ? left.item.payload.priceInCent
+          : normalizeSortableTimestamp(left.item.payload.listedAt)
+      const rightValue =
+        field === 'priceInCent'
+          ? right.item.payload.priceInCent
+          : normalizeSortableTimestamp(right.item.payload.listedAt)
+      if (leftValue === rightValue) {
+        return left.index - right.index
+      }
+      return (leftValue - rightValue) * direction
+    })
+    .map(({ item }) => item)
+}
+
+const sortMarketSummaryItems = (
+  items: ContentMarketItemSummaryDto[],
+  sort: MarketSortInput
+): ContentMarketItemSummaryDto[] => {
+  const field = sort?.field ?? 'listedAt'
+  const direction = sort?.direction === 'asc' ? 1 : -1
+
+  return items
+    .map((item, index) => ({ item, index }))
+    .sort((left, right) => {
+      const leftValue =
+        field === 'priceInCent'
+          ? left.item.priceInCent
+          : normalizeSortableTimestamp(left.item.listedAt)
+      const rightValue =
+        field === 'priceInCent'
+          ? right.item.priceInCent
+          : normalizeSortableTimestamp(right.item.listedAt)
+      if (leftValue === rightValue) {
+        return left.index - right.index
+      }
+      return (leftValue - rightValue) * direction
+    })
+    .map(({ item }) => item)
+}
+
 const normalizeLegacyNoticeItem = (
   item: unknown,
   index: number,
@@ -558,6 +627,21 @@ const normalizeLegacyFeaturedDrop = (
     target: createBasicTarget('drop', dropId),
   }
 }
+
+const createEmptyFeaturedDrop = (): ContentFeaturedDropDto => ({
+  dropId: '',
+  title: '',
+  sectionTitle: '首发藏品',
+  sectionSubtitle: 'Featured Drop',
+  priceLabel: '铸造价格',
+  currency: 'CNY',
+  priceInCent: 0,
+  mintedCount: 0,
+  supplyCount: 0,
+  asset: null,
+  placeholderIconKey: 'box',
+  target: createBasicTarget('drop', ''),
+})
 
 const normalizeLegacyActivityEntry = (
   item: unknown,
@@ -853,6 +937,15 @@ export const createContentBackendHttpImplementation = (
         list_rows: 4,
       }),
     ])
+    const failedResponse = findFailedLegacyResponse(
+      noticeResponse,
+      bannerResponse,
+      featuredResponse,
+      marketResponse
+    )
+    if (failedResponse) {
+      return createContentEnvelope<ContentSceneDto>(failedResponse.envelope, null)
+    }
 
     const noticePage = extractPageItems(noticeResponse.envelope.data, 1, 3)
     const bannerPage = extractPageItems(bannerResponse.envelope.data, 1, 20)
@@ -874,21 +967,24 @@ export const createContentBackendHttpImplementation = (
     const featured =
       featuredPage.items
         .map((item, index) => normalizeLegacyFeaturedDrop(item, index))
-        .find((item): item is ContentFeaturedDropDto => Boolean(item)) ??
-      normalizeLegacyFeaturedDrop({}, 0)
-    const marketItems = marketPage.items
-      .map((item, index) =>
-        normalizeLegacyMarketSummary(item, index, {
-          resourceType: 'market_item',
-          sort: {
-            field: 'listedAt',
-            direction: 'desc',
-          },
-          page: 1,
-          pageSize: 4,
-        })
-      )
-      .filter((item): item is ContentMarketItemSummaryDto => Boolean(item))
+        .find((item): item is ContentFeaturedDropDto => Boolean(item)) ?? createEmptyFeaturedDrop()
+    const marketSort: MarketSortInput = {
+      field: 'listedAt',
+      direction: 'desc',
+    }
+    const marketItems = sortMarketSummaryItems(
+      marketPage.items
+        .map((item, index) =>
+          normalizeLegacyMarketSummary(item, index, {
+            resourceType: 'market_item',
+            sort: marketSort,
+            page: 1,
+            pageSize: 4,
+          })
+        )
+        .filter((item): item is ContentMarketItemSummaryDto => Boolean(item)),
+      marketSort
+    )
 
     const blocks: ContentSceneBlockDto[] = [
       {
@@ -976,6 +1072,10 @@ export const createContentBackendHttpImplementation = (
         list_rows: 8,
       }),
     ])
+    const failedResponse = findFailedLegacyResponse(activityResponse, noticeResponse)
+    if (failedResponse) {
+      return createContentEnvelope<ContentSceneDto>(failedResponse.envelope, null)
+    }
 
     const activityPage = extractPageItems(activityResponse.envelope.data, 1, 8)
     const noticePage = extractPageItems(noticeResponse.envelope.data, 1, 8)
@@ -1019,6 +1119,10 @@ export const createContentBackendHttpImplementation = (
         list_rows: 9,
       }),
     ])
+    const failedResponse = findFailedLegacyResponse(userResponse, assetResponse)
+    if (failedResponse) {
+      return createContentEnvelope<ContentSceneDto>(failedResponse.envelope, null)
+    }
 
     const userInfo = isObjectRecord(userResponse.envelope.data) ? userResponse.envelope.data : {}
     const assetPage = extractPageItems(assetResponse.envelope.data, 1, 9)
@@ -1166,9 +1270,12 @@ export const createContentBackendHttpImplementation = (
         }
 
         const extracted = extractPageItems(response.envelope.data, input.page, input.pageSize)
-        const items = extracted.items
-          .map((item, index) => normalizeLegacyMarketItem(item, index, input))
-          .filter((item): item is ContentListItemDtoBase<'market_item'> => Boolean(item))
+        const items = sortMarketListItems(
+          extracted.items
+            .map((item, index) => normalizeLegacyMarketItem(item, index, input))
+            .filter((item): item is ContentListItemDtoBase<'market_item'> => Boolean(item)),
+          input.sort
+        )
 
         return {
           envelope: createContentEnvelope<ContentListDto>(response.envelope, {

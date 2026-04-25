@@ -439,4 +439,149 @@ describe('content.backend-http provider', () => {
       },
     })
   })
+
+  it('returns a failed home scene envelope when any required legacy wrapper fails', async () => {
+    vi.stubGlobal('uni', {
+      request(options: MockUniRequestOptions) {
+        const url = options.url
+        const responseData = url.includes('/banner/show/getBanner')
+          ? {
+              code: 701,
+              msg: 'banner failed',
+              data: null,
+            }
+          : {
+              code: 0,
+              msg: 'ok',
+              data: [],
+            }
+
+        options.success?.({
+          statusCode: 200,
+          data: responseData,
+          header: {},
+        })
+      },
+    })
+
+    const implementation = createContentBackendHttpImplementation({
+      baseUrl: 'https://legacy.example.com',
+      isProduction: true,
+    })
+
+    const response = await implementation.getScene({ sceneId: 'home' })
+
+    expect(response).toMatchObject({
+      code: 701,
+      message: 'banner failed',
+      data: null,
+    })
+  })
+
+  it('keeps an empty featured drop shell instead of synthesizing a fake zero-price drop', async () => {
+    vi.stubGlobal('uni', {
+      request(options: MockUniRequestOptions) {
+        const url = options.url
+        const responseData = url.includes('/index/afficheList')
+          ? {
+              data: {
+                data: [],
+              },
+            }
+          : url.includes('/banner/show/getBanner')
+            ? {
+                data: [],
+              }
+            : url.includes('/box/blind_box/list')
+              ? {
+                  data: [],
+                }
+              : {
+                  data: [],
+                }
+
+        options.success?.({
+          statusCode: 200,
+          data: {
+            code: 0,
+            msg: 'ok',
+            ...responseData,
+          },
+          header: {},
+        })
+      },
+    })
+
+    const implementation = createContentBackendHttpImplementation({
+      baseUrl: 'https://legacy.example.com',
+      isProduction: true,
+    })
+
+    const response = await implementation.getScene({ sceneId: 'home' })
+    const featuredBlock = response.data?.blocks.find((block) => block.blockType === 'featured_drop')
+
+    expect(featuredBlock).toMatchObject({
+      blockType: 'featured_drop',
+      item: {
+        dropId: '',
+        title: '',
+        priceInCent: 0,
+      },
+    })
+  })
+
+  it('sorts the current market page in backend-http without sending unsupported sort fields', async () => {
+    vi.stubGlobal('uni', {
+      request(options: MockUniRequestOptions) {
+        requestCalls.push(options)
+        options.success?.({
+          statusCode: 200,
+          data: {
+            code: 0,
+            msg: 'ok',
+            data: [
+              {
+                id: 1,
+                product: {
+                  name: 'High',
+                },
+                price: '20.00',
+                create_time: '2026-04-24T10:00:00+08:00',
+              },
+              {
+                id: 2,
+                product: {
+                  name: 'Low',
+                },
+                price: '10.00',
+                create_time: '2026-04-24T09:00:00+08:00',
+              },
+            ],
+          },
+          header: {},
+        })
+      },
+    })
+
+    const implementation = createContentBackendHttpImplementation({
+      baseUrl: 'https://legacy.example.com',
+      isProduction: true,
+    })
+
+    const response = await implementation.getList({
+      resourceType: 'market_item',
+      page: 1,
+      pageSize: 10,
+      sort: {
+        field: 'priceInCent',
+        direction: 'asc',
+      },
+    })
+
+    expect(requestCalls[0]?.data).toEqual({
+      page: 1,
+      list_rows: 10,
+    })
+    expect(response.envelope.data?.items.map((item) => item.title)).toEqual(['Low', 'High'])
+  })
 })
