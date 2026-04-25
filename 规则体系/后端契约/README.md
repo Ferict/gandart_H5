@@ -50,33 +50,37 @@
    - 生成或抽取的中间产物
 4. `api-inventory.md`
    - 接口总清单、状态、证据入口
-5. `operation-usage-guide.md`
+5. `全量接口契约文档.md`
+   - 面向后端维护同事的全量接口文档，集中列出全部接口、请求地址、请求字段、返回结构摘录、字段说明和风险
+6. `后端维护接口契约交接文档.md`
+   - 面向后端维护同事的最小阅读入口和中文摘要
+7. `operation-usage-guide.md`
    - 面向前端接入的接口用途、旧前端消费位置、请求字段、已消费响应字段与风险说明
-6. `field-usage-index.md`
+8. `field-usage-index.md`
    - 字段级用途索引，说明旧前端哪里读取字段、接入时能否稳定依赖
-7. `frontend-consumption-index.md`
+9. `frontend-consumption-index.md`
    - 旧前端页面、组件、模板和脚本的实际字段消费证据
-8. `dataflow-ledger.md`
+10. `dataflow-ledger.md`
    - 运行时与数据流映射线索
-9. `usage-index.md`
+11. `usage-index.md`
    - 消费侧证据索引
-10. `unresolved.md`
+12. `unresolved.md`
 
 - 未确认、待补证、接受风险项总表
 
-11. `handoff-guide.md`
+13. `handoff-guide.md`
 
 - 迁移前抽取产物的交接说明
 
-12. `completion-statement.md`
+14. `completion-statement.md`
 
 - 抽取批次的完成声明
 
-13. `p11.12.1-freeze.md`
+15. `p11.12.1-freeze.md`
     - `P11.12.1` 内部适配基线冻结记录
-14. `p11.12.2-delta-matrix.md`
+16. `p11.12.2-delta-matrix.md`
     - `P11.12.2` 当前前端内容域契约与项目级后端契约的差异矩阵
-15. `p11.12.3-bridge-architecture.md`
+17. `p11.12.3-bridge-architecture.md`
     - `P11.12.3` 全量前端现用接口与后端契约接驳架构口径
 
 补充说明：
@@ -201,14 +205,16 @@
 后续任何人接新版后端契约时，默认阅读顺序固定为：
 
 1. 本文件 `规则体系/后端契约/README.md`
-2. `api-inventory.md`
-3. `operation-usage-guide.md`
-4. `field-usage-index.md`
-5. `frontend-consumption-index.md`
-6. `unresolved.md`
-7. `contracts/index.ts`
-8. 对应 `contracts/*.contract.ts`
-9. 如需补线索，再看 `usage-index.md`、`dataflow-ledger.md`
+2. `后端维护接口契约交接文档.md`
+3. `全量接口契约文档.md`
+4. `api-inventory.md`
+5. `operation-usage-guide.md`
+6. `field-usage-index.md`
+7. `frontend-consumption-index.md`
+8. `unresolved.md`
+9. `contracts/index.ts`
+10. 对应 `contracts/*.contract.ts`
+11. 如需补线索，再看 `usage-index.md`、`dataflow-ledger.md`
 
 禁止一上来直接把 `contracts/inferred/*` 当正式接口真值。
 

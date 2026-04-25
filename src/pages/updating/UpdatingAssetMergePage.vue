@@ -5,9 +5,22 @@ Out of scope: real merge-domain fetching, merge execution, and formal contract w
 -->
 <template>
   <page-meta :page-style="pageMetaStyle" />
-  <SecondaryPageFrame route-source="updating-asset-merge" title="资产合成" @back="emit('back')">
+  <SecondaryPageFrame
+    route-source="updating-asset-merge"
+    :title="frameTitle"
+    :has-action-rail="Boolean(selectedEvent)"
+    :action-rail-occupied-height="112"
+    @back="handleFrameBack"
+  >
     <view class="asset-merge-page-content">
-      <view v-if="assetMergeEventList.length" class="asset-merge-event-list">
+      <UpdatingAssetMergeDetailPanel
+        v-if="selectedEvent"
+        :event="selectedEvent"
+        :active-recipe-id="activeRecipeId"
+        @select-recipe="handleRecipeSelect"
+      />
+
+      <view v-else-if="assetMergeEventList.length" class="asset-merge-event-list">
         <view
           v-for="event in assetMergeEventList"
           :key="event.id"
@@ -88,15 +101,34 @@ Out of scope: real merge-domain fetching, merge execution, and formal contract w
         <text class="asset-merge-empty-copy">当前暂无可参与的合成活动</text>
       </view>
     </view>
+
+    <template v-if="selectedEvent" #action-rail>
+      <HomeInteractiveTarget
+        class="asset-merge-detail-action"
+        :label="primaryActionLabel"
+        :disabled="isPrimaryActionDisabled"
+        @activate="handlePrimaryAction"
+      >
+        <view
+          class="asset-merge-detail-action-visual"
+          :class="{ 'is-disabled': isPrimaryActionDisabled }"
+        >
+          <AetherIcon :name="primaryActionIcon" :size="16" :stroke-width="2.3" />
+          <text class="asset-merge-detail-action-copy">{{ primaryActionLabel }}</text>
+        </view>
+      </HomeInteractiveTarget>
+    </template>
   </SecondaryPageFrame>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AetherIcon from '../../components/AetherIcon.vue'
 import HomeInteractiveTarget from '../../components/HomeInteractiveTarget.vue'
 import SecondaryPageFrame from '../../components/SecondaryPageFrame.vue'
 import { useResponsiveRailLayout } from '../../composables/useResponsiveRailLayout'
+import type { AetherIconName } from '../../models/ui/aetherIcon.model'
+import UpdatingAssetMergeDetailPanel from './UpdatingAssetMergeDetailPanel.vue'
 import type { AssetMergeEventViewModel, AssetMergeTone } from './runtime/asset-merge.model'
 import { useAssetMergeRuntime } from './runtime/useAssetMergeRuntime'
 
@@ -106,6 +138,89 @@ const emit = defineEmits<{
 
 const { runtimeContext } = useResponsiveRailLayout()
 const { assetMergeEventList } = useAssetMergeRuntime()
+const selectedEventId = ref<string | null>(null)
+const activeRecipeId = ref('')
+const isMerging = ref(false)
+
+const selectedEvent = computed(() => {
+  if (!selectedEventId.value) {
+    return null
+  }
+
+  return assetMergeEventList.value.find((event) => event.id === selectedEventId.value) ?? null
+})
+
+const activeRecipe = computed(() => {
+  const event = selectedEvent.value
+  if (!event) {
+    return null
+  }
+
+  return (
+    event.recipes.find((recipe) => recipe.id === activeRecipeId.value) ?? event.recipes[0] ?? null
+  )
+})
+
+const frameTitle = computed(() => (selectedEvent.value ? '合成详情' : '资产合成'))
+
+const isPrimaryActionDisabled = computed(() => {
+  const event = selectedEvent.value
+  if (!event) {
+    return true
+  }
+
+  return event.status !== 'LIVE' || !activeRecipe.value?.isReady || isMerging.value
+})
+
+const primaryActionLabel = computed(() => {
+  const event = selectedEvent.value
+  if (!event) {
+    return ''
+  }
+
+  if (event.status === 'UPCOMING') {
+    return '活动未开始'
+  }
+
+  if (event.status === 'ENDED') {
+    return '活动已结束'
+  }
+
+  if (isMerging.value) {
+    return '合成中'
+  }
+
+  if (!activeRecipe.value?.isReady) {
+    return '当前方案素材不足'
+  }
+
+  return '确认合成'
+})
+
+const primaryActionIcon = computed<AetherIconName>(() => {
+  if (isMerging.value) {
+    return 'loader-2'
+  }
+
+  if (selectedEvent.value?.status === 'UPCOMING') {
+    return 'calendar-days'
+  }
+
+  if (selectedEvent.value?.status === 'ENDED') {
+    return 'octagon-alert'
+  }
+
+  if (!activeRecipe.value?.isReady) {
+    return 'shield-alert'
+  }
+
+  return 'zap'
+})
+
+watch(selectedEvent, (event) => {
+  activeRecipeId.value = event?.recipes[0]?.id ?? ''
+  isMerging.value = false
+})
 
 const pageMetaStyle = computed(() => {
   const viewportHeight = runtimeContext.value.viewportHeight
@@ -139,7 +254,7 @@ const resolveActionLabel = (event: AssetMergeEventViewModel) => {
     return '已结束'
   }
 
-  return '前往合成页'
+  return event.status === 'UPCOMING' ? '查看方案' : '前往合成页'
 }
 
 const handleMergeTap = (event: AssetMergeEventViewModel) => {
@@ -147,10 +262,64 @@ const handleMergeTap = (event: AssetMergeEventViewModel) => {
     return
   }
 
-  uni.showToast({
-    title: event.status === 'UPCOMING' ? '活动暂未开始' : '合成流程待接入',
-    icon: 'none',
-  })
+  selectedEventId.value = event.id
+}
+
+const handleFrameBack = () => {
+  if (selectedEventId.value) {
+    selectedEventId.value = null
+    return
+  }
+
+  emit('back')
+}
+
+const handleRecipeSelect = (recipeId: string) => {
+  activeRecipeId.value = recipeId
+}
+
+const handlePrimaryAction = () => {
+  const event = selectedEvent.value
+  if (!event) {
+    return
+  }
+
+  if (event.status === 'UPCOMING') {
+    uni.showToast({
+      title: '活动暂未开始',
+      icon: 'none',
+    })
+    return
+  }
+
+  if (event.status === 'ENDED') {
+    uni.showToast({
+      title: '活动已结束',
+      icon: 'none',
+    })
+    return
+  }
+
+  if (!activeRecipe.value?.isReady) {
+    uni.showToast({
+      title: '当前方案素材不足',
+      icon: 'none',
+    })
+    return
+  }
+
+  if (isMerging.value) {
+    return
+  }
+
+  isMerging.value = true
+  setTimeout(() => {
+    isMerging.value = false
+    uni.showToast({
+      title: '合成成功',
+      icon: 'success',
+    })
+  }, 900)
 }
 </script>
 
@@ -457,6 +626,44 @@ const handleMergeTap = (event: AssetMergeEventViewModel) => {
   font-size: 12px;
   line-height: 18px;
   font-weight: 500;
+}
+
+.asset-merge-detail-action {
+  display: block;
+  width: 100%;
+  border-radius: 18px;
+}
+
+.asset-merge-detail-action-visual {
+  min-height: 52px;
+  border-radius: 18px;
+  background: var(--aether-surface-inverse, #111111);
+  color: #ffffff;
+  box-shadow: var(--aether-shadow-overlay-float, 0 0 24px rgba(15, 23, 42, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+.asset-merge-detail-action.is-entry-active .asset-merge-detail-action-visual {
+  transform: scale(0.985);
+}
+
+.asset-merge-detail-action-visual.is-disabled {
+  background: var(--aether-surface-tertiary, #f1f5f9);
+  color: #94a3b8;
+  box-shadow: none;
+}
+
+.asset-merge-detail-action-copy {
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
 }
 
 @media screen and (width < 390px) {
