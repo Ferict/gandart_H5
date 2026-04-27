@@ -92,10 +92,6 @@ describe('content contract endpoint consistency', () => {
     })
     await implementation.getList({
       resourceType: 'market_item',
-      sort: {
-        field: 'listedAt',
-        direction: 'desc',
-      },
       page: 1,
       pageSize: 20,
     })
@@ -119,7 +115,7 @@ describe('content contract endpoint consistency', () => {
       },
       {
         method: CONTENT_API_ENDPOINTS.list.method,
-        url: `https://api.example.com${CONTENT_API_ENDPOINTS.list.path}?resourceType=market_item&sortField=listedAt&sortDirection=desc&page=1&pageSize=20`,
+        url: `https://api.example.com${CONTENT_API_ENDPOINTS.list.path}?resourceType=market_item&page=1&pageSize=20`,
       },
       {
         method: CONTENT_API_ENDPOINTS.noticeRead.method,
@@ -170,5 +166,24 @@ describe('content contract endpoint consistency', () => {
     }
 
     expect(failureEnvelope.data).toBeNull()
+  })
+
+  it('serializes formal marketKind query param when present', async () => {
+    const implementation = createContentHttpImplementation({
+      baseUrl: 'https://api.example.com',
+      isProduction: true,
+    })
+
+    await implementation.getList({
+      resourceType: 'market_item',
+      marketKind: 'blindBoxes',
+      page: 1,
+      pageSize: 20,
+    })
+
+    expect(requestCalls.at(-1)).toEqual({
+      method: CONTENT_API_ENDPOINTS.list.method,
+      url: `https://api.example.com${CONTENT_API_ENDPOINTS.list.path}?resourceType=market_item&marketKind=blindBoxes&page=1&pageSize=20`,
+    })
   })
 })

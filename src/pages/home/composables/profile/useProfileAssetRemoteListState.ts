@@ -12,6 +12,7 @@ import {
 } from '../../../../services/home-rail/homeRailProfileContent.service'
 import { logSafeError } from '../../../../utils/safeLogger.util'
 import type { HomeRailPaginationAttemptResult } from '../shared/useHomeRailPaginationLoadingChain'
+import { COMMON_BATCHED_TRANSPORT_PAGES_PER_BATCH } from '../shared/homeRailBatchStrategy'
 
 interface UseProfileAssetRemoteListStateOptions {
   remotePageSize: number
@@ -56,9 +57,14 @@ export const useProfileAssetRemoteListState = ({
   const hasProfileAssetFirstScreenError = ref(false)
   const hasProfileAssetPaginationError = ref(false)
   const remoteProfileAssetListEtag = ref<string | null>(null)
+  const remoteProfileAssetListEtagScope = ref<string | null>(null)
   const profileAssetResolvedPage = ref(0)
+  const loadedProfileAssetItemCount = ref(0)
+  const isBeyondFirstTransportBatch = ref(false)
   const profileAssetQueryCacheKey = ref<string | null>(null)
   const profileAssetListRequestVersion = ref(0)
+  const transportPagesPerBatch = COMMON_BATCHED_TRANSPORT_PAGES_PER_BATCH
+  const transportBatchSize = remotePageSize * transportPagesPerBatch
 
   const resolveProfileAssetQueryCacheKey = (query: ResolveHomeRailProfileAssetListInput) => {
     return JSON.stringify({
@@ -66,6 +72,111 @@ export const useProfileAssetRemoteListState = ({
       subCategory: query.subCategory ?? null,
       keyword: query.keyword ?? null,
     })
+  }
+
+  const resolveProfileAssetEtagScope = (querySignature: string, userScope: string | null) => {
+    return `${querySignature}::${userScope ?? ''}`
+  }
+
+  const canApplyProfileAssetRemoteResult = (
+    requestVersion: number,
+    querySignature: string,
+    userScope: string | null
+  ) => {
+    return (
+      profileAssetListRequestVersion.value === requestVersion &&
+      resolveProfileAssetQuerySignature() === querySignature &&
+      resolveCurrentPersistUserScope() === userScope
+    )
+  }
+
+  const syncLoadedProfileAssetDepth = (loadedItemCount: number) => {
+    loadedProfileAssetItemCount.value = loadedItemCount
+    isBeyondFirstTransportBatch.value = loadedItemCount > transportBatchSize
+  }
+
+  interface ResolvedProfileAssetBatch {
+    appendedItems: HomeRailProfileAssetListResult['items']
+    firstPageEtag: string | null
+    firstPageNotModified: boolean
+    lastConsumedRemotePage: number
+    total: number
+  }
+
+  const resolveRemoteProfileAssetBatch = async (
+    startPage: number,
+    query: ResolveHomeRailProfileAssetListInput,
+    expectedQuerySignature: string,
+    requestUserScope: string | null,
+    requestVersion: number,
+    existingItems: HomeRailProfileAssetListResult['items'],
+    options: { ifNoneMatch?: string } = {}
+  ): Promise<ResolvedProfileAssetBatch | null> => {
+    const appendedItems: HomeRailProfileAssetListResult['items'] = []
+    const seenIds = new Set(existingItems.map((item) => item.id))
+    let firstPageEtag: string | null = null
+    let firstPageNotModified = false
+    let lastConsumedRemotePage = Math.max(startPage - 1, 0)
+    let total = 0
+
+    for (let pageOffset = 0; pageOffset < transportPagesPerBatch; pageOffset += 1) {
+      const page = startPage + pageOffset
+      const requestSnapshot = {
+        ...query,
+        page,
+        pageSize: remotePageSize,
+      }
+      const result =
+        pageOffset === 0
+          ? await resolveHomeRailProfileAssetList(requestSnapshot, {
+              ifNoneMatch: options.ifNoneMatch,
+            })
+          : await resolveHomeRailProfileAssetList(requestSnapshot, {
+              ifNoneMatch: undefined,
+            })
+
+      if (
+        !canApplyProfileAssetRemoteResult(requestVersion, expectedQuerySignature, requestUserScope)
+      ) {
+        return null
+      }
+
+      if (pageOffset === 0) {
+        firstPageEtag = result.etag ?? null
+        firstPageNotModified = result.notModified === true
+        if (firstPageNotModified) {
+          return {
+            appendedItems: [],
+            firstPageEtag,
+            firstPageNotModified: true,
+            lastConsumedRemotePage,
+            total: remoteProfileAssetTotal.value,
+          }
+        }
+      }
+
+      if (result.notModified) {
+        continue
+      }
+
+      lastConsumedRemotePage = result.page
+      total = result.total
+      result.items.forEach((item) => {
+        if (seenIds.has(item.id)) {
+          return
+        }
+        seenIds.add(item.id)
+        appendedItems.push(item)
+      })
+    }
+
+    return {
+      appendedItems,
+      firstPageEtag,
+      firstPageNotModified,
+      lastConsumedRemotePage,
+      total,
+    }
   }
 
   const reloadRemoteProfileAssetList = async (
@@ -78,6 +189,7 @@ export const useProfileAssetRemoteListState = ({
     const hasCachedItems = remoteProfileAssets.value.length > 0
     const queryCacheKey = resolveProfileAssetQueryCacheKey(query)
     const requestUserScope = resolveCurrentPersistUserScope()
+    const requestEtagScope = resolveProfileAssetEtagScope(expectedQuerySignature, requestUserScope)
     hasProfileAssetFirstScreenError.value = false
     hasProfileAssetPaginationError.value = false
     profileAssetLoadingPhase.value = hasCachedItems ? 'pagination' : 'first-screen'
@@ -89,36 +201,64 @@ export const useProfileAssetRemoteListState = ({
     }
 
     try {
-      const result = await resolveHomeRailProfileAssetList(requestSnapshot, {
-        ifNoneMatch: options.force ? undefined : (remoteProfileAssetListEtag.value ?? undefined),
-      })
+      const batch = await resolveRemoteProfileAssetBatch(
+        1,
+        query,
+        expectedQuerySignature,
+        requestUserScope,
+        requestVersion,
+        [],
+        {
+          ifNoneMatch:
+            !options.force && remoteProfileAssetListEtagScope.value === requestEtagScope
+              ? (remoteProfileAssetListEtag.value ?? undefined)
+              : undefined,
+        }
+      )
 
-      if (
-        profileAssetListRequestVersion.value !== requestVersion ||
-        resolveProfileAssetQuerySignature() !== expectedQuerySignature
-      ) {
+      if (!batch) {
         return null
       }
 
-      if (result.notModified) {
+      if (batch.firstPageNotModified) {
         hasResolvedRemoteProfileAssets.value =
           hasResolvedRemoteProfileAssets.value && profileAssetQueryCacheKey.value === queryCacheKey
-        return result
+        return {
+          page: requestSnapshot.page ?? 1,
+          pageSize: requestSnapshot.pageSize ?? remotePageSize,
+          total: remoteProfileAssetTotal.value,
+          items: [],
+          etag: remoteProfileAssetListEtag.value ?? undefined,
+          notModified: true,
+        }
       }
 
-      remoteProfileAssets.value = result.items
-      remoteProfileAssetTotal.value = result.total
+      const mergedResult: HomeRailProfileAssetListResult = {
+        page: Math.max(batch.lastConsumedRemotePage, 1),
+        pageSize: remotePageSize,
+        total: batch.total,
+        items: batch.appendedItems,
+        etag: batch.firstPageEtag ?? undefined,
+        notModified: false,
+      }
+      remoteProfileAssets.value = mergedResult.items
+      remoteProfileAssetTotal.value = mergedResult.total
       hasResolvedRemoteProfileAssets.value = true
-      remoteProfileAssetListEtag.value = result.etag ?? null
-      profileAssetResolvedPage.value = result.page
+      remoteProfileAssetListEtag.value = batch.firstPageEtag
+      remoteProfileAssetListEtagScope.value = batch.firstPageEtag ? requestEtagScope : null
+      profileAssetResolvedPage.value = mergedResult.page
+      syncLoadedProfileAssetDepth(mergedResult.items.length)
       profileAssetQueryCacheKey.value = queryCacheKey
-      syncResolvedProfileAssetListSnapshot(requestSnapshot, result, result.etag)
-      await persistResolvedProfileAssetListSnapshot?.(requestSnapshot, result, requestUserScope)
-      return result
+      syncResolvedProfileAssetListSnapshot(requestSnapshot, mergedResult, mergedResult.etag)
+      await persistResolvedProfileAssetListSnapshot?.(
+        requestSnapshot,
+        mergedResult,
+        requestUserScope
+      )
+      return mergedResult
     } catch (error) {
       if (
-        profileAssetListRequestVersion.value !== requestVersion ||
-        resolveProfileAssetQuerySignature() !== expectedQuerySignature
+        !canApplyProfileAssetRemoteResult(requestVersion, expectedQuerySignature, requestUserScope)
       ) {
         return null
       }
@@ -131,7 +271,9 @@ export const useProfileAssetRemoteListState = ({
       }
       return null
     } finally {
-      if (profileAssetListRequestVersion.value === requestVersion) {
+      if (
+        canApplyProfileAssetRemoteResult(requestVersion, expectedQuerySignature, requestUserScope)
+      ) {
         isRemoteProfileAssetsLoading.value = false
         profileAssetLoadingPhase.value = 'idle'
       }
@@ -161,27 +303,22 @@ export const useProfileAssetRemoteListState = ({
     isRemoteProfileAssetsLoading.value = true
 
     try {
-      const result = await resolveHomeRailProfileAssetList(
-        {
-          ...query,
-          page: nextPage,
-          pageSize: remotePageSize,
-        },
-        {
-          ifNoneMatch: undefined,
-        }
+      const batch = await resolveRemoteProfileAssetBatch(
+        nextPage,
+        query,
+        expectedQuerySignature,
+        requestUserScope,
+        requestVersion,
+        remoteProfileAssets.value
       )
 
-      if (
-        profileAssetListRequestVersion.value !== requestVersion ||
-        resolveProfileAssetQuerySignature() !== expectedQuerySignature
-      ) {
+      if (!batch) {
         return {
           outcome: 'stale',
         }
       }
 
-      if (result.notModified) {
+      if (batch.firstPageNotModified) {
         return {
           outcome: 'no-progress',
           pageAdvanced: false,
@@ -189,40 +326,49 @@ export const useProfileAssetRemoteListState = ({
         }
       }
 
-      const existingIdSet = new Set(remoteProfileAssets.value.map((item) => item.id))
-      const appendedItems = result.items.filter((item) => !existingIdSet.has(item.id))
-      const pageAdvanced = result.page > profileAssetResolvedPage.value
-      remoteProfileAssetTotal.value = result.total
-      remoteProfileAssetListEtag.value = result.etag ?? remoteProfileAssetListEtag.value
-      profileAssetResolvedPage.value = result.page
-      if (!appendedItems.length) {
+      const pageAdvanced = batch.lastConsumedRemotePage > profileAssetResolvedPage.value
+      remoteProfileAssetTotal.value = batch.total > 0 ? batch.total : remoteProfileAssetTotal.value
+      profileAssetResolvedPage.value = Math.max(
+        batch.lastConsumedRemotePage,
+        profileAssetResolvedPage.value
+      )
+      if (!batch.appendedItems.length) {
+        syncLoadedProfileAssetDepth(remoteProfileAssets.value.length)
         return {
           outcome: 'no-progress',
           pageAdvanced,
-          totalReached: remoteProfileAssets.value.length >= result.total,
+          totalReached: remoteProfileAssets.value.length >= remoteProfileAssetTotal.value,
         }
       }
 
-      remoteProfileAssets.value = [...remoteProfileAssets.value, ...appendedItems]
+      remoteProfileAssets.value = [...remoteProfileAssets.value, ...batch.appendedItems]
       const mergedResult: HomeRailProfileAssetListResult = {
-        ...result,
+        page: profileAssetResolvedPage.value,
+        pageSize: remotePageSize,
+        total: remoteProfileAssetTotal.value,
         items: [...remoteProfileAssets.value],
+        etag: remoteProfileAssetListEtag.value ?? undefined,
+        notModified: false,
       }
       hasResolvedRemoteProfileAssets.value = true
+      syncLoadedProfileAssetDepth(remoteProfileAssets.value.length)
       await persistResolvedProfileAssetListSnapshot?.(
-        resolveProfileAssetQuerySnapshot(),
+        {
+          ...query,
+          page: 1,
+          pageSize: remotePageSize,
+        },
         mergedResult,
         requestUserScope
       )
       return {
         outcome: 'appended',
         pageAdvanced,
-        totalReached: remoteProfileAssets.value.length >= result.total,
+        totalReached: remoteProfileAssets.value.length >= mergedResult.total,
       }
     } catch (error) {
       if (
-        profileAssetListRequestVersion.value === requestVersion &&
-        resolveProfileAssetQuerySignature() === expectedQuerySignature
+        canApplyProfileAssetRemoteResult(requestVersion, expectedQuerySignature, requestUserScope)
       ) {
         logSafeError('homeRail.profile', error, {
           message: 'failed to load more remote asset list',
@@ -232,7 +378,9 @@ export const useProfileAssetRemoteListState = ({
         outcome: 'error',
       }
     } finally {
-      if (profileAssetListRequestVersion.value === requestVersion) {
+      if (
+        canApplyProfileAssetRemoteResult(requestVersion, expectedQuerySignature, requestUserScope)
+      ) {
         isRemoteProfileAssetsLoading.value = false
         profileAssetLoadingPhase.value = 'idle'
       }
@@ -255,7 +403,14 @@ export const useProfileAssetRemoteListState = ({
     remoteProfileAssetTotal.value = result.total
     hasResolvedRemoteProfileAssets.value = true
     remoteProfileAssetListEtag.value = result.etag ?? null
+    remoteProfileAssetListEtagScope.value = result.etag
+      ? resolveProfileAssetEtagScope(
+          resolveProfileAssetQuerySignature(),
+          resolveCurrentPersistUserScope()
+        )
+      : null
     profileAssetResolvedPage.value = Math.max(result.page, 1)
+    syncLoadedProfileAssetDepth(result.items.length)
     profileAssetQueryCacheKey.value = resolveProfileAssetQueryCacheKey(query)
     hasProfileAssetFirstScreenError.value = false
     hasProfileAssetPaginationError.value = false
@@ -296,6 +451,8 @@ export const useProfileAssetRemoteListState = ({
     hasProfileAssetPaginationError,
     remoteProfileAssetListEtag,
     profileAssetResolvedPage,
+    loadedProfileAssetItemCount,
+    isBeyondFirstTransportBatch,
     profileAssetListRequestVersion,
     hydrateRemoteProfileAssetListFromPersistentCache,
     reloadRemoteProfileAssetList,

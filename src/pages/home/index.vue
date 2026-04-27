@@ -12,7 +12,6 @@ Out of scope: rail-specific data pipelines, result-window timing, and leaf compo
       layoutMode,
       {
         'is-drawer-open': isDrawerLayerOpen,
-        'is-filter-open': isActivityDateFilterLayerOpen,
         'is-global-stage-scaled': isGlobalStageScaled,
       },
     ]"
@@ -24,9 +23,7 @@ Out of scope: rail-specific data pipelines, result-window timing, and leaf compo
           :layout-mode="layoutMode"
           :runtime-context="runtimeContext"
           :home-shell-derived-state="homeShellDerivedState"
-          :activity-date-filter-range="activityDateFilterRange"
           @open-drawer="handleDrawerOpen"
-          @open-activity-date-filter="handleActivityDateFilterOpen"
           @change-tab="handleTabChange"
         />
       </view>
@@ -44,14 +41,6 @@ Out of scope: rail-specific data pipelines, result-window timing, and leaf compo
       :runtime-context="runtimeContext"
       @close="handleDrawerClose"
     />
-    <HomeActivityDateFilterSheet
-      :open="isActivityDateFilterLayerOpen"
-      :runtime-context="runtimeContext"
-      :submitted-range="activityDateFilterRange"
-      @close="handleActivityDateFilterClose"
-      @apply="handleActivityDateFilterApply"
-      @reset="handleActivityDateFilterReset"
-    />
   </view>
 </template>
 
@@ -65,7 +54,6 @@ import { resolveHomeShellTrackLayoutState } from '../../services/home-shell/home
 import HomeShellDrawer from '../../components/HomeShellDrawer.vue'
 import HomeShellTabbar from './components/shared/HomeShellTabbar.vue'
 import HomeShellTrackStage from './components/shared/HomeShellTrackStage.vue'
-import HomeActivityDateFilterSheet from './components/shared/HomeActivityDateFilterSheet.vue'
 
 /**
  * 文件职责：
@@ -105,26 +93,19 @@ const pageRuntimeStyle = computed<CSSProperties>(() => {
     '--home-global-stage-scale': `${stageScale}`,
     '--home-global-stage-offset-x': `${stageOffsetX}px`,
     '--home-stage-shell-height': compensatedHeight,
-    '--aether-page-background': '#ffffff',
   } as CSSProperties
 })
 const pageMetaStyle = computed(() => {
   const viewportHeight = runtimeContext.value.viewportHeight
   const height = viewportHeight > 0 ? `${viewportHeight}px` : '100vh'
-  return `height:${height};min-height:${height};background:#ffffff;`
+  return `height:${height};min-height:${height};background:var(--aether-page-background,#fafafa);`
 })
 
 const {
   isDrawerLayerOpen,
-  isActivityDateFilterLayerOpen,
-  activityDateFilterRange,
   homeShellDerivedState,
   handleDrawerOpen,
   handleDrawerClose,
-  handleActivityDateFilterOpen,
-  handleActivityDateFilterClose,
-  handleActivityDateFilterApply,
-  handleActivityDateFilterReset,
   handleTabChange,
 } = useHomeShellState({
   layoutMode,

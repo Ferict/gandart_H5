@@ -1,7 +1,7 @@
 <!--
-Responsibility: render the activity notice head section template, including title copy, search
-trigger, and date-filter trigger presentation for the activity rail.
-Out of scope: notice query execution, search visibility policy, and date-filter runtime logic.
+Responsibility: render the activity notice head section template, including title copy and search
+trigger for the activity rail.
+Out of scope: notice query execution and search visibility policy.
 -->
 <template>
   <view class="home-activity-section-head">
@@ -27,21 +27,6 @@ Out of scope: notice query execution, search visibility policy, and date-filter 
           />
         </view>
       </HomeInteractiveTarget>
-      <HomeInteractiveTarget
-        class="home-activity-section-action-entry"
-        interaction-mode="compact"
-        :label="'打开日期筛选，当前 ' + activeDateFilterLabel"
-        @activate="emit('date-filter-open')"
-      >
-        <view class="home-activity-section-action-visual">
-          <AetherIcon
-            class="home-activity-section-action-icon"
-            name="calendar-days"
-            :size="16"
-            :stroke-width="2"
-          />
-        </view>
-      </HomeInteractiveTarget>
     </view>
   </view>
 </template>
@@ -55,14 +40,12 @@ interface Props {
   subtitle: string
   isNoticeSearchVisible: boolean
   hasActiveNoticeSearch: boolean
-  activeDateFilterLabel: string
 }
 
 defineProps<Props>()
 
 const emit = defineEmits<{
   'notice-search-toggle': []
-  'date-filter-open': []
 }>()
 </script>
 

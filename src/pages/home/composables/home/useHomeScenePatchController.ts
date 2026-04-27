@@ -19,7 +19,6 @@ import type {
   HomeBannerItem,
   HomeFeaturedDropContent,
   HomeMarketCard,
-  HomeMarketSortField,
   HomeRailHomeContent,
 } from '../../../../models/home-rail/homeRailHome.model'
 import { logSafeError } from '../../../../utils/safeLogger.util'
@@ -31,18 +30,12 @@ interface UseHomeScenePatchControllerOptions {
   collection: ComputedRef<HomeMarketCard[]>
   marketListQuerySignature: ComputedRef<string>
   activeMarketTagId: Ref<string>
-  isMarketDefaultSortSelected: Ref<boolean>
-  marketSortField: Ref<HomeMarketSortField>
   hasResolvedInitialHomeContent: Ref<boolean>
   hasBootstrappedMarketResults: Ref<boolean>
   homeContentRequestVersion: Ref<number>
   homeContentRefreshRunId: Ref<number>
   lastResolvedMeta: Ref<RailSceneResolvedMeta | null>
   syncMarketTagSelection: (tags?: HomeRailHomeContent['market']['tags']) => void
-  syncMarketSortConfig: (
-    sortConfig?: HomeRailHomeContent['market']['sortConfig'],
-    preserveCurrent?: boolean
-  ) => void
   triggerHomeScenePatchMotionReduction: (modules: HomeRailHomeSceneModuleKey[]) => void
   startHomeNoticeLiveReorder: () => void
   setActiveAnnouncementIndex: (index: number) => void
@@ -69,13 +62,7 @@ export const useHomeScenePatchController = (options: UseHomeScenePatchController
       return false
     }
 
-    if (options.isMarketDefaultSortSelected.value) {
-      return true
-    }
-
-    return nextContent.market.sortConfig.options.some(
-      (option) => option.field === options.marketSortField.value
-    )
+    return true
   }
 
   const applyHomeSceneModules = (
@@ -148,7 +135,6 @@ export const useHomeScenePatchController = (options: UseHomeScenePatchController
 
     if (shouldSyncMarketShell) {
       options.syncMarketTagSelection(nextContent.market.tags)
-      options.syncMarketSortConfig(nextContent.market.sortConfig, true)
     }
 
     if (shouldReplayNoticeBar) {
@@ -213,15 +199,11 @@ export const useHomeScenePatchController = (options: UseHomeScenePatchController
 
   const applyHomeRailContent = (
     nextContent: HomeRailHomeContent,
-    optionsForApply: { preserveMarketPresentation?: boolean; preserveMarketSort?: boolean } = {}
+    optionsForApply: { preserveMarketPresentation?: boolean } = {}
   ) => {
     options.homeContent.value = nextContent
     options.hasResolvedInitialHomeContent.value = true
     options.syncMarketTagSelection(nextContent.market.tags)
-    options.syncMarketSortConfig(
-      nextContent.market.sortConfig,
-      optionsForApply.preserveMarketSort === true
-    )
 
     if (
       !optionsForApply.preserveMarketPresentation ||

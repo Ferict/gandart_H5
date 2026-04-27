@@ -3,10 +3,7 @@
  * Out of scope: template-ref adapter wiring and template-only label formatting.
  */
 import { type ComputedRef } from 'vue'
-import type {
-  ActivityDateFilterRange,
-  ActivityNotice,
-} from '../../../../models/home-rail/homeRailActivity.model'
+import type { ActivityNotice } from '../../../../models/home-rail/homeRailActivity.model'
 import type { ResultMountScrollMetrics } from '../../../../services/home-rail/homeRailResultMountWindow.service'
 import { consumeActivityNoticeUnread } from '../../../../services/home-rail/homeRailActivityContent.service'
 import {
@@ -24,18 +21,18 @@ import { ALL_ACTIVITY_NOTICE_TAG } from './useActivityNoticeQueryState'
 import { useActivityNoticeReadBridge } from './useActivityNoticeReadBridge'
 import { useActivityNoticeSearchRevealTransition } from './useActivityNoticeSearchRevealTransition'
 import { useHomeRailActivityNoticeEffectsRuntime } from './useHomeRailActivityNoticeEffectsRuntime'
+import { useHomeRailActivityNoticeLoadMore } from './useHomeRailActivityNoticeLoadMore'
 import { useHomeRailActivityNoticeResultRuntime } from './useHomeRailActivityNoticeResultRuntime'
 import { useActivityScenePatchController } from './useActivityScenePatchController'
 import { useHomeRailActivityNavigation } from './useHomeRailActivityNavigation'
 import { useHomeRailActivityNoticeDataPipeline } from './useHomeRailActivityNoticeDataPipeline'
 import { useHomeRailActivityRefreshRuntime } from './useHomeRailActivityRefreshRuntime'
 import { useHomeRailActivityRuntimeState } from './useHomeRailActivityRuntimeState'
+import { ACTIVITY_NOTICE_BATCH_STRATEGY } from '../shared/homeRailBatchStrategy'
 
 interface UseHomeRailActivityPanelRuntimeOptions {
-  activeDateFilterRange: ComputedRef<ActivityDateFilterRange>
   isActive: ComputedRef<boolean>
   mountScrollMetrics: ComputedRef<ResultMountScrollMetrics | null | undefined>
-  emitOpenDateFilter: () => void
 }
 
 export const useHomeRailActivityPanelRuntime = (
@@ -87,7 +84,7 @@ export const useHomeRailActivityPanelRuntime = (
   const { activityNoticeQueryState, activityNoticeRemoteListState } =
     useHomeRailActivityNoticeDataPipeline({
       content: activityContent,
-      activeDateFilterRange: options.activeDateFilterRange,
+      isActive: options.isActive,
       syncResolvedNoticeSnapshot: syncHomeRailActivityNoticeListSnapshot,
       hydratePersistedNoticeListSnapshot: (query) =>
         hydrateActivityNoticeListFromPersistentCache(query),
@@ -100,7 +97,6 @@ export const useHomeRailActivityPanelRuntime = (
     noticeKeyword,
     isNoticeSearchVisible,
     noticeTags,
-    activeDateFilterLabel,
     normalizedAppliedNoticeKeyword,
     hasActiveNoticeSearch,
     sceneFilteredNotices,
@@ -127,6 +123,7 @@ export const useHomeRailActivityPanelRuntime = (
     remoteNoticeListErrorMessage,
     hydrateRemoteNoticeListFromPersistentCache,
     reloadRemoteActivityNoticeList,
+    loadMoreRemoteActivityNoticeListPage,
     resetRemoteNoticeListForInactive,
   } = activityNoticeRemoteListState
 
@@ -147,6 +144,9 @@ export const useHomeRailActivityPanelRuntime = (
   const {
     noticeEmptyStateTitle,
     noticeEmptyStateDescription,
+    filteredNotices,
+    resolvedNoticeTotal,
+    noticeVisibleCount,
     displayedNotices,
     mountedNotices,
     pendingNoticeList,
@@ -177,6 +177,7 @@ export const useHomeRailActivityPanelRuntime = (
     resolveNoticeEntryStyle,
     resolveNoticeRemovedOverlayItemStyle,
     syncMountedNoticeWindow,
+    resolveDisplayedNoticeVisibleEndRow,
     syncNoticeVisualImages,
     syncNoticeRevealPhases,
     requestActivityNoticeRefreshReplay,
@@ -193,8 +194,6 @@ export const useHomeRailActivityPanelRuntime = (
       allNoticeTag: ALL_ACTIVITY_NOTICE_TAG,
       activeTag,
       noticeKeyword,
-      activeDateFilterRange: options.activeDateFilterRange,
-      activeDateFilterLabel,
       normalizedAppliedNoticeKeyword,
       hasResolvedInitialActivityContent,
       hasResolvedRemoteNoticeList,
@@ -222,7 +221,6 @@ export const useHomeRailActivityPanelRuntime = (
     resetActivityRuntimeForInactive,
     disposeActivityRuntime,
     handleNoticeFirstScreenRetry,
-    handleActivityBottomRetry,
     refreshContent,
     runActivityActivationCheck,
     runActivityVisibleUpdateCheck,
@@ -252,12 +250,29 @@ export const useHomeRailActivityPanelRuntime = (
     scheduleNoticeTagIndicatorSync,
   })
 
-  const { openDateFilterOverlay, handleEntryClick, handleNoticeClick } =
-    useHomeRailActivityNavigation({
-      emitOpenDateFilter: options.emitOpenDateFilter,
-      markNoticeReadLocal,
-      consumeActivityNoticeUnread,
-    })
+  const {
+    scheduleActivityNoticeLoadMoreObserver,
+    clearActivityNoticeLoadMoreObserver,
+    handleActivityBottomRetry,
+  } = useHomeRailActivityNoticeLoadMore({
+    isActive: options.isActive,
+    displayedNotices,
+    filteredNotices,
+    remoteFilteredNoticeList,
+    resolvedNoticeTotal,
+    noticeVisibleCount,
+    revealStepCount: ACTIVITY_NOTICE_BATCH_STRATEGY.revealStepCount,
+    isRemoteNoticeListLoading,
+    isNoticePaginationLoading,
+    resolveDisplayedNoticeVisibleEndRow,
+    loadMoreRemoteActivityNoticeListPage,
+    applyResolvedActivityNoticeList,
+  })
+
+  const { handleEntryClick, handleNoticeClick } = useHomeRailActivityNavigation({
+    markNoticeReadLocal,
+    consumeActivityNoticeUnread,
+  })
 
   useHomeRailActivityNoticeEffectsRuntime({
     noticeListQuerySignature,
@@ -266,6 +281,7 @@ export const useHomeRailActivityPanelRuntime = (
     visibleNoticeContentSignature,
     noticeRefreshReplayRequestId,
     activityNoticeImageStateVersionRef,
+    noticeVisibleCount,
     displayedNotices,
     mountedNotices,
     pendingNoticeList,
@@ -276,6 +292,7 @@ export const useHomeRailActivityPanelRuntime = (
     hasSeenActivityPageActivation,
     activityForegroundSignal,
     activityPollSignal,
+    initialVisibleCount: ACTIVITY_NOTICE_BATCH_STRATEGY.initialRevealCount,
     initializeActivityContent,
     clearStagedNoticeListUpdate,
     reloadActivityNoticeListAndApply,
@@ -283,6 +300,8 @@ export const useHomeRailActivityPanelRuntime = (
     syncMountedNoticeWindow,
     syncNoticeVisualImages,
     syncNoticeRevealPhases,
+    scheduleActivityNoticeLoadMoreObserver,
+    clearActivityNoticeLoadMoreObserver,
     scheduleNoticeTagIndicatorSync,
     syncActivityNoticeQuerySnapshot: () => {
       syncHomeRailActivityNoticeQuerySnapshot(resolveActivityNoticeQuerySnapshot())
@@ -309,7 +328,6 @@ export const useHomeRailActivityPanelRuntime = (
     isActivityScenePatchMotionReduced,
     isNoticeSearchVisible,
     hasActiveNoticeSearch,
-    activeDateFilterLabel,
     noticeTags,
     activeTag,
     isNoticeTagLeftFadeVisible,
@@ -358,7 +376,6 @@ export const useHomeRailActivityPanelRuntime = (
     handleActivityBottomRetry,
     handleNoticeFirstScreenRetry,
     handleNoticeSearchToggle,
-    openDateFilterOverlay,
     handleEntryClick,
     handleNoticeClick,
     refreshContent,

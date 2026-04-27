@@ -7,7 +7,9 @@
 import { computed, type ComputedRef, type Ref } from 'vue'
 import type { ProfileCategoryKey } from '../../../models/home-rail/homeRailProfile.model'
 import type { ProfileAssetDetailContent } from '../../../models/profile-asset-detail/profileAssetDetail.model'
+import { resolvePriceSymbol } from '../../../utils/priceSymbol.util'
 import { DEFAULT_PROFILE_ASSET_ITEM_ID } from './useProfileAssetDetailRouteState'
+import type { ProfileAssetDetailRouteQuery } from './profileAssetDetailRouteQuery'
 
 export interface AssetDetailTrait {
   typeLabel: string
@@ -42,7 +44,7 @@ const DEFAULT_PRESET: AssetDetailUiPreset = {
   owner: '0x8A...3F92',
   contract: '0x7F2...C4A1',
   chain: '0xE4...9AC1',
-  tokenStandard: 'ERC-721',
+  tokenStandard: 'BSN',
   fiatText: '≈ ￥8,542.10',
   archiveNote: '该资产已通过链上索引映射，当前为个人中心持有态。',
   descriptionNote: '当前页仅完成 UI 落地，交易与分享动作由主控后续接入。',
@@ -65,11 +67,6 @@ const PRESET_BY_CATEGORY: Record<ProfileCategoryKey, Partial<AssetDetailUiPreset
     primaryActionText: '挂售资产',
     secondaryActionText: '转移仓位',
   },
-  certificates: {
-    collectionLabel: '权益凭证档案',
-    primaryActionText: '挂售资产',
-    secondaryActionText: '申请更新',
-  },
 }
 
 const PRESET_BY_ITEM: Record<string, Partial<AssetDetailUiPreset>> = {
@@ -87,6 +84,7 @@ const PRESET_BY_ITEM: Record<string, Partial<AssetDetailUiPreset>> = {
 
 interface UseProfileAssetDetailPresentationOptions {
   detailContent: Ref<ProfileAssetDetailContent>
+  routeQuery: Ref<ProfileAssetDetailRouteQuery>
 }
 
 export interface UseProfileAssetDetailPresentationResult {
@@ -99,6 +97,9 @@ export interface UseProfileAssetDetailPresentationResult {
   valueCardTitleText: ComputedRef<string>
   displayPriceUnitVisual: ComputedRef<string>
   valueCardMetricLabelText: ComputedRef<string>
+  valueCardHoldingSerialText: ComputedRef<string>
+  valueCardHoldingCount: ComputedRef<number>
+  valueCardAcquiredAtText: ComputedRef<string>
   assetDescriptionText: ComputedRef<string>
   valueCardTotalValueCompactLabelText: ComputedRef<string>
   resolvedTraits: ComputedRef<AssetDetailTrait[]>
@@ -141,6 +142,7 @@ const formatCompactTotalValue = (value: number) => {
 
 export const useProfileAssetDetailPresentation = ({
   detailContent,
+  routeQuery,
 }: UseProfileAssetDetailPresentationOptions): UseProfileAssetDetailPresentationResult => {
   const activeUiPreset = computed(() =>
     resolvePreset(detailContent.value.id, detailContent.value.categoryId)
@@ -178,27 +180,21 @@ export const useProfileAssetDetailPresentation = ({
   const valueCardTitleText = computed(() => detailContent.value.title.trim())
 
   const displayPriceUnitVisual = computed(() => {
-    const currency = (detailContent.value.currency || '').trim().toUpperCase()
-    if (currency === 'CNY' || currency === 'RMB') {
-      return '\uFFE5'
-    }
-
     const raw = (detailContent.value.priceUnit || detailContent.value.currency || 'CNY').trim()
-    const normalized = raw.toUpperCase()
-    if (
-      normalized === 'CNY' ||
-      normalized === 'RMB' ||
-      raw === '\u5143' ||
-      raw === '\u00A5' ||
-      raw === '\uFFE5'
-    ) {
-      return '\uFFE5'
-    }
-
-    return raw || '\uFFE5'
+    return resolvePriceSymbol(raw) || '￥'
   })
 
   const valueCardMetricLabelText = computed(() => '当前估值 / MARKET VALUE')
+
+  const valueCardHoldingSerialText = computed(() => routeQuery.value.holdingSerial.trim())
+
+  const valueCardHoldingCount = computed(() => {
+    return valueCardHoldingSerialText.value ? 1 : detailContent.value.holdingsCount
+  })
+
+  const valueCardAcquiredAtText = computed(() => {
+    return routeQuery.value.holdingAcquiredAt.trim() || detailContent.value.acquiredAt
+  })
 
   const assetDescriptionText = computed(() => {
     const title = detailContent.value.title.trim() || '该藏品'
@@ -239,6 +235,9 @@ export const useProfileAssetDetailPresentation = ({
     valueCardTitleText,
     displayPriceUnitVisual,
     valueCardMetricLabelText,
+    valueCardHoldingSerialText,
+    valueCardHoldingCount,
+    valueCardAcquiredAtText,
     assetDescriptionText,
     valueCardTotalValueCompactLabelText,
     resolvedTraits,

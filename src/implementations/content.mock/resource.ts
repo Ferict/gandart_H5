@@ -16,6 +16,7 @@ import type {
 import { cloneContentAsset } from '../../mocks/content-db/assets'
 import { contentCategoryDb } from '../../mocks/content-db/categories'
 import { contentDropDb } from '../../mocks/content-db/drops'
+import { cloneContentIdentityVerification } from '../../mocks/content-db/identity-verification'
 import { contentMarketItemDb } from '../../mocks/content-db/market-items'
 import { contentNoticeDb } from '../../mocks/content-db/notices'
 import {
@@ -612,6 +613,33 @@ export const buildResourceData = (input: ContentResourceRequestDto): ContentReso
       asset: null,
       payload: item.payload,
       relations: item.relations ?? [],
+    }
+  }
+
+  if (input.resourceType === 'identity_verification') {
+    const item = cloneContentIdentityVerification(input.resourceId)
+    if (!item) {
+      return null
+    }
+
+    return {
+      resourceType: 'identity_verification',
+      resourceId: item.resourceId,
+      title: item.title,
+      status: item.status,
+      updatedAt: item.updatedAt,
+      summary: item.summary,
+      asset: null,
+      payload: item.payload,
+      relations: [
+        {
+          relationType: 'parent',
+          target: {
+            targetType: 'service_entry',
+            targetId: 'auth',
+          },
+        },
+      ],
     }
   }
 

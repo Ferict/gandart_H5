@@ -41,7 +41,7 @@ presentation assembly.
         </view>
       </view>
       <view class="hero-card-tail">
-        <text class="hero-id-scramble">ID:{{ detailId }}</text>
+        <text class="hero-id-scramble">AS:BSN</text>
         <view class="hero-bottom-right" aria-hidden="true">
           <view
             v-for="(barWidth, barIndex) in heroBarcodeBars"
@@ -62,7 +62,6 @@ import HomeInteractiveTarget from '../../../components/HomeInteractiveTarget.vue
 import HomeMarketCardImageReveal from '../../../components/HomeMarketCardImageReveal.vue'
 
 defineProps<{
-  detailId: string
   heroTopCodeText: string
   heroBarcodeBars: number[]
   heroMediaFrameStyle: CSSProperties
@@ -227,7 +226,7 @@ const emit = defineEmits<{
 }
 
 .hero-id-scramble {
-  color: #111;
+  color: #94a3b8;
   font-size: 12px;
   line-height: 14px;
   font-weight: 600;

@@ -3,6 +3,8 @@
  * stays out of the component body and runtime composables.
  * Out of scope: query ownership, refresh workflows, result windows, reveal runtime, and page events.
  */
+import { PROFILE_ASSET_BATCH_STRATEGY } from '../shared/homeRailBatchStrategy'
+
 export const IS_HOME_RAIL_PROFILE_DEV = Boolean(
   (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV
 )
@@ -16,9 +18,9 @@ export const PROFILE_ASSET_GRID_COLUMN_GAP_PX = 12
 export const PROFILE_ASSET_GRID_ROW_GAP_PX = 20
 export const PROFILE_ASSET_CARD_COPY_HEIGHT_PX = 72
 export const PROFILE_ASSET_CARD_FALLBACK_WIDTH_PX = 164
-export const PROFILE_ASSET_INITIAL_VISIBLE_COUNT = 32
-export const PROFILE_ASSET_LOAD_MORE_COUNT = 16
-export const PROFILE_ASSET_REMOTE_PAGE_SIZE = 32
+export const PROFILE_ASSET_INITIAL_VISIBLE_COUNT = PROFILE_ASSET_BATCH_STRATEGY.initialRevealCount
+export const PROFILE_ASSET_LOAD_MORE_COUNT = PROFILE_ASSET_BATCH_STRATEGY.revealStepCount
+export const PROFILE_ASSET_REMOTE_PAGE_SIZE = PROFILE_ASSET_BATCH_STRATEGY.backendPageSize
 export const PROFILE_ASSET_LOAD_MORE_REMAINING_ROWS_THRESHOLD = 8
 export const PROFILE_ASSET_MOUNT_BUFFER_TOP_ROWS = 2
 export const PROFILE_ASSET_MOUNT_BUFFER_BOTTOM_ROWS = 3

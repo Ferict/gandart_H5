@@ -56,17 +56,9 @@ const emit = defineEmits<{
   gap: 16px;
   border-radius: 0;
   border: none;
-  border-bottom: 1px solid transparent;
-  background-image: var(
-    --aether-glass-background-image,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.82) 100%)
-  );
-  -webkit-backdrop-filter: blur(8px) saturate(1.2);
-  backdrop-filter: blur(8px) saturate(1.2);
-  box-shadow: 0 0 0 rgba(15, 23, 42, 0);
-  transition:
-    box-shadow 220ms ease,
-    border-color 220ms ease;
+  background: transparent;
+  box-shadow: none;
+  transition: none;
 }
 
 .home-topbar::after {
@@ -74,15 +66,8 @@ const emit = defineEmits<{
 }
 
 .home-topbar.is-scrolled {
-  border-bottom-color: rgba(226, 232, 240, 0.82);
-  box-shadow: var(--aether-shadow-topbar-scroll, 0 0 16px rgba(15, 23, 42, 0.04));
-}
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .home-topbar {
-    background-color: var(--aether-glass-fallback-bg, rgba(255, 255, 255, 0.96));
-    background-image: none;
-  }
+  background: transparent;
+  box-shadow: none;
 }
 
 .home-topbar-copy {
@@ -106,13 +91,13 @@ const emit = defineEmits<{
   align-items: flex-end;
   justify-content: flex-start;
   width: max-content;
-  height: 20px;
+  height: 18px;
   gap: 2px;
   box-sizing: border-box;
 }
 
 .home-topbar-title-logo {
-  height: 20px;
+  height: 18px;
   width: auto;
   display: block;
   flex-shrink: 0;
@@ -140,7 +125,7 @@ const emit = defineEmits<{
 
 .home-topbar-dot-slot {
   width: 8px;
-  height: 20px;
+  height: 18px;
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;

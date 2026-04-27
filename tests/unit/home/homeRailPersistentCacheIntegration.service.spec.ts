@@ -76,11 +76,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           sectionSubtitle: 'Market Flow',
           tags: [],
           actions: [],
-          sortConfig: {
-            defaultField: 'listedAt',
-            defaultDirection: 'desc',
-            options: [],
-          },
           cards: [],
         },
       },
@@ -92,16 +87,12 @@ describe('homeRailPersistentCacheIntegration.service', () => {
     })
 
     const query = {
-      sort: {
-        field: 'listedAt' as const,
-        direction: 'desc' as const,
-      },
       page: 1,
-      pageSize: 32,
+      pageSize: 15,
     }
     await persistHomeMarketListToPersistentCache(query, {
-      page: 1,
-      pageSize: 32,
+      page: 2,
+      pageSize: 15,
       total: 2,
       items: [
         {
@@ -130,6 +121,7 @@ describe('homeRailPersistentCacheIntegration.service', () => {
 
     expect(scene?.meta.signature).toBe('sig-home')
     expect(list?.etag).toBe('etag-market')
+    expect(list?.page).toBe(2)
     expect(list?.items[0]?.id).toBe('m1')
   })
 
@@ -196,7 +188,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -232,7 +223,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -247,14 +237,14 @@ describe('homeRailPersistentCacheIntegration.service', () => {
     const query = {
       categoryId: 'collections' as const,
       page: 1,
-      pageSize: 32,
+      pageSize: 15,
     }
 
     await persistProfileAssetListToPersistentCache(
       query,
       {
-        page: 1,
-        pageSize: 32,
+        page: 2,
+        pageSize: 15,
         total: 1,
         items: [
           {
@@ -263,7 +253,7 @@ describe('homeRailPersistentCacheIntegration.service', () => {
             date: '2026-04-03T00:00:00.000Z',
             subCategory: 'default',
             holdingsCount: 1,
-            priceUnit: '楼',
+            priceUnit: '￥',
             price: 10,
             editionCode: 'A-1',
             issueCount: 1,
@@ -283,6 +273,7 @@ describe('homeRailPersistentCacheIntegration.service', () => {
     expect(resolveCurrentHomeRailProfileUserScope()).toBe('0xabc')
     expect(scene?.meta.signature).toBe('sig-profile')
     expect(list?.etag).toBe('etag-profile')
+    expect(list?.page).toBe(2)
     expect(list?.items[0]?.id).toBe('asset-1')
   })
 
@@ -293,7 +284,7 @@ describe('homeRailPersistentCacheIntegration.service', () => {
     const query = {
       categoryId: 'collections' as const,
       page: 1,
-      pageSize: 32,
+      pageSize: 15,
     }
 
     transitionHomeRailProfileUserScope('0xold')
@@ -312,7 +303,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -327,7 +317,7 @@ describe('homeRailPersistentCacheIntegration.service', () => {
       query,
       {
         page: 1,
-        pageSize: 32,
+        pageSize: 15,
         total: 1,
         items: [],
         etag: 'etag-old',
@@ -374,11 +364,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           sectionSubtitle: 'sub',
           tags: [],
           actions: [],
-          sortConfig: {
-            defaultField: 'listedAt',
-            defaultDirection: 'desc',
-            options: [],
-          },
           cards: [],
         },
       },
@@ -418,7 +403,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -447,7 +431,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {
@@ -501,7 +484,6 @@ describe('homeRailPersistentCacheIntegration.service', () => {
           assets: {
             collections: [],
             blindBoxes: [],
-            certificates: [],
           },
         },
         meta: {

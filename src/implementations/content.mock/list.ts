@@ -8,59 +8,28 @@ import type {
   ContentListDto,
   ContentListItemDtoBase,
   ContentListRequestDto,
-  ContentMarketListRequestDto,
-  ContentMarketSortField,
-  ContentSortDirection,
 } from '../../contracts/content-api.contract'
 import { cloneContentAsset } from '../../mocks/content-db/assets'
-import { contentMarketItemDb, sortContentMarketItems } from '../../mocks/content-db/market-items'
+import { contentMarketItemDb } from '../../mocks/content-db/market-items'
 import { contentNoticeDb } from '../../mocks/content-db/notices'
-import {
-  homeMarketDefaultSortDirection,
-  homeMarketDefaultSortField,
-} from '../../mocks/content-db/shared-home-collection-catalog'
 import { profileSceneDb } from '../../mocks/content-db/scenes/profile'
 import { compareNoticeByPublishedAtDesc, getNoticeUnreadState, resolveNoticeVisual } from './shared'
 
-const isContentMarketSortField = (value: string): value is ContentMarketSortField => {
-  return (
-    value === 'listedAt' ||
-    value === 'priceInCent' ||
-    value === 'tradeVolume24h' ||
-    value === 'holderCount'
-  )
-}
-
-const resolveMarketListSort = (
-  input: ContentMarketListRequestDto
-): { field: ContentMarketSortField; direction: ContentSortDirection } => {
-  if (isContentMarketSortField(input.sort.field)) {
-    return {
-      field: input.sort.field,
-      direction: input.sort.direction === 'asc' ? 'asc' : 'desc',
-    }
-  }
-
-  return {
-    field: homeMarketDefaultSortField,
-    direction: homeMarketDefaultSortDirection,
-  }
-}
-
 export const buildListData = (input: ContentListRequestDto): ContentListDto | null => {
   if (input.resourceType === 'market_item') {
+    const marketKind = input.marketKind ?? 'collections'
     const filtered = contentMarketItemDb.filter((item) => {
+      const matchMarketKind = item.marketKind === marketKind
       const matchCategory =
         !input.categoryId ||
         input.categoryId === 'all' ||
         item.categoryIds.includes(input.categoryId)
       const matchKeyword = !input.keyword || item.title.includes(input.keyword)
-      return matchCategory && matchKeyword
+      return matchMarketKind && matchCategory && matchKeyword
     })
-    const sorted = sortContentMarketItems(filtered, resolveMarketListSort(input))
 
     const pageStart = (input.page - 1) * input.pageSize
-    const pageItems = sorted.slice(pageStart, pageStart + input.pageSize)
+    const pageItems = filtered.slice(pageStart, pageStart + input.pageSize)
     const items: ContentListItemDtoBase<'market_item'>[] = pageItems.map((item) => ({
       resourceType: 'market_item',
       resourceId: item.itemId,
@@ -94,7 +63,7 @@ export const buildListData = (input: ContentListRequestDto): ContentListDto | nu
       resourceType: 'market_item',
       page: input.page,
       pageSize: input.pageSize,
-      total: sorted.length,
+      total: filtered.length,
       items,
     }
   }

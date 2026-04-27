@@ -3,7 +3,7 @@
  * consumption so panel click wiring stays outside the parent component.
  * Out of scope: content refresh, scene hydration, result windows, and visual runtime behavior.
  */
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef } from 'vue'
 import {
   buildActionEntryUrl,
   buildContentResourceUrl,
@@ -23,7 +23,6 @@ import type {
 interface UseHomeRailHomeNavigationOptions {
   activeAnnouncement: ComputedRef<HomeAnnouncementItem | undefined>
   bannerDrop: ComputedRef<HomeFeaturedDropContent>
-  isMarketSortPopoverOpen: Ref<boolean>
   emitBannerClick: () => void
   emitAnnouncementClick: () => void
   emitCollectionClick: (id: string) => void
@@ -114,7 +113,6 @@ export function useHomeRailHomeNavigation(options: UseHomeRailHomeNavigationOpti
   }
 
   const handleCollectionClick = (item: HomeMarketCard) => {
-    options.isMarketSortPopoverOpen.value = false
     options.emitCollectionClick(item.id)
     navigateByUrlSafely(buildTargetUrl(item.target, `${item.name} 交易链路`, 'home-collection'))
   }

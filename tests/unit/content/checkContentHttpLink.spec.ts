@@ -37,7 +37,7 @@ describe('check-content-http-link shared helpers', () => {
     })
   })
 
-  it('builds the default market_item list smoke with formal sort params', async () => {
+  it('builds the default market_item list smoke without unsupported sort params', async () => {
     const { createContentHttpChecks, createContentHttpSmokeConfig, loadContentApiContract } =
       await loadSharedModule()
 
@@ -58,8 +58,6 @@ describe('check-content-http-link shared helpers', () => {
       label: 'GET /api/content/list',
       query: {
         resourceType: 'market_item',
-        sortField: 'listedAt',
-        sortDirection: 'desc',
         page: 1,
         pageSize: 20,
       },

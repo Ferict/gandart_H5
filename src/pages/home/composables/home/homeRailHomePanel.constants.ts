@@ -3,16 +3,19 @@
  * configuration stays out of the component body and runtime composables.
  * Out of scope: business state ownership, refresh workflows, reveal runtime, and page events.
  */
+import { HOME_MARKET_BATCH_STRATEGY } from '../shared/homeRailBatchStrategy'
+
 export const HOME_BANNER_PLACEHOLDER_URL = '/static/home/banner/banner-placeholder.jpg'
 export const IS_HOME_RAIL_HOME_DEV = Boolean(
   (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV
 )
 export const HOME_MARKET_RESULT_SWITCH_DEBOUNCE_MS = 120
-export const HOME_MARKET_RESULT_INITIAL_VISIBLE_COUNT = 32
-export const HOME_MARKET_RESULT_LOAD_MORE_COUNT = 16
+export const HOME_MARKET_RESULT_INITIAL_VISIBLE_COUNT =
+  HOME_MARKET_BATCH_STRATEGY.initialRevealCount
+export const HOME_MARKET_RESULT_LOAD_MORE_COUNT = HOME_MARKET_BATCH_STRATEGY.revealStepCount
 export const HOME_MARKET_RESULT_LEAVE_DURATION_MS = 300
 export const HOME_MARKET_RESULT_ENTER_DURATION_MS = 300
-export const HOME_MARKET_REMOTE_PAGE_SIZE = 32
+export const HOME_MARKET_REMOTE_PAGE_SIZE = HOME_MARKET_BATCH_STRATEGY.backendPageSize
 export const HOME_MARKET_REFRESH_MIN_VISIBLE_DURATION_MS = 320
 export const HOME_MARKET_REFRESH_SETTLE_POLL_INTERVAL_MS = 16
 export const HOME_TOP_REFRESH_REPLAY_MIN_VISIBLE_DURATION_MS = 260

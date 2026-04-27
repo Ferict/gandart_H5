@@ -5,7 +5,6 @@
  */
 import type { ComputedRef } from 'vue'
 import type {
-  ActivityDateFilterRange,
   ActivityNoticeListResult,
   HomeRailActivityContent,
 } from '../../../../models/home-rail/homeRailActivity.model'
@@ -15,7 +14,7 @@ import { useActivityNoticeRemoteListState } from './useActivityNoticeRemoteListS
 
 interface UseHomeRailActivityNoticeDataPipelineOptions {
   content: { value: HomeRailActivityContent }
-  activeDateFilterRange: ComputedRef<ActivityDateFilterRange>
+  isActive: ComputedRef<boolean>
   syncResolvedNoticeSnapshot: (
     query: ActivityNoticeQuerySnapshot,
     list: ActivityNoticeListResult,
@@ -35,10 +34,10 @@ export const useHomeRailActivityNoticeDataPipeline = (
 ) => {
   const activityNoticeQueryState = useActivityNoticeQueryState({
     content: options.content,
-    activeDateFilterRange: options.activeDateFilterRange,
   })
 
   const activityNoticeRemoteListState = useActivityNoticeRemoteListState({
+    resolveIsActive: () => options.isActive.value,
     resolveQuerySnapshot: activityNoticeQueryState.resolveActivityNoticeQuerySnapshot,
     syncResolvedNoticeSnapshot: options.syncResolvedNoticeSnapshot,
     hydratePersistedNoticeListSnapshot: options.hydratePersistedNoticeListSnapshot,

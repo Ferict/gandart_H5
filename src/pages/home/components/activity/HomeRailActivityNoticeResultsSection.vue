@@ -203,6 +203,7 @@ const assignNoticeResultsStageRef = createResolvedTemplateRefForwarder((element)
   position: relative;
   min-height: 84px;
   border-radius: var(--home-activity-card-radius);
+  border: 1px solid rgba(15, 23, 42, 0.06);
   background: var(--aether-surface-primary, #ffffff);
   box-shadow: var(--aether-shadow-soft, 0 0 24px rgba(15, 23, 42, 0.05));
   padding: 16px;

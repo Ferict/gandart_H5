@@ -32,7 +32,7 @@ const createProfileAsset = (id: string): ProfileAssetItem => ({
   date: '2026-04-03T00:00:00.000Z',
   subCategory: 'default',
   holdingsCount: 1,
-  priceUnit: '楼',
+  priceUnit: '￥',
   price: 10,
   editionCode: 'A-1',
   issueCount: 1,
@@ -44,7 +44,7 @@ const createListResult = (
   overrides: Partial<HomeRailProfileAssetListResult> = {}
 ): HomeRailProfileAssetListResult => ({
   page: 1,
-  pageSize: 32,
+  pageSize: 15,
   total: 2,
   items: [createProfileAsset('asset-1')],
   etag: 'etag-1',
@@ -58,7 +58,7 @@ describe('useProfileAssetRemoteListState', () => {
     logSafeErrorMock.mockReset()
   })
 
-  it('persists first-screen result into request scope captured at request start', async () => {
+  it('drops stale profile first-screen result when user scope changes', async () => {
     const currentUserScope = ref<string | null>('0xold')
     const persistResolvedProfileAssetListSnapshot = vi.fn()
     let releaseRequest: ((value: HomeRailProfileAssetListResult) => void) | null = null
@@ -73,11 +73,11 @@ describe('useProfileAssetRemoteListState', () => {
     const querySnapshot: ResolveHomeRailProfileAssetListInput = {
       categoryId: 'collections',
       page: 1,
-      pageSize: 32,
+      pageSize: 15,
     }
 
     const state = useProfileAssetRemoteListState({
-      remotePageSize: 32,
+      remotePageSize: 15,
       resolveProfileAssetQuerySnapshot: () => querySnapshot,
       resolveProfileAssetQuerySignature: () => 'sig-profile-list',
       resolveCurrentPersistUserScope: () => currentUserScope.value,
@@ -95,30 +95,36 @@ describe('useProfileAssetRemoteListState', () => {
     )
     await reloadPromise
 
-    expect(persistResolvedProfileAssetListSnapshot).toHaveBeenCalledWith(
-      expect.objectContaining({ page: 1, pageSize: 32 }),
-      expect.objectContaining({ etag: 'etag-first-screen' }),
-      '0xold'
-    )
+    expect(state.remoteProfileAssets.value).toEqual([])
+    expect(persistResolvedProfileAssetListSnapshot).not.toHaveBeenCalled()
   })
 
-  it('persists load-more result into request scope captured before pagination request', async () => {
+  it('drops stale profile load-more result when user scope changes', async () => {
     const currentUserScope = ref<string | null>('0xold')
     const persistResolvedProfileAssetListSnapshot = vi.fn()
     const querySnapshot: ResolveHomeRailProfileAssetListInput = {
       categoryId: 'collections',
       page: 1,
-      pageSize: 32,
+      pageSize: 15,
     }
 
-    resolveHomeRailProfileAssetListMock.mockResolvedValueOnce(
-      createListResult({
-        page: 1,
-        total: 2,
-        items: [createProfileAsset('asset-1')],
-        etag: 'etag-page-1',
-      })
-    )
+    resolveHomeRailProfileAssetListMock
+      .mockResolvedValueOnce(
+        createListResult({
+          page: 1,
+          total: 2,
+          items: [createProfileAsset('asset-1')],
+          etag: 'etag-page-1',
+        })
+      )
+      .mockResolvedValueOnce(
+        createListResult({
+          page: 2,
+          total: 2,
+          items: [createProfileAsset('asset-1')],
+          etag: 'etag-page-2',
+        })
+      )
 
     let releaseRequest: ((value: HomeRailProfileAssetListResult) => void) | null = null
     resolveHomeRailProfileAssetListMock.mockImplementationOnce(
@@ -129,7 +135,7 @@ describe('useProfileAssetRemoteListState', () => {
     )
 
     const state = useProfileAssetRemoteListState({
-      remotePageSize: 32,
+      remotePageSize: 15,
       resolveProfileAssetQuerySnapshot: () => querySnapshot,
       resolveProfileAssetQuerySignature: () => 'sig-profile-list',
       resolveCurrentPersistUserScope: () => currentUserScope.value,
@@ -144,21 +150,189 @@ describe('useProfileAssetRemoteListState', () => {
     currentUserScope.value = '0xnew'
     releaseRequest?.(
       createListResult({
-        page: 2,
+        page: 3,
         total: 2,
         items: [createProfileAsset('asset-2')],
-        etag: 'etag-page-2',
+        etag: 'etag-page-3',
       })
     )
     await loadMorePromise
 
-    expect(persistResolvedProfileAssetListSnapshot).toHaveBeenCalledWith(
-      querySnapshot,
-      expect.objectContaining({
-        etag: 'etag-page-2',
-        items: [createProfileAsset('asset-1'), createProfileAsset('asset-2')],
-      }),
-      '0xold'
+    expect(state.remoteProfileAssets.value.map((item) => item.id)).toEqual(['asset-1'])
+    expect(persistResolvedProfileAssetListSnapshot).not.toHaveBeenCalled()
+  })
+
+  it('does not reuse profile etag across user scopes', async () => {
+    const currentUserScope = ref<string | null>('0xold')
+    const querySnapshot: ResolveHomeRailProfileAssetListInput = {
+      categoryId: 'collections',
+      page: 1,
+      pageSize: 15,
+    }
+
+    resolveHomeRailProfileAssetListMock
+      .mockResolvedValueOnce(
+        createListResult({
+          page: 1,
+          total: 1,
+          items: [createProfileAsset('asset-1')],
+          etag: 'etag-old-user',
+        })
+      )
+      .mockResolvedValueOnce(
+        createListResult({
+          page: 1,
+          total: 1,
+          items: [createProfileAsset('asset-2')],
+          etag: 'etag-new-user',
+        })
+      )
+
+    const state = useProfileAssetRemoteListState({
+      remotePageSize: 15,
+      resolveProfileAssetQuerySnapshot: () => querySnapshot,
+      resolveProfileAssetQuerySignature: () => 'sig-profile-list',
+      resolveCurrentPersistUserScope: () => currentUserScope.value,
+      syncResolvedProfileAssetListSnapshot: vi.fn(),
+    })
+
+    await state.reloadRemoteProfileAssetList(querySnapshot)
+    currentUserScope.value = '0xnew'
+    await state.reloadRemoteProfileAssetList(querySnapshot)
+
+    expect(resolveHomeRailProfileAssetListMock).toHaveBeenNthCalledWith(
+      2,
+      expect.any(Object),
+      expect.objectContaining({ ifNoneMatch: undefined })
     )
+  })
+
+  it('reloads the first fixed two-page batch and appends the next fixed batch on load more', async () => {
+    const persistResolvedProfileAssetListSnapshot = vi.fn()
+    const syncResolvedProfileAssetListSnapshot = vi.fn()
+    const querySnapshot: ResolveHomeRailProfileAssetListInput = {
+      categoryId: 'collections',
+      page: 1,
+      pageSize: 15,
+    }
+
+    resolveHomeRailProfileAssetListMock
+      .mockResolvedValueOnce(
+        createListResult({
+          page: 1,
+          total: 5,
+          items: [createProfileAsset('asset-1'), createProfileAsset('asset-2')],
+          etag: 'etag-first-batch',
+        })
+      )
+      .mockResolvedValueOnce(
+        createListResult({
+          page: 2,
+          total: 5,
+          items: [createProfileAsset('asset-2'), createProfileAsset('asset-3')],
+          etag: 'etag-page-2',
+        })
+      )
+      .mockResolvedValueOnce(
+        createListResult({
+          page: 3,
+          total: 5,
+          items: [createProfileAsset('asset-3'), createProfileAsset('asset-4')],
+          etag: 'etag-page-3',
+        })
+      )
+      .mockResolvedValueOnce(
+        createListResult({
+          page: 4,
+          total: 5,
+          items: [createProfileAsset('asset-5')],
+          etag: 'etag-page-4',
+        })
+      )
+
+    const state = useProfileAssetRemoteListState({
+      remotePageSize: 15,
+      resolveProfileAssetQuerySnapshot: () => querySnapshot,
+      resolveProfileAssetQuerySignature: () => 'sig-profile-list',
+      resolveCurrentPersistUserScope: () => '0xabc',
+      syncResolvedProfileAssetListSnapshot,
+      persistResolvedProfileAssetListSnapshot,
+    })
+
+    const reloadResult = await state.reloadRemoteProfileAssetList(querySnapshot)
+
+    expect(reloadResult?.items.map((item) => item.id)).toEqual(['asset-1', 'asset-2', 'asset-3'])
+    expect(state.remoteProfileAssets.value.map((item) => item.id)).toEqual([
+      'asset-1',
+      'asset-2',
+      'asset-3',
+    ])
+    expect(state.profileAssetResolvedPage.value).toBe(2)
+    expect(state.loadedProfileAssetItemCount.value).toBe(3)
+    expect(state.remoteProfileAssetListEtag.value).toBe('etag-first-batch')
+    expect(syncResolvedProfileAssetListSnapshot).toHaveBeenCalledTimes(1)
+
+    const loadMoreResult = await state.loadMoreRemoteProfileAssetListPage(querySnapshot)
+
+    expect(loadMoreResult).toEqual({
+      outcome: 'appended',
+      pageAdvanced: true,
+      totalReached: true,
+    })
+    expect(state.remoteProfileAssets.value.map((item) => item.id)).toEqual([
+      'asset-1',
+      'asset-2',
+      'asset-3',
+      'asset-4',
+      'asset-5',
+    ])
+    expect(state.profileAssetResolvedPage.value).toBe(4)
+    expect(state.loadedProfileAssetItemCount.value).toBe(5)
+    expect(state.remoteProfileAssetListEtag.value).toBe('etag-first-batch')
+    expect(resolveHomeRailProfileAssetListMock.mock.calls.map(([input]) => input.page)).toEqual([
+      1, 2, 3, 4,
+    ])
+    expect(persistResolvedProfileAssetListSnapshot).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        page: 1,
+        pageSize: 15,
+      }),
+      expect.objectContaining({
+        page: 4,
+        items: expect.arrayContaining([expect.objectContaining({ id: 'asset-5' })]),
+      }),
+      '0xabc'
+    )
+  })
+
+  it('hydrates merged list state with last consumed page and deep-pagination flag intact', async () => {
+    const querySnapshot: ResolveHomeRailProfileAssetListInput = {
+      categoryId: 'collections',
+      page: 1,
+      pageSize: 15,
+    }
+    const hydratePersistedProfileAssetListSnapshot = vi.fn(async () =>
+      createListResult({
+        page: 4,
+        total: 40,
+        items: Array.from({ length: 31 }, (_, index) => createProfileAsset(`asset-${index + 1}`)),
+        etag: 'etag-hydrated',
+      })
+    )
+
+    const state = useProfileAssetRemoteListState({
+      remotePageSize: 15,
+      resolveProfileAssetQuerySnapshot: () => querySnapshot,
+      resolveProfileAssetQuerySignature: () => 'sig-profile-list',
+      resolveCurrentPersistUserScope: () => '0xabc',
+      syncResolvedProfileAssetListSnapshot: vi.fn(),
+      hydratePersistedProfileAssetListSnapshot,
+    })
+
+    await state.hydrateRemoteProfileAssetListFromPersistentCache(querySnapshot)
+
+    expect(state.profileAssetResolvedPage.value).toBe(4)
+    expect(state.loadedProfileAssetItemCount.value).toBe(31)
+    expect(state.isBeyondFirstTransportBatch.value).toBe(true)
   })
 })

@@ -1,41 +1,22 @@
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { describe, expect, it, vi } from 'vitest'
 import { useHomeMarketQueryState } from '@/pages/home/composables/home/useHomeMarketQueryState'
-import type { HomeRailHomeContent } from '@/models/home-rail/homeRailHome.model'
-
-const createMarketContent = (): HomeRailHomeContent['market'] => ({
-  sectionTitle: 'Market',
-  sectionSubtitle: 'Latest collectibles',
-  tags: [
-    { id: 'all', label: 'All' },
-    { id: 'featured', label: 'Featured' },
-    { id: 'hot', label: 'Hot' },
-  ],
-  actions: [],
-  sortConfig: {
-    defaultField: 'listedAt',
-    defaultDirection: 'desc',
-    options: [
-      { field: 'price', label: 'Price' },
-      { field: 'tradeVolume24h', label: '24h Volume' },
-    ],
-  },
-  cards: [],
-})
+import type { HomeMarketTag } from '@/models/home-rail/homeRailHome.model'
+const marketTagSeeds: HomeMarketTag[] = [
+  { id: 'all', label: 'All' },
+  { id: 'featured', label: 'Featured', marketKinds: ['collections'] },
+  { id: 'box-series', label: 'Box Series', marketKinds: ['blindBoxes'] },
+  { id: 'shared', label: 'Shared', marketKinds: ['collections', 'blindBoxes'] },
+]
 
 const createHarness = () => {
-  const marketContent = computed(() => createMarketContent())
-  const marketTags = computed(() => marketContent.value.tags)
+  const marketTags = computed(() => marketTagSeeds)
 
   const state = useHomeMarketQueryState({
-    marketContent,
     marketTags,
-    hasBootstrappedMarketResults: ref(false),
     emitMarketSearchClick: vi.fn(),
-    emitMarketSortClick: vi.fn(),
     emitMarketTagSelect: vi.fn(),
     scheduleMarketMountWindowSync: vi.fn(),
-    defaultSortLabel: 'Default',
     pageSize: 60,
   })
 
@@ -100,34 +81,73 @@ describe('useHomeMarketQueryState', () => {
     expect(state.resolveMarketListQuerySnapshot().keyword).toBeUndefined()
   })
 
-  it('applies tag and sort switches immediately so the active UI and query stay aligned', () => {
-    const { state, marketTags } = createHarness()
+  it('applies tag switches immediately so the active UI and query stay aligned', () => {
+    const { state } = createHarness()
+    const visibleMarketTags = state.marketTags.value
 
-    const sortOptions = state.marketSortMenuOptions.value
-    expect(sortOptions.length).toBeGreaterThan(2)
-
-    state.handleMarketTagSelect(marketTags[1])
-    state.handleMarketSortOptionSelect(sortOptions[1])
+    state.handleMarketTagSelect(visibleMarketTags[1])
     expect(state.resolveMarketListQuerySnapshot()).toMatchObject({
       categoryId: 'featured',
       keyword: undefined,
-      sort: {
-        field: 'price',
-        direction: 'asc',
-      },
     })
 
-    state.handleMarketTagSelect(marketTags[2])
-    state.handleMarketSortOptionSelect(sortOptions[2])
+    state.handleMarketTagSelect(visibleMarketTags[2])
 
     expect(state.resolveMarketListQuerySnapshot()).toMatchObject({
-      categoryId: 'hot',
+      categoryId: 'shared',
       keyword: undefined,
-      sort: {
-        field: 'tradeVolume24h',
-        direction: 'asc',
-      },
     })
-    expect(state.marketListQuerySignature.value).toBe('hot::::tradeVolume24h::asc')
+    expect(state.marketListQuerySignature.value).toBe('collections::shared::')
+  })
+
+  it('includes marketKind in signature and resets tag when kind changes', () => {
+    const { state } = createHarness()
+
+    state.handleMarketTagSelect(state.marketTags.value[2])
+    expect(state.resolveMarketListQuerySnapshot()).toMatchObject({
+      marketKind: 'collections',
+      categoryId: 'shared',
+    })
+
+    state.handleMarketKindSelect('blindBoxes')
+
+    expect(state.resolveMarketListQuerySnapshot()).toMatchObject({
+      marketKind: 'blindBoxes',
+      categoryId: undefined,
+    })
+    expect(state.marketListQuerySignature.value).toBe('blindBoxes::::')
+  })
+
+  it('exposes different tag lists for collections and blind boxes', () => {
+    const { state } = createHarness()
+
+    expect(state.marketTags.value.map((tag) => tag.id)).toEqual(['all', 'featured', 'shared'])
+
+    state.handleMarketKindSelect('blindBoxes')
+
+    expect(state.marketTags.value.map((tag) => tag.id)).toEqual(['all', 'box-series', 'shared'])
+    state.handleMarketTagSelect(state.marketTags.value[1])
+    expect(state.resolveMarketListQuerySnapshot()).toMatchObject({
+      marketKind: 'blindBoxes',
+      categoryId: 'box-series',
+    })
+  })
+
+  it('keeps applied keyword when marketKind changes', async () => {
+    vi.useFakeTimers()
+    const { state } = createHarness()
+
+    state.handleMarketKeywordInput({
+      detail: {
+        value: 'dragon',
+      },
+    } as unknown as Event)
+    await vi.advanceTimersByTimeAsync(300)
+    state.handleMarketKindSelect('blindBoxes')
+
+    expect(state.resolveMarketListQuerySnapshot()).toMatchObject({
+      marketKind: 'blindBoxes',
+      keyword: 'dragon',
+    })
   })
 })

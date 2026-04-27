@@ -16,7 +16,6 @@ import {
   HOME_MARKET_CARD_COPY_HEIGHT_PX,
   HOME_MARKET_CARD_FALLBACK_WIDTH_PX,
   HOME_MARKET_CARD_STAGGER_STEP_MS,
-  HOME_MARKET_DEFAULT_SORT_LABEL,
   HOME_MARKET_GRID_COLUMNS,
   HOME_MARKET_GRID_COLUMN_GAP_PX,
   HOME_MARKET_GRID_ROW_GAP_PX,
@@ -46,7 +45,6 @@ interface UseHomeRailHomePanelRuntimeOptions {
   isHomePanelActive: ComputedRef<boolean>
   mountScrollMetrics: ComputedRef<ResultMountScrollMetrics | null | undefined>
   emitMarketSearchClick: () => void
-  emitMarketSortClick: () => void
   emitMarketTagSelect: (tag: string, index: number) => void
 }
 
@@ -55,7 +53,7 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     homeBannerItems,
     bannerDrop,
     marketContent,
-    marketTags,
+    marketTags: sourceMarketTags,
     marketCollection,
     homeAnnouncementItems,
   } = options.contentState
@@ -67,14 +65,10 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
   } = options.runtimeState
 
   const { homeMarketQueryState, homeMarketRemoteListState } = useHomeRailHomeMarketDataPipeline({
-    marketContent,
-    marketTags,
-    resolveHasBootstrappedMarketResults: () => hasBootstrappedMarketResults.value,
+    marketTags: sourceMarketTags,
     scheduleMarketMountWindowSync: () => scheduleMarketMountWindowSync(),
     emitMarketSearchClick: options.emitMarketSearchClick,
-    emitMarketSortClick: options.emitMarketSortClick,
     emitMarketTagSelect: options.emitMarketTagSelect,
-    defaultSortLabel: HOME_MARKET_DEFAULT_SORT_LABEL,
     remotePageSize: HOME_MARKET_REMOTE_PAGE_SIZE,
     syncMarketListQuerySnapshot: (query) => syncHomeRailHomeMarketQuerySnapshot(query),
     syncResolvedMarketListSnapshot: (query, list, etag) =>
@@ -91,22 +85,15 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
   })
 
   const {
-    marketSortTriggerLabel,
-    marketSortMenuOptions,
-    marketSortPopoverPlacement,
-    marketSortLayerRef,
-    isMarketSortPopoverOpen,
-    marketSortDirection,
-    marketSortField,
-    isMarketDefaultSortSelected,
+    activeMarketKind,
+    marketKindOptions,
+    marketTags,
     marketKeyword,
     isMarketSearchVisible,
     activeMarketTagId,
     hasActiveMarketSearch,
     marketListQuery,
     marketListQuerySignature,
-    isMarketSortOptionActive,
-    resolveMarketSortOptionAriaLabel,
     handleMarketSearchClick,
     handleMarketSearchRevealBeforeEnter,
     handleMarketSearchRevealEnter,
@@ -114,8 +101,7 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     handleMarketSearchRevealBeforeLeave,
     handleMarketSearchRevealLeave,
     handleMarketSearchRevealAfterLeave,
-    handleMarketSortTriggerClick,
-    handleMarketSortOptionSelect,
+    handleMarketKindSelect,
     handleMarketTagSelect,
     handleMarketKeywordInput,
     handleMarketKeywordClear,
@@ -123,13 +109,8 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     clearHomeMarketSearchState,
     clearMarketListQueryDebounce,
     resetHomeMarketQueryForInactive,
-    bindMarketSortPopoverViewportListeners,
-    unbindMarketSortPopoverViewportListeners,
     disposeHomeMarketQueryState,
     syncMarketTagSelection,
-    syncMarketSortConfig,
-    isLeftFadeVisible: isMarketTagLeftFadeVisible,
-    handleHorizontalScroll: handleMarketTagScroll,
   } = homeMarketQueryState
 
   const {
@@ -331,8 +312,6 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     isHomePanelActive: options.isHomePanelActive,
     marketListQuerySignature,
     activeMarketTagId,
-    isMarketDefaultSortSelected,
-    marketSortField,
     hasBootstrappedMarketResults,
     marketCollection,
     marketResultTotal,
@@ -343,7 +322,6 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     reloadRemoteMarketList,
     resolveMarketListQuerySnapshot,
     syncMarketTagSelection,
-    syncMarketSortConfig,
     consumeStagedMarketListUpdate,
     stageMarketListUpdate,
     applyResolvedMarketListResult,
@@ -359,10 +337,7 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     startHomePullRefreshPresentation,
   })
 
-  const homeMarketSortConfig = computed(() => marketContent.value.sortConfig)
-
   useHomeRailHomeMarketEffectsRuntime({
-    marketSortConfig: homeMarketSortConfig,
     marketTags,
     marketListQuery,
     marketListQuerySignature,
@@ -378,10 +353,7 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     homeForegroundSignal,
     homePollSignal,
     marketImageStateVersion,
-    isMarketSortPopoverOpen,
-    marketSortPopoverPlacement,
     mountScrollMetrics: options.mountScrollMetrics,
-    syncMarketSortConfig,
     syncMarketTagSelection,
     syncMarketListQuerySnapshot: () => {
       syncHomeRailHomeMarketQuerySnapshot(resolveMarketListQuerySnapshot())
@@ -400,8 +372,6 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     syncMountedMarketWindow,
     syncMarketCardRevealStates,
     scheduleMarketMountWindowSync,
-    bindMarketSortPopoverViewportListeners,
-    unbindMarketSortPopoverViewportListeners,
     scheduleMarketLoadMoreObserver,
     resetHomeMarketResultWindowForInactive,
     resetHomeVisualRevealForInactive,
@@ -418,18 +388,13 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
   })
 
   return {
-    marketSortTriggerLabel,
-    marketSortMenuOptions,
-    marketSortPopoverPlacement,
-    marketSortLayerRef,
-    isMarketSortPopoverOpen,
-    marketSortDirection,
+    activeMarketKind,
+    marketKindOptions,
+    marketTags,
     marketKeyword,
     isMarketSearchVisible,
     activeMarketTagId,
     hasActiveMarketSearch,
-    isMarketSortOptionActive,
-    resolveMarketSortOptionAriaLabel,
     handleMarketSearchClick,
     handleMarketSearchRevealBeforeEnter,
     handleMarketSearchRevealEnter,
@@ -437,13 +402,10 @@ export const useHomeRailHomePanelRuntime = (options: UseHomeRailHomePanelRuntime
     handleMarketSearchRevealBeforeLeave,
     handleMarketSearchRevealLeave,
     handleMarketSearchRevealAfterLeave,
-    handleMarketSortTriggerClick,
-    handleMarketSortOptionSelect,
+    handleMarketKindSelect,
     handleMarketTagSelect,
     handleMarketKeywordInput,
     handleMarketKeywordClear,
-    isMarketTagLeftFadeVisible,
-    handleMarketTagScroll,
     isHomeNoticeLiveReordering,
     isHomeScenePatchMotionReduced,
     isBannerSwiperAutoplayEnabled,

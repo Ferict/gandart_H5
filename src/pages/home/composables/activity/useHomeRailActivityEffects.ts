@@ -7,6 +7,7 @@
 import { onBeforeUnmount, onMounted, watch, type ComputedRef, type Ref } from 'vue'
 import type { ActivityNotice } from '../../../../models/home-rail/homeRailActivity.model'
 import type { ResultMountScrollMetrics } from '../../../../services/home-rail/homeRailResultMountWindow.service'
+import type { ResultLoadSource } from '../../../../services/home-rail/homeRailResultWindow.service'
 
 interface UseHomeRailActivityEffectsOptions {
   noticeListQuerySignature: ComputedRef<string>
@@ -15,6 +16,7 @@ interface UseHomeRailActivityEffectsOptions {
   visibleNoticeContentSignature: ComputedRef<string>
   noticeRefreshReplayRequestId: Ref<number>
   activityNoticeImageStateVersionRef: Ref<number>
+  noticeVisibleCount: Ref<number>
   displayedNotices: Ref<ActivityNotice[]>
   mountedNotices: Ref<ActivityNotice[]>
   pendingNoticeList: Ref<ActivityNotice[]>
@@ -25,17 +27,20 @@ interface UseHomeRailActivityEffectsOptions {
   hasSeenActivityPageActivation: Ref<boolean>
   activityForegroundSignal: Ref<unknown>
   activityPollSignal: Ref<unknown>
+  initialVisibleCount: number
   initializeActivityContent: () => Promise<void>
   clearStagedNoticeListUpdate: () => void
   reloadActivityNoticeListAndApply: (options?: {
     force?: boolean
     replay?: boolean
-    motionSource?: 'initial-enter' | 'manual-query-switch' | 'manual-refresh'
+    motionSource?: ResultLoadSource
   }) => Promise<unknown>
   reconcileNoticeRender: () => void
   syncMountedNoticeWindow: (items?: ActivityNotice[]) => void
   syncNoticeVisualImages: (items?: ActivityNotice[]) => void
   syncNoticeRevealPhases: (items?: ActivityNotice[]) => void
+  scheduleActivityNoticeLoadMoreObserver: () => void
+  clearActivityNoticeLoadMoreObserver: () => void
   scheduleNoticeTagIndicatorSync: () => void
   syncActivityNoticeQuerySnapshot: () => void
   markNoticeRefreshPresentationCancelled: () => void
@@ -62,6 +67,8 @@ export const useHomeRailActivityEffects = (options: UseHomeRailActivityEffectsOp
 
   watch(options.noticeListQuerySignature, () => {
     options.clearStagedNoticeListUpdate()
+    options.clearActivityNoticeLoadMoreObserver()
+    options.noticeVisibleCount.value = options.initialVisibleCount
     options.syncActivityNoticeQuerySnapshot()
     if (!options.hasResolvedInitialActivityContent.value) {
       return
@@ -112,6 +119,7 @@ export const useHomeRailActivityEffects = (options: UseHomeRailActivityEffectsOp
       options.syncMountedNoticeWindow(options.displayedNotices.value)
       options.syncNoticeVisualImages(options.mountedNotices.value)
       options.syncNoticeRevealPhases(options.mountedNotices.value)
+      options.scheduleActivityNoticeLoadMoreObserver()
     },
     { immediate: true }
   )
@@ -125,11 +133,13 @@ export const useHomeRailActivityEffects = (options: UseHomeRailActivityEffectsOp
     (isActive) => {
       if (!isActive) {
         options.markNoticeRefreshPresentationCancelled()
+        options.noticeVisibleCount.value = options.initialVisibleCount
         options.resetActivityRuntimeForInactive()
         options.resetActivityQueryForInactive()
         options.resetRemoteNoticeListForInactive()
         options.resetNoticeResultWindowForInactive()
         options.resetNoticeVisualRevealForInactive()
+        options.clearActivityNoticeLoadMoreObserver()
         return
       }
 
@@ -138,6 +148,7 @@ export const useHomeRailActivityEffects = (options: UseHomeRailActivityEffectsOp
       options.hasSeenActivityPageActivation.value = true
       options.syncNoticeVisualImages(options.mountedNotices.value)
       options.syncNoticeRevealPhases(options.mountedNotices.value)
+      options.scheduleActivityNoticeLoadMoreObserver()
       options.scheduleNoticeTagIndicatorSync()
       if (
         isFirstActivation &&
@@ -182,5 +193,6 @@ export const useHomeRailActivityEffects = (options: UseHomeRailActivityEffectsOp
     options.disposeActivityQueryState()
     options.disposeNoticeResultWindow()
     options.disposeNoticeVisualReveal()
+    options.clearActivityNoticeLoadMoreObserver()
   })
 }

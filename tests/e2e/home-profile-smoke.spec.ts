@@ -15,7 +15,15 @@ test('profile tab keeps core interactions stable', async ({ page }) => {
     )
     await expect(page.locator('.home-profile-panel')).toBeVisible({ timeout: 15000 })
     await expect(page.locator('.home-profile-header-title')).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('.home-profile-identity-card')).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('.home-profile-identity-name')).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('.home-profile-summary-grid')).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('.home-profile-summary-card').first()).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('#home-profile-assets-anchor')).toBeVisible({ timeout: 15000 })
     await expect(page.locator('.home-profile-assets-title')).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('.home-profile-section-tag-entry').first()).toBeVisible({
+      timeout: 15000,
+    })
     await expect(page.locator('.home-profile-asset-grid, .home-profile-empty-card')).toBeVisible({
       timeout: 15000,
     })
@@ -58,6 +66,7 @@ test('profile tab keeps core interactions stable', async ({ page }) => {
     }
   }
   await expect(page.locator('.home-profile-asset-grid, .home-profile-empty-card')).toBeVisible()
+  await expect(page.locator('#home-profile-assets-anchor')).toBeVisible()
 
   const searchTrigger = page.locator('.home-profile-search-entry')
   await searchTrigger.click()
@@ -107,10 +116,19 @@ test('profile tab keeps core interactions stable', async ({ page }) => {
   const realAssetCount = await assetCards.count()
   if (realAssetCount > 0) {
     await assetCards.first().click()
+    const holdingsSheet = page.locator('.profile-asset-holdings-sheet')
+    const holdingEntries = page.locator('.profile-asset-holding-entry')
+    await expect(holdingsSheet).toBeVisible()
+    await expect(holdingEntries.first()).toBeVisible()
+    await holdingEntries.first().click()
     await assertRouteChangedFromProfile()
     await goBackToProfile()
   } else {
     await expect(page.locator('.home-profile-empty-card')).toBeVisible()
+  }
+  const profileFooter = page.locator('.home-list-loading-footer')
+  if (await profileFooter.count()) {
+    await expect(profileFooter.first()).toBeVisible()
   }
   await expect(page.locator('.home-list-loading-footer.is-error')).toHaveCount(0)
 

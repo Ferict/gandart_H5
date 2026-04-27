@@ -53,11 +53,10 @@
 37. `useHomeMarketResultWindowOverlayRuntime.ts`
 38. `homeMarketResultWindowProjection.ts`
 39. `useHomeMarketResultWindowPresentationRuntime.ts`
-40. `useHomeMarketSortPopoverRuntime.ts`
-41. `useHomeMarketSearchRuntime.ts`
-42. `useHomeMarketTagSelectionRuntime.ts`
-43. `useHomeSurfaceVisualRevealRuntime.ts`
-44. `useHomeMarketCardVisualRevealRuntime.ts`
+40. `useHomeMarketSearchRuntime.ts`
+41. `useHomeMarketTagSelectionRuntime.ts`
+42. `useHomeSurfaceVisualRevealRuntime.ts`
+43. `useHomeMarketCardVisualRevealRuntime.ts`
 
 ## 不应放入的内容
 

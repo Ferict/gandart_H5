@@ -125,7 +125,7 @@ routing.
           :resolve-profile-asset-entry-class="resolveProfileAssetEntryClass"
           :resolve-profile-asset-entry-style="resolveProfileAssetEntryStyle"
           :resolve-profile-asset-reveal-phase="resolveProfileAssetRevealPhase"
-          :handle-asset-click="handleAssetClick"
+          :handle-asset-click="openProfileAssetHoldingsSheet"
           :handle-profile-asset-visual-image-load="handleProfileAssetVisualImageLoad"
           :handle-profile-asset-visual-image-error="handleProfileAssetVisualImageError"
           :handle-profile-asset-visual-image-retrying="handleProfileAssetVisualImageRetrying"
@@ -138,7 +138,7 @@ routing.
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import AetherIcon from '../../../components/AetherIcon.vue'
 import { type ResultMountScrollMetrics } from '../../../services/home-rail/homeRailResultMountWindow.service'
 import { createResolvedTemplateRefAssigner } from '../../../utils/resolveTemplateRefElement.util'
@@ -154,6 +154,7 @@ import HomeRailProfileSummarySection from './profile/HomeRailProfileSummarySecti
 import HomeRailProfileSubCategorySection from './profile/HomeRailProfileSubCategorySection.vue'
 import { useHomeRailProfileNavigation } from '../composables/profile/useHomeRailProfileNavigation'
 import { useHomeRailProfilePanelRuntime } from '../composables/profile/useHomeRailProfilePanelRuntime'
+import { useProfileAssetHoldingsSheet } from '../composables/profile/useProfileAssetHoldingsSheet'
 
 const props = withDefaults(
   defineProps<{
@@ -246,15 +247,38 @@ const {
   handleCopyAddress,
   handleShowQr,
   handleQuickEntryClick,
-  handleAssetClick,
+  handleAssetInstanceDetailNavigation,
 } = useHomeRailProfileNavigation({
   activeCategory,
   profileAddress: profileSummaryAddress,
 })
 
+const {
+  isProfileAssetHoldingsSheetOpen,
+  activeProfileAssetHoldingsSheetViewModel,
+  openProfileAssetHoldingsSheet,
+  closeProfileAssetHoldingsSheet,
+  handleProfileAssetHoldingInstanceActivate,
+} = useProfileAssetHoldingsSheet({
+  navigateToAssetDetail: handleAssetInstanceDetailNavigation,
+})
+
+watch(profilePanelActiveProp, (isActive) => {
+  if (isActive) {
+    return
+  }
+
+  closeProfileAssetHoldingsSheet()
+})
+
 defineExpose({
   refreshContent,
   waitForRefreshPresentation,
+  resolveProfileAssetHoldingsSheetOpen: () => isProfileAssetHoldingsSheetOpen.value,
+  resolveActiveProfileAssetHoldingsSheetViewModel: () =>
+    activeProfileAssetHoldingsSheetViewModel.value,
+  closeProfileAssetHoldingsSheet,
+  handleProfileAssetHoldingInstanceActivate,
 })
 </script>
 

@@ -6,8 +6,6 @@
  */
 import type {
   ContentMarketBadgeType,
-  ContentMarketSortField,
-  ContentSortDirection,
   ContentMarketVisualTone,
   ContentPlaceholderIconKey,
   ContentProfileCategoryId,
@@ -36,23 +34,13 @@ export interface SharedHomeCollectionRecord {
   updatedAt: string
   summary: string
   profileCategoryId: ContentProfileCategoryId
-  profileSubCategory: '数字艺术' | '3D组件' | '音乐现场'
+  profileSubCategory: '数字艺术' | '3D组件' | '音乐现场' | '资格证'
   acquiredAt?: string
   linkedMarketItemId: string
 }
 
 const baseSummary = '首页市场与个人中心共用的藏品 mock 目录，后续接真实内容时继续沿用这条共享链路。'
 const updatedAt = '2026-03-26T23:58:00+08:00'
-
-export const homeMarketSortOptionSeed: Array<{ field: ContentMarketSortField; label: string }> = [
-  { field: 'listedAt', label: '时间' },
-  { field: 'priceInCent', label: '市场价' },
-  { field: 'tradeVolume24h', label: '交易量' },
-  { field: 'holderCount', label: '持有量' },
-]
-
-export const homeMarketDefaultSortField: ContentMarketSortField = 'listedAt'
-export const homeMarketDefaultSortDirection: ContentSortDirection = 'desc'
 
 /**
  * 首页市场卡与个人中心“我的藏品”必须共用这份目录。
@@ -409,8 +397,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     acquiredAt: '2024.10.18',
     linkedMarketItemId: 'C-16',
   },
@@ -431,8 +419,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     linkedMarketItemId: 'C-17',
   },
   {
@@ -454,8 +442,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     acquiredAt: '2024.10.19',
     linkedMarketItemId: 'C-18',
   },
@@ -562,8 +550,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     acquiredAt: '2024.10.23',
     linkedMarketItemId: 'C-23',
   },
@@ -605,8 +593,8 @@ const sharedHomeCollectionCatalogSeed: Omit<
     status: 'online',
     updatedAt,
     summary: baseSummary,
-    profileCategoryId: 'certificates',
-    profileSubCategory: '数字艺术',
+    profileCategoryId: 'collections',
+    profileSubCategory: '资格证',
     acquiredAt: '2024.10.24',
     linkedMarketItemId: 'C-25',
   },

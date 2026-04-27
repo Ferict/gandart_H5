@@ -19,14 +19,20 @@ describe('useProfileAssetDetailRouteState', () => {
       assetId: 'C-10',
       category: 'certificates',
       source: 'profile',
+      holdingInstanceId: 'asset-genesis-zero::holding::1',
+      holdingSerial: '#10291',
+      holdingAcquiredAt: '2026.04.03 08:41:00',
     })
 
     expect(routeState.routeSource.value).toBe('profile')
     expect(routeState.resolveCurrentDetailRoute()).toEqual({
       itemId: 'C-10',
-      category: 'certificates',
+      category: 'collections',
     })
-    expect(routeState.currentDetailRouteSignature.value).toBe('C-10::certificates')
+    expect(routeState.routeQuery.value.holdingInstanceId).toBe('asset-genesis-zero::holding::1')
+    expect(routeState.routeQuery.value.holdingSerial).toBe('#10291')
+    expect(routeState.routeQuery.value.holdingAcquiredAt).toBe('2026.04.03 08:41:00')
+    expect(routeState.currentDetailRouteSignature.value).toBe('C-10::collections')
   })
 
   it('falls back to collections when the route category is unsupported', () => {

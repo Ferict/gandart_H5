@@ -3,13 +3,11 @@ import { useHomeMarketSearchRuntime } from '@/pages/home/composables/home/useHom
 
 const createHarness = () => {
   const emitMarketSearchClick = vi.fn()
-  const dismissSortPopover = vi.fn()
   const scheduleMarketMountWindowSync = vi.fn()
   let pendingTask: (() => void) | null = null
 
   const state = useHomeMarketSearchRuntime({
     emitMarketSearchClick,
-    dismissSortPopover,
     scheduleMarketMountWindowSync,
     searchDebounce: {
       schedule(task) {
@@ -29,7 +27,6 @@ const createHarness = () => {
   return {
     state,
     emitMarketSearchClick,
-    dismissSortPopover,
     flushDebounce,
   }
 }
@@ -60,12 +57,11 @@ describe('useHomeMarketSearchRuntime', () => {
   })
 
   it('toggles search visibility and clears the current keyword on second click', () => {
-    const { state, emitMarketSearchClick, dismissSortPopover, flushDebounce } = createHarness()
+    const { state, emitMarketSearchClick, flushDebounce } = createHarness()
 
     state.handleMarketSearchClick()
     expect(state.isMarketSearchVisible.value).toBe(true)
     expect(emitMarketSearchClick).toHaveBeenCalledTimes(1)
-    expect(dismissSortPopover).toHaveBeenCalledTimes(1)
 
     state.handleMarketKeywordInput({
       detail: {
@@ -81,6 +77,5 @@ describe('useHomeMarketSearchRuntime', () => {
     expect(state.marketKeyword.value).toBe('')
     expect(state.normalizedAppliedMarketKeyword.value).toBe('')
     expect(emitMarketSearchClick).toHaveBeenCalledTimes(2)
-    expect(dismissSortPopover).toHaveBeenCalledTimes(2)
   })
 })

@@ -12,16 +12,8 @@ Out of scope: rail-local runtime, remote data chains, and result window timing b
           <view class="home-page-track">
             <view class="home-track-top-inset" />
 
-            <view v-show="isHomePage" class="home-track-home-topbar">
-              <HomeRailTopbar
-                :can-open-drawer="trackLayoutState.canUseDrawer"
-                :is-scrolled="homeTrackScrolled"
-                @open-drawer="handleOpenDrawer"
-              />
-            </view>
-
             <view class="home-track-panel-stage">
-              <view class="home-track-refresh-rail">
+              <view v-if="!isHomePage" class="home-track-refresh-rail">
                 <view
                   class="home-track-refresh-indicator"
                   :class="resolveTrackRefreshIndicatorClass(activePageKey)"
@@ -39,23 +31,17 @@ Out of scope: rail-local runtime, remote data chains, and result window timing b
                   </view>
                 </view>
               </view>
-              <scroll-view
+              <HomeTrackPullRefreshScroller
                 v-if="shouldMountHomePage"
                 v-show="isHomePage"
                 ref="homeScrollViewRef"
                 class="home-track-scroll home-track-panel-scroll"
-                scroll-y
-                :show-scrollbar="false"
-                :refresher-enabled="true"
-                refresher-default-style="none"
-                refresher-background="transparent"
-                :refresher-threshold="HOME_TRACK_PULL_REFRESH_TRIGGER_OFFSET_PX"
-                :refresher-triggered="resolveTrackRefresherTriggered('home')"
+                :is-active="isHomePage"
+                :refresher-threshold-px="HOME_TRACK_PULL_REFRESH_TRIGGER_OFFSET_PX"
                 @scroll="handleTrackScroll('home', $event)"
-                @refresherpulling="handleTrackRefresherPulling('home', $event)"
-                @refresherrefresh="handleTrackRefresherRefresh('home')"
-                @refresherrestore="handleTrackRefresherRestore('home')"
-                @refresherabort="handleTrackRefresherAbort('home')"
+                @refresh="handleHomeTrackPullRefresh"
+                @refresher-pulling="handleTrackRefresherPulling('home', $event)"
+                @refresher-restore="handleTrackRefresherRestore('home')"
               >
                 <view class="home-track-scroll-content home-track-scroll-content--home">
                   <HomeRailHomePanel
@@ -63,11 +49,12 @@ Out of scope: rail-local runtime, remote data chains, and result window timing b
                     :can-open-drawer="trackLayoutState.canUseDrawer"
                     :is-active="isHomePage"
                     :mount-scroll-metrics="resolveTrackMountScrollMetrics('home')"
+                    :refresh-slot-state="resolveTrackRefreshSlotState('home')"
                     @open-drawer="handleOpenDrawer"
                   />
                   <view class="home-track-scroll-bottom-spacer" aria-hidden="true" />
                 </view>
-              </scroll-view>
+              </HomeTrackPullRefreshScroller>
 
               <scroll-view
                 v-if="shouldMountActivityPage"
@@ -92,8 +79,6 @@ Out of scope: rail-local runtime, remote data chains, and result window timing b
                     ref="activityPanelRef"
                     :is-active="isActivityPage"
                     :mount-scroll-metrics="resolveTrackMountScrollMetrics('activity')"
-                    :active-date-filter-range="props.activityDateFilterRange"
-                    @open-date-filter="handleOpenActivityDateFilter"
                   />
                   <view class="home-track-scroll-bottom-spacer" aria-hidden="true" />
                 </view>
@@ -129,6 +114,13 @@ Out of scope: rail-local runtime, remote data chains, and result window timing b
                   <view class="home-track-scroll-bottom-spacer" aria-hidden="true" />
                 </view>
               </scroll-view>
+
+              <HomeRailProfileAssetHoldingsSheet
+                :open="isProfileAssetHoldingsSheetOpen"
+                :asset-view-model="activeProfileAssetHoldingsSheetViewModel"
+                @close="handleCloseProfileAssetHoldingsSheet"
+                @instance-detail="handleProfileAssetHoldingInstanceDetail"
+              />
             </view>
           </view>
         </view>
@@ -145,7 +137,7 @@ Out of scope: rail-local runtime, remote data chains, and result window timing b
 </template>
 
 <script setup lang="ts">
-import { nextTick } from 'vue'
+import { computed, nextTick } from 'vue'
 import AetherIcon from '../../../../components/AetherIcon.vue'
 import {
   HOME_ACTIVITY_PAGE_KEY,
@@ -156,15 +148,18 @@ import {
 } from '../../../../models/home-shell/homeShell.model'
 import { type ViewportRuntimeContext } from '../../../../services/home-shell/homeShellLayoutMode.service'
 import { setRailPageReloadMode } from '../../../../services/home-rail/homeRailPageReloadPolicy.service'
-import type { ActivityDateFilterRange } from '../../../../models/home-rail/homeRailActivity.model'
 import type { HomeShellDerivedState } from '../../../../services/home-shell/homeShellState.service'
 import { logSafeError } from '../../../../utils/safeLogger.util'
 import HomeRailActivityPanel from '../HomeRailActivityPanel.vue'
 import HomeRailHomePanel from '../HomeRailHomePanel.vue'
-import HomeRailTopbar from './HomeRailTopbar.vue'
 import HomeRailProfilePanel from '../HomeRailProfilePanel.vue'
+import HomeRailProfileAssetHoldingsSheet from '../profile/HomeRailProfileAssetHoldingsSheet.vue'
 import HomeShellNavRail from '../../../../components/HomeShellNavRail.vue'
-import { useHomeTrackRefreshController } from '../../composables/home/useHomeTrackRefreshController'
+import HomeTrackPullRefreshScroller from './HomeTrackPullRefreshScroller.vue'
+import {
+  type HomeTrackRefreshHandle,
+  useHomeTrackRefreshController,
+} from '../../composables/home/useHomeTrackRefreshController'
 import { HOME_TRACK_PULL_REFRESH_TRIGGER_OFFSET_PX } from '../../composables/home/homeTrackRefresh.constants'
 import { useHomeTrackMountMetrics } from '../../composables/home/useHomeTrackMountMetrics'
 import { useHomeTrackPageMountState } from '../../composables/home/useHomeTrackPageMountState'
@@ -172,17 +167,16 @@ import { useHomeTrackProfileScrollBridge } from '../../composables/home/useHomeT
 import { useHomeTrackStageLifecycle } from '../../composables/home/useHomeTrackStageLifecycle'
 import { useHomeTrackStageRefs } from '../../composables/home/useHomeTrackStageRefs'
 import { useHomeTrackStageViewState } from '../../composables/home/useHomeTrackStageViewState'
+import type { ProfileAssetHoldingsSheetViewModel } from '../../composables/profile/useProfileAssetHoldingsSheet'
 interface Props {
   layoutMode: LayoutMode
   runtimeContext: ViewportRuntimeContext
   homeShellDerivedState: HomeShellDerivedState
-  activityDateFilterRange: ActivityDateFilterRange
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
   openDrawer: []
-  openActivityDateFilter: []
 }>()
 
 setRailPageReloadMode('reload-on-update')
@@ -215,17 +209,15 @@ const handleOpenDrawer = () => {
   emit('openDrawer')
 }
 
-const handleOpenActivityDateFilter = () => {
-  emit('openActivityDateFilter')
-}
-
 const {
   resolveTrackWindowingSuspended,
   resolveTrackRefresherTriggered,
   resolveTrackRefreshIndicatorClass,
   resolveTrackRefreshIndicatorStyle,
+  resolveTrackRefreshSlotState,
   resetTrackRefresherVisualState,
   handleTrackRefresherPulling,
+  refreshTrackPage,
   handleTrackRefresherRefresh,
   handleTrackRefresherRestore,
   handleTrackRefresherAbort,
@@ -237,7 +229,6 @@ const {
 })
 
 const {
-  homeTrackScrolled,
   resolveTrackMountScrollMetrics,
   handleTrackScroll,
   syncTrackViewportSnapshot,
@@ -270,6 +261,61 @@ const {
   handleProfileScrollToAssetsSection,
   disposeProfileScrollBridge,
 } = useHomeTrackProfileScrollBridge()
+
+interface HomeTrackProfilePanelOverlayHandle extends HomeTrackRefreshHandle {
+  resolveProfileAssetHoldingsSheetOpen?: () => boolean
+  resolveActiveProfileAssetHoldingsSheetViewModel?: () => ProfileAssetHoldingsSheetViewModel | null
+  closeProfileAssetHoldingsSheet?: () => void
+  handleProfileAssetHoldingInstanceActivate?: (instanceId: string) => void
+}
+
+const resolveProfilePanelOverlayHandle = (): HomeTrackProfilePanelOverlayHandle | null => {
+  return profilePanelRef.value as HomeTrackProfilePanelOverlayHandle | null
+}
+
+const isProfileAssetHoldingsSheetOpen = computed(() => {
+  return Boolean(resolveProfilePanelOverlayHandle()?.resolveProfileAssetHoldingsSheetOpen?.())
+})
+
+const activeProfileAssetHoldingsSheetViewModel =
+  computed<ProfileAssetHoldingsSheetViewModel | null>(() => {
+    return (
+      resolveProfilePanelOverlayHandle()?.resolveActiveProfileAssetHoldingsSheetViewModel?.() ??
+      null
+    )
+  })
+
+const handleCloseProfileAssetHoldingsSheet = () => {
+  resolveProfilePanelOverlayHandle()?.closeProfileAssetHoldingsSheet?.()
+}
+
+const handleProfileAssetHoldingInstanceDetail = (instanceId: string) => {
+  resolveProfilePanelOverlayHandle()?.handleProfileAssetHoldingInstanceActivate?.(instanceId)
+}
+
+const completeHomeTrackPullRefresh = async (success: boolean) => {
+  const homeScroller = homeScrollViewRef.value as {
+    completeRefresh?: (success?: boolean) => Promise<void> | void
+  } | null
+
+  try {
+    await homeScroller?.completeRefresh?.(success)
+  } catch (error) {
+    logSafeError('homeTrack', error, {
+      message: 'failed to complete home pull refresh scroller',
+    })
+  }
+}
+
+const handleHomeTrackPullRefresh = async () => {
+  let didRefreshSucceed = false
+
+  try {
+    didRefreshSucceed = await refreshTrackPage(HOME_PRIMARY_PAGE_KEY)
+  } finally {
+    await completeHomeTrackPullRefresh(didRefreshSucceed)
+  }
+}
 useHomeTrackStageLifecycle({
   nextTickFn: nextTick,
   syncTrackViewportSnapshotForAllPages,
@@ -286,7 +332,7 @@ useHomeTrackStageLifecycle({
   height: var(--home-stage-shell-height, var(--home-stage-height, 100dvh));
   min-height: var(--home-stage-shell-height, var(--home-stage-height, 100vh));
   min-height: var(--home-stage-shell-height, var(--home-stage-height, 100dvh));
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -324,7 +370,7 @@ useHomeTrackStageLifecycle({
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
 }
 
 .home-page-grid {
@@ -346,22 +392,13 @@ useHomeTrackStageLifecycle({
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
   box-sizing: border-box;
 }
 
 .home-track-top-inset {
   flex: 0 0 auto;
   height: var(--home-safe-top, 0);
-}
-
-.home-track-home-topbar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--home-safe-top, 0);
-  z-index: 16;
-  pointer-events: auto;
 }
 
 .home-track-scroll {
@@ -373,14 +410,16 @@ useHomeTrackStageLifecycle({
   width: 100%;
   box-sizing: border-box;
   display: block;
-  background: var(--aether-page-background, #ffffff);
+  background: var(--aether-page-background, #fafafa);
+  overscroll-behavior-y: none;
 }
 
 .home-track-refresh-rail {
   position: absolute;
-  inset: 0 0 auto;
+  inset: 0;
   z-index: 15;
   pointer-events: none;
+  overflow: visible;
 }
 
 .home-track-refresh-indicator {
@@ -464,7 +503,7 @@ useHomeTrackStageLifecycle({
 }
 
 .home-track-scroll-content--home {
-  padding-top: 72px;
+  padding-top: 0;
 }
 
 .home-track-scroll-content--standard {
@@ -482,6 +521,8 @@ useHomeTrackStageLifecycle({
 }
 
 .home-track-panel-stage {
+  --home-track-home-topbar-height: 64px;
+
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
@@ -492,11 +533,6 @@ useHomeTrackStageLifecycle({
 }
 
 @media screen and (width < 430px) {
-  .home-track-home-topbar {
-    left: 0;
-    right: 0;
-  }
-
   .home-track-scroll {
     --home-page-inline-padding: 16px;
   }

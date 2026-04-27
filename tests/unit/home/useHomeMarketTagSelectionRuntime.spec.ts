@@ -11,34 +11,29 @@ const createTags = (): HomeMarketTag[] => [
 
 const createHarness = (tags = createTags()) => {
   const emitMarketTagSelect = vi.fn()
-  const dismissSortPopover = vi.fn()
   const scheduleMarketQuerySwitchApply = vi.fn()
 
   const state = useHomeMarketTagSelectionRuntime({
     marketTags: computed(() => tags),
     emitMarketTagSelect,
-    dismissSortPopover,
     scheduleMarketQuerySwitchApply,
   })
 
   return {
     state,
     emitMarketTagSelect,
-    dismissSortPopover,
     scheduleMarketQuerySwitchApply,
   }
 }
 
 describe('useHomeMarketTagSelectionRuntime', () => {
   it('selects a new tag and schedules the query switch', () => {
-    const { state, emitMarketTagSelect, dismissSortPopover, scheduleMarketQuerySwitchApply } =
-      createHarness()
+    const { state, emitMarketTagSelect, scheduleMarketQuerySwitchApply } = createHarness()
 
     state.handleMarketTagSelect({ id: 'hot', label: 'Hot' })
 
     expect(state.activeMarketTagId.value).toBe('hot')
     expect(emitMarketTagSelect).toHaveBeenCalledWith('Hot', 2)
-    expect(dismissSortPopover).toHaveBeenCalledTimes(1)
     expect(scheduleMarketQuerySwitchApply).toHaveBeenCalledTimes(1)
   })
 

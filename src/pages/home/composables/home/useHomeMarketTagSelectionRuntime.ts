@@ -8,14 +8,12 @@ import type { HomeMarketTag } from '../../../../models/home-rail/homeRailHome.mo
 interface UseHomeMarketTagSelectionRuntimeOptions {
   marketTags: ComputedRef<HomeMarketTag[]>
   emitMarketTagSelect: (tagLabel: string, index: number) => void
-  dismissSortPopover: () => void
   scheduleMarketQuerySwitchApply: () => void
 }
 
 export const useHomeMarketTagSelectionRuntime = ({
   marketTags,
   emitMarketTagSelect,
-  dismissSortPopover,
   scheduleMarketQuerySwitchApply,
 }: UseHomeMarketTagSelectionRuntimeOptions) => {
   const activeMarketTagId = ref('all')
@@ -59,7 +57,6 @@ export const useHomeMarketTagSelectionRuntime = ({
       return
     }
 
-    dismissSortPopover()
     activeMarketTagId.value = tag.id
     const nextIndex = marketTags.value.findIndex((entry) => entry.id === tag.id)
     emitMarketTagSelect(tag.label, nextIndex >= 0 ? nextIndex : 0)

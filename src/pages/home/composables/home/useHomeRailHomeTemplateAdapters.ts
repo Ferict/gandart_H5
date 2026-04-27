@@ -8,7 +8,6 @@ import type { HomeBannerItem } from '../../../../models/home-rail/homeRailHome.m
 import { createResolvedTemplateRefAssigner } from '../../../../utils/resolveTemplateRefElement.util'
 
 interface UseHomeRailHomeTemplateAdaptersOptions {
-  marketSortLayerRef: Ref<HTMLElement | null>
   marketLoadMoreSentinelRef: Ref<HTMLElement | null>
   marketResultsStageRef: Ref<HTMLElement | null>
   marketResultsContentRef: Ref<HTMLElement | null>
@@ -30,10 +29,6 @@ interface UseHomeRailHomeTemplateAdaptersOptions {
 export const useHomeRailHomeTemplateAdapters = (
   options: UseHomeRailHomeTemplateAdaptersOptions
 ) => {
-  const assignMarketSortLayerRef = (element: HTMLElement | null) => {
-    options.marketSortLayerRef.value = element
-  }
-
   const assignMarketLoadMoreSentinelRef = (element: HTMLElement | null) => {
     options.marketLoadMoreSentinelRef.value = element
   }
@@ -59,7 +54,6 @@ export const useHomeRailHomeTemplateAdapters = (
   }
 
   return {
-    assignMarketSortLayerRef,
     assignMarketLoadMoreSentinelRef,
     assignMarketResultsStageRef,
     assignMarketResultsContentRef,

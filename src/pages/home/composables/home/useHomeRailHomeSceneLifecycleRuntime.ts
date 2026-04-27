@@ -3,7 +3,6 @@
  * Out of scope: market query/result window implementation and visual reveal/presentation runtime internals.
  */
 import { type ComputedRef } from 'vue'
-import type { HomeRailHomeContent } from '../../../../models/home-rail/homeRailHome.model'
 import type { useHomeRailHomeContentState } from './useHomeRailHomeContentState'
 import type { useHomeRailHomeRuntimeState } from './useHomeRailHomeRuntimeState'
 import { useHomeRailHomeContentLifecycle } from './useHomeRailHomeContentLifecycle'
@@ -22,8 +21,6 @@ interface UseHomeRailHomeSceneLifecycleRuntimeOptions {
   isHomePanelActive: ComputedRef<boolean>
   marketListQuerySignature: HomeScenePatchControllerOptions['marketListQuerySignature']
   activeMarketTagId: HomeScenePatchControllerOptions['activeMarketTagId']
-  isMarketDefaultSortSelected: HomeScenePatchControllerOptions['isMarketDefaultSortSelected']
-  marketSortField: HomeScenePatchControllerOptions['marketSortField']
   hasBootstrappedMarketResults: HomeScenePatchControllerOptions['hasBootstrappedMarketResults']
   marketCollection: HomeMarketReloadOptions['marketCollection']
   marketResultTotal: HomeMarketReloadOptions['marketResultTotal']
@@ -34,10 +31,6 @@ interface UseHomeRailHomeSceneLifecycleRuntimeOptions {
   reloadRemoteMarketList: HomeMarketReloadOptions['reloadRemoteMarketList']
   resolveMarketListQuerySnapshot: HomeContentLifecycleOptions['resolveMarketListQuerySnapshot']
   syncMarketTagSelection: HomeScenePatchControllerOptions['syncMarketTagSelection']
-  syncMarketSortConfig: (
-    sortConfig?: HomeRailHomeContent['market']['sortConfig'],
-    options?: { preserveCurrent?: boolean }
-  ) => void
   consumeStagedMarketListUpdate: HomeContentLifecycleOptions['consumeStagedMarketListUpdate']
   stageMarketListUpdate: HomeContentLifecycleOptions['stageMarketListUpdate']
   applyResolvedMarketListResult: HomeMarketReloadOptions['applyResolvedMarketListResult']
@@ -78,16 +71,12 @@ export const useHomeRailHomeSceneLifecycleRuntime = (
     collection,
     marketListQuerySignature: options.marketListQuerySignature,
     activeMarketTagId: options.activeMarketTagId,
-    isMarketDefaultSortSelected: options.isMarketDefaultSortSelected,
-    marketSortField: options.marketSortField,
     hasResolvedInitialHomeContent,
     hasBootstrappedMarketResults: options.hasBootstrappedMarketResults,
     homeContentRequestVersion,
     homeContentRefreshRunId,
     lastResolvedMeta,
     syncMarketTagSelection: (tags) => options.syncMarketTagSelection(tags),
-    syncMarketSortConfig: (sortConfig, preserveCurrent) =>
-      options.syncMarketSortConfig(sortConfig, { preserveCurrent }),
     triggerHomeScenePatchMotionReduction: (modules) =>
       options.triggerHomeScenePatchMotionReduction(modules),
     startHomeNoticeLiveReorder: () => options.startHomeNoticeLiveReorder(),

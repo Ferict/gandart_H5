@@ -35,6 +35,7 @@ export type ContentResourceType =
   | 'asset'
   | 'user_profile'
   | 'service_entry'
+  | 'identity_verification'
   | 'service_action'
   | 'settings_action'
   | 'profile_asset'
@@ -44,8 +45,7 @@ export type ContentTargetType = ContentResourceType | ContentActionTargetType
 export type ContentListResourceType = 'market_item' | 'notice' | 'profile_asset'
 export type ContentResourceDetailSupport = 'detail' | 'target-only' | 'deferred'
 export type ContentMarketActionId = 'search' | 'history'
-export type ContentMarketSortField = 'listedAt' | 'priceInCent' | 'tradeVolume24h' | 'holderCount'
-export type ContentSortDirection = 'asc' | 'desc'
+export type ContentMarketKind = 'collections' | 'blindBoxes'
 export type ContentHomeBannerTone = 'dawn' | 'azure' | 'ember'
 export type ContentPlaceholderIconKey =
   | 'box'
@@ -57,9 +57,13 @@ export type ContentPlaceholderIconKey =
 export type ContentMarketBadgeType = 'new' | 'hot' | 'featured'
 export type ContentMarketVisualTone = 'ink' | 'mist' | 'aqua' | 'sand'
 export type ContentActivityEntryTone = 'dark' | 'light' | 'soft'
-export type ContentProfileCategoryId = 'collections' | 'blindBoxes' | 'certificates'
+export type ContentProfileCategoryId = 'collections' | 'blindBoxes'
 export type ContentServiceEntryId = 'orders' | 'auth' | 'wallet' | 'invite' | 'community'
 export type ContentServiceEntryTone = 'cyan' | 'green' | 'amber' | 'rose' | 'slate'
+export type ContentIdentityVerificationStatus = 'unverified' | 'processing' | 'verified' | 'failed'
+export type ContentIdentityVerificationResultTone = 'success' | 'danger'
+export type ContentIdentityVerificationMockSubmitResult = 'success' | 'failure'
+export type ContentIdentityVerificationFeatureIconKey = 'box' | 'gift' | 'repeat-2'
 export type ContentServiceHubIndicatorTone = 'cyan' | 'green' | 'amber' | 'rose' | 'red'
 export type ContentNoticeVisualPreset =
   | 'consignment'
@@ -275,7 +279,7 @@ export const CONTENT_API_ENDPOINTS = {
     requestFields: [
       'resourceType：必填；当前正式列表类型为 market_item、notice、profile_asset。',
       'page / pageSize：必填；当前正式分页口径固定为 page + pageSize。',
-      'market_item.sortField / sortDirection：市场列表必填排序字段与方向；wire query 是扁平字段，不是 sort.field。',
+      'market_item.marketKind / categoryId / keyword：市场列表可选筛选条件；当前后端不支持排序字段。',
       'market_item.categoryId / keyword：市场列表可选筛选条件；不筛选时可以不传。',
       'notice.tag / keyword / startDate / endDate：公告列表可选筛选条件；wire query 是扁平字段，不是 dateRange。',
       'profile_asset.categoryId / subCategory / keyword：个人资产列表可选筛选条件；用户身份来自外部鉴权上下文。',
@@ -295,7 +299,7 @@ export const CONTENT_API_ENDPOINTS = {
     backendSteps: [
       '读取 query.resourceType。',
       '读取 query.page 和 query.pageSize，并按数字处理。',
-      '如果 resourceType=market_item，读取 sortField、sortDirection、categoryId、keyword。',
+      '如果 resourceType=market_item，读取 marketKind、categoryId、keyword；不要读取排序字段。',
       '如果 resourceType=notice，读取 tag、keyword、startDate、endDate。',
       '如果 resourceType=profile_asset，读取 categoryId、subCategory、keyword。',
       '按 resourceType 查询对应列表。',
@@ -303,7 +307,7 @@ export const CONTENT_API_ENDPOINTS = {
       '用 ContentEnvelope 包起来返回；成功 code=0，items 没有数据时返回空数组。',
     ],
     requestExample:
-      'GET /api/content/list?resourceType=market_item&sortField=listedAt&sortDirection=desc&page=1&pageSize=20',
+      'GET /api/content/list?resourceType=market_item&marketKind=collections&page=1&pageSize=20',
     successExample: stringifyContentApiJsonExample({
       code: 0,
       message: 'OK',
@@ -582,6 +586,14 @@ export const CONTENT_API_RESOURCE_TYPES = {
     idExample: 'orders',
     backendRule: '服务入口详情必须返回 serviceId、tone、statusLabel、badges、metrics、sections。',
   },
+  identity_verification: {
+    label: '实名认证详情',
+    detailSupport: 'detail',
+    payloadDto: 'ContentIdentityVerificationPayloadDto',
+    idExample: 'auth',
+    backendRule:
+      '实名认证详情必须返回 verificationStatus、表单字段、processing 文案和成功/失败结果配置；真实提交 action 后续单独进入正式 contract。',
+  },
   service_action: {
     label: '服务动作入口',
     detailSupport: 'detail',
@@ -663,7 +675,7 @@ export const CONTENT_API_FIELD_OWNERSHIP = {
     'ContentSceneDto.sceneId / version / updatedAt / blocks',
     'ContentResourceDto.resourceType / resourceId / title / subtitle / status / updatedAt / summary / asset / payload / relations',
     'ContentListDto.resourceType / page / pageSize / total / items',
-    'ContentTargetDto.targetType / targetId / provider / target.params.category / target.params.subCategory',
+    'ContentTargetDto.targetType / targetId / provider / target.params.category / target.params.subCategory / target.params.seriesId',
   ],
   backendContentDisplayMetadataFields:
     CONTENT_API_DISPLAY_METADATA_FIELDS.backendContentDisplayMetadata,
@@ -679,7 +691,7 @@ export const CONTENT_API_FIELD_OWNERSHIP = {
 
 export const CONTENT_API_FIELD_BOUNDARY_NOTES = {
   targetParams:
-    'target.params.category / target.params.subCategory 只为 profile_asset 跳转提供目标资源上下文，不是可自由扩展的新后端业务字段。',
+    'target.params.category / target.params.subCategory / target.params.seriesId 只为 profile_asset 跳转提供目标资源上下文，不是可自由扩展的新后端业务字段；资格证不作为一级分类。',
   targetProvider:
     'ContentTargetDto.provider 是内容来源标记，例如 home、activity；它不是运行时 provider，也不是 mock/http 切换开关。',
   routeQuery: 'route.query.* 只停留在前端路由层，永远不是正式内容域 contract 字段。',
@@ -716,10 +728,12 @@ export interface ContentProfileAssetTargetDto {
   provider?: string
   /** 个人资产详情需要的目标上下文，只允许这里列出的字段。 */
   params: {
-    /** 一级分类，必须使用 ContentProfileCategoryId 的正式值，用于详情页恢复资产所在分类。 */
+    /** 一级分类，必须使用 ContentProfileCategoryId 的正式值；资格证归入 collections 下的系列/二级分类。 */
     category: ContentProfileCategoryId
-    /** 二级分类，可选；不传表示没有二级分类上下文，不能临时扩展为其他业务参数。 */
+    /** 二级分类，可选；旧前端对应 series_name，不传表示没有二级分类上下文。 */
     subCategory?: string
+    /** 系列 ID，可选；旧前端对应 series_id，只作为 profile_asset 目标上下文。 */
+    seriesId?: string
   }
 }
 
@@ -934,10 +948,12 @@ export interface ContentAssetPayloadDto {
 }
 
 export interface ContentProfileAssetPayloadDto {
-  /** 一级资产分类，只能使用 ContentProfileCategoryId。 */
+  /** 一级资产分类，只能使用 ContentProfileCategoryId；资格证不得作为一级分类。 */
   categoryId: ContentProfileCategoryId
-  /** 二级资产分类展示文本。 */
+  /** 二级资产分类展示文本；旧前端个人资产口径对应 series_name。 */
   subCategory: string
+  /** 系列 ID，可选；旧前端个人资产口径对应 series_id。 */
+  seriesId?: string
   /** 获得时间，推荐 ISO 8601 字符串。 */
   acquiredAt: string
   /** 当前用户持有数量。 */
@@ -1016,6 +1032,77 @@ export interface ContentServiceEntryPayloadDto {
   sections: ContentServiceEntrySectionDto[]
 }
 
+export interface ContentIdentityVerificationResultDto {
+  /** 结果态视觉语义，只允许 success / danger。 */
+  tone: ContentIdentityVerificationResultTone
+  /** 结果态标题。 */
+  title: string
+  /** 结果态英文装饰码。 */
+  code: string
+  /** 结果态说明文案。 */
+  description: string
+  /** 结果态主按钮文案。 */
+  actionLabel: string
+  /** 结果态审核结论文案。 */
+  auditFeedback: string
+}
+
+export interface ContentIdentityVerificationFeatureDto {
+  /** 宸茶В閿佹潈鐩婂浘鏍囬敭銆?*/
+  iconKey: ContentIdentityVerificationFeatureIconKey
+  /** 宸茶В閿佹潈鐩婃爣棰樸€?*/
+  title: string
+  /** 宸茶В閿佹潈鐩婅鏄庛€?*/
+  description: string
+}
+
+export interface ContentIdentityVerificationPayloadDto {
+  /** 当前实名认证状态。 */
+  verificationStatus: ContentIdentityVerificationStatus
+  /** 当前真实姓名；未认证或未预填时允许为空字符串。 */
+  legalName: string
+  /** 当前证件号；未认证或未预填时允许为空字符串。 */
+  idNumber: string
+  /** 已掩码的证件号；展示已认证摘要时可直接使用。 */
+  maskedIdNumber: string
+  /** 姓名输入 placeholder。 */
+  namePlaceholder: string
+  /** 证件号输入 placeholder。 */
+  idNumberPlaceholder: string
+  /** 宸茶璇佸睍绀虹敤鐨勬牳楠屾椂闂淬€?*/
+  verifiedAt: string
+  /** 宸茶璇佸睍绀虹敤鐨勯摼涓婅妭鐐规爣璇嗐€?*/
+  didNode: string
+  /** 宸茶璇佸悗鐨勮В閿佹潈鐩婂垪琛ㄣ€?*/
+  unlockedFeatures: ContentIdentityVerificationFeatureDto[]
+  /** 鏁版嵁瀹夊叏澹版槑鏍囬銆?*/
+  securityStatementTitle: string
+  /** 鏁版嵁瀹夊叏澹版槑姝ｆ枃銆?*/
+  securityStatementCopy: string
+  /** 当前 mock 是否允许提交。 */
+  submitEnabled: boolean
+  /** 协议是否默认勾选。 */
+  agreementCheckedByDefault: boolean
+  /** 隐私协议展示名。 */
+  privacyPolicyLabel: string
+  /** 协议说明文案。 */
+  consentCopy: string
+  /** 处理中英文装饰码。 */
+  processingCode: string
+  /** 处理中标题。 */
+  processingTitle: string
+  /** 处理中说明文案。 */
+  processingDescription: string
+  /** 审核机构文案。 */
+  auditOrganization: string
+  /** mock 提交后返回成功还是失败。 */
+  mockSubmitResult: ContentIdentityVerificationMockSubmitResult
+  /** mock 成功结果配置。 */
+  successResult: ContentIdentityVerificationResultDto
+  /** mock 失败结果配置。 */
+  failureResult: ContentIdentityVerificationResultDto
+}
+
 export interface ContentActionEntryPayloadDto {
   /** 动作入口 ID。它是内容入口 ID，不是 POST actionType。 */
   actionId: string
@@ -1044,6 +1131,7 @@ export type ContentResourcePayloadDto =
   | ContentAssetPayloadDto
   | ContentProfileAssetPayloadDto
   | ContentServiceEntryPayloadDto
+  | ContentIdentityVerificationPayloadDto
   | ContentActionEntryPayloadDto
   | Record<string, never>
 
@@ -1063,9 +1151,11 @@ export type ContentResourcePayloadByType<T extends ContentResourceType> = T exte
               ? ContentProfileAssetPayloadDto
               : T extends 'service_entry'
                 ? ContentServiceEntryPayloadDto
-                : T extends 'market_action' | 'service_action' | 'settings_action'
-                  ? ContentActionEntryPayloadDto
-                  : Record<string, never>
+                : T extends 'identity_verification'
+                  ? ContentIdentityVerificationPayloadDto
+                  : T extends 'market_action' | 'service_action' | 'settings_action'
+                    ? ContentActionEntryPayloadDto
+                    : Record<string, never>
 
 export interface ContentHomeBannerDto {
   /** 横幅 ID，必须能用于前端埋点或追踪，不要求一定能走 resource 查询。 */
@@ -1114,6 +1204,8 @@ export interface ContentCategorySummaryDto {
   categoryId: string
   /** 分类展示名称。 */
   categoryName: string
+  /** Optional top-level market kinds this category belongs to; absent means shared. */
+  marketKinds?: ContentMarketKind[]
 }
 
 export interface ContentMarketActionDto {
@@ -1123,22 +1215,6 @@ export interface ContentMarketActionDto {
   label: string
   /** 点击动作后的正式目标。 */
   target: ContentTargetDto
-}
-
-export interface ContentMarketSortOptionDto {
-  /** 排序字段，只能使用 ContentMarketSortField。 */
-  field: ContentMarketSortField
-  /** 排序选项展示文本。 */
-  label: string
-}
-
-export interface ContentMarketSortConfigDto {
-  /** 默认排序字段。 */
-  defaultField: ContentMarketSortField
-  /** 默认排序方向。 */
-  defaultDirection: ContentSortDirection
-  /** 可选排序项；没有自定义排序项时可以省略整个 sortConfig。 */
-  options: ContentMarketSortOptionDto[]
 }
 
 export interface ContentMarketItemSummaryDto {
@@ -1212,8 +1288,6 @@ export interface ContentMarketOverviewBlockDto {
   categories: ContentCategorySummaryDto[]
   /** 市场动作入口；没有动作时返回空数组。 */
   actions: ContentMarketActionDto[]
-  /** 市场排序配置，可选；不传时前端使用默认排序。 */
-  sortConfig?: ContentMarketSortConfigDto
   /** 市场首屏条目；没有条目时返回空数组。 */
   items: ContentMarketItemSummaryDto[]
 }
@@ -1256,7 +1330,7 @@ export interface ContentProfileSummaryBlockDto {
   blockType: 'profile_summary'
   /** 当前用户展示名，身份来自外部鉴权上下文。 */
   displayName: string
-  /** 当前用户地址或账号展示文本，不作为 content API 身份参数。 */
+  /** 当前用户区块链地址展示文本；旧前端个人中心来源为 userInfo.ntf_url，不作为 content API 身份参数。 */
   address: string
   /** 当前用户摘要，可选。 */
   summary?: string
@@ -1277,11 +1351,11 @@ export interface ContentProfileSummaryBlockDto {
 }
 
 export interface ContentProfileAssetCategoryDto {
-  /** 一级分类 ID，只能使用 ContentProfileCategoryId。 */
+  /** 一级分类 ID，只能使用 ContentProfileCategoryId；资格证归入 collections 下的二级分类/系列。 */
   categoryId: ContentProfileCategoryId
   /** 一级分类展示名。 */
   categoryName: string
-  /** 二级分类列表；没有二级分类时返回空数组。 */
+  /** 二级分类列表；旧前端对应系列名列表，没有二级分类时返回空数组。 */
   subCategories: string[]
 }
 
@@ -1292,9 +1366,11 @@ export interface ContentProfileAssetItemDto {
   title: string
   /** 获得时间，推荐 ISO 8601 字符串。 */
   acquiredAt: string
-  /** 二级分类展示文本。 */
+  /** 二级分类展示文本；旧前端个人资产口径对应 series_name。 */
   subCategory: string
-  /** 一级分类 ID。 */
+  /** 系列 ID，可选；旧前端个人资产口径对应 series_id。 */
+  seriesId?: string
+  /** 一级分类 ID；资格证不得作为一级分类。 */
   categoryId: ContentProfileCategoryId
   /** 当前用户持有数量。 */
   holdingsCount: number
@@ -1552,14 +1628,12 @@ export interface ContentResourceRequestDto {
 export interface ContentMarketListWireQueryDto {
   /** 固定为 market_item，表示市场条目列表。 */
   resourceType: 'market_item'
+  /** Optional market top-level kind; defaults to collections when absent. */
+  marketKind?: ContentMarketKind
   /** 可选。市场分类 ID；不筛选分类时不传。 */
   categoryId?: string
   /** 可选。搜索关键词；不搜索时不传。 */
   keyword?: string
-  /** 必填。排序字段，只能使用 ContentMarketSortField。 */
-  sortField: ContentMarketSortField
-  /** 必填。排序方向，只能使用 asc 或 desc。 */
-  sortDirection: ContentSortDirection
   /** 必填。页码，当前正式口径从 1 开始。 */
   page: number
   /** 必填。每页数量。 */
@@ -1586,10 +1660,12 @@ export interface ContentNoticeListWireQueryDto {
 export interface ContentProfileAssetListWireQueryDto {
   /** 固定为 profile_asset，表示当前用户个人资产列表。 */
   resourceType: 'profile_asset'
-  /** 可选。一级分类 ID；不筛选一级分类时不传。 */
+  /** 可选。一级分类 ID；只允许 collections / blindBoxes，不筛选一级分类时不传。 */
   categoryId?: string
-  /** 可选。二级分类；不筛选二级分类时不传。 */
+  /** 可选。二级分类展示名；旧前端对应 series_name，不筛选二级分类时不传。 */
   subCategory?: string
+  /** 可选。系列 ID；旧前端对应 series_id，不筛选系列时不传。 */
+  seriesId?: string
   /** 可选。搜索关键词；不搜索时不传。 */
   keyword?: string
   /** 必填。页码，当前正式口径从 1 开始。 */
@@ -1607,25 +1683,19 @@ export type ContentListWireQueryDto =
  * 前端 port 内部的列表请求形态。
  *
  * 当前正式后端 wire 契约仍是 `ContentListWireQueryDto` 的扁平 query：
- * `sortField/sortDirection/startDate/endDate`。这里保留嵌套结构只是为了让前端页面和
- * mock 继续使用更自然的内部模型，http adapter 会负责映射到 wire query。
+ * `marketKind/startDate/endDate`。市场排序字段已从正式请求中移除，后端未支持前端排序。
  *
  * cursor 分页暂未进入正式 DTO，后续如启用必须先更新本文件。
  */
 export interface ContentMarketListRequestDto {
   /** 固定为 market_item。前端内部字段，wire query 同名传给后端。 */
   resourceType: 'market_item'
+  /** Optional market top-level kind; defaults to collections when absent. */
+  marketKind?: ContentMarketKind
   /** 可选。市场分类 ID。前端内部字段，wire query 同名传给后端。 */
   categoryId?: string
   /** 可选。搜索关键词。前端内部字段，wire query 同名传给后端。 */
   keyword?: string
-  /** 必填。前端内部排序对象；http adapter 会拆成 sortField 与 sortDirection。 */
-  sort: {
-    /** 排序字段；wire query 名称是 sortField。 */
-    field: ContentMarketSortField
-    /** 排序方向；wire query 名称是 sortDirection。 */
-    direction: ContentSortDirection
-  }
   /** 必填。页码，当前正式口径从 1 开始。 */
   page: number
   /** 必填。每页数量。 */
@@ -1655,10 +1725,12 @@ export interface ContentNoticeListRequestDto {
 export interface ContentProfileAssetListRequestDto {
   /** 固定为 profile_asset。前端内部字段，wire query 同名传给后端。 */
   resourceType: 'profile_asset'
-  /** 可选。一级分类 ID。前端内部字段，wire query 同名传给后端。 */
+  /** 可选。一级分类 ID。只允许 collections / blindBoxes；资格证不作为一级分类。 */
   categoryId?: string
-  /** 可选。二级分类。前端内部字段，wire query 同名传给后端。 */
+  /** 可选。二级分类展示名；旧前端对应 series_name。 */
   subCategory?: string
+  /** 可选。系列 ID；旧前端对应 series_id。 */
+  seriesId?: string
   /** 可选。搜索关键词。前端内部字段，wire query 同名传给后端。 */
   keyword?: string
   /** 必填。页码，当前正式口径从 1 开始。 */

@@ -121,6 +121,11 @@ export const useActivityNoticeResultWindowGeometryRuntime = (
     options.noticeBottomSpacerHeight.value = 0
   }
 
+  const resolveDisplayedNoticeVisibleEndRow = () => {
+    const mountWindow = resolveNoticeMountedWindow()
+    return mountWindow.geometry.visibleEndRow >= 0 ? mountWindow.geometry.visibleEndRow : null
+  }
+
   const clearNoticeMountWindowSyncRaf = () => {
     if (noticeMountWindowSyncRafId === null) {
       return
@@ -150,6 +155,7 @@ export const useActivityNoticeResultWindowGeometryRuntime = (
   return {
     noticeResultsStageStyle,
     syncMountedNoticeWindow,
+    resolveDisplayedNoticeVisibleEndRow,
     clearMountedNoticeWindow,
     clearNoticeMountWindowSyncRaf,
     scheduleNoticeMountWindowSync,

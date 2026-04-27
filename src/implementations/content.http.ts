@@ -9,13 +9,11 @@ import {
   type ContentApiHttpMethod,
   type ContentEnvelope,
   type ContentListDto,
-  type ContentMarketListRequestDto,
   type ContentListRequestDto,
   type ContentResourceDto,
   type ContentResourceRequestDto,
   type ContentSceneDto,
   type ContentSceneRequestDto,
-  type ContentSortDirection,
 } from '../contracts/content-api.contract'
 import type {
   ContentListPortResponse,
@@ -240,15 +238,6 @@ const requestListContent = async (
   })
 }
 
-const resolveListSort = (
-  input: ContentMarketListRequestDto
-): { field: string; direction: ContentSortDirection } => {
-  return {
-    field: input.sort.field,
-    direction: input.sort.direction === 'asc' ? 'asc' : 'desc',
-  }
-}
-
 export const createContentHttpImplementation = (
   options: ContentHttpImplementationOptions
 ): ContentPort => {
@@ -291,15 +280,13 @@ export const createContentHttpImplementation = (
       // Each branch only serializes fields that are already part of the backend
       // contract for that concrete list resource.
       if (input.resourceType === 'market_item') {
-        const sort = resolveListSort(input)
         return requestListContent(
           endpoint.method,
           buildUrl(baseUrl, endpoint.path, {
             resourceType: input.resourceType,
+            marketKind: input.marketKind,
             categoryId: input.categoryId,
             keyword: input.keyword,
-            sortField: sort.field,
-            sortDirection: sort.direction,
             page: input.page,
             pageSize: input.pageSize,
           }),
@@ -329,6 +316,7 @@ export const createContentHttpImplementation = (
           resourceType: input.resourceType,
           categoryId: input.categoryId,
           subCategory: input.subCategory,
+          seriesId: input.seriesId,
           keyword: input.keyword,
           page: input.page,
           pageSize: input.pageSize,

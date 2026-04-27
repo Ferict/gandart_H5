@@ -3,7 +3,7 @@
  * activity, profile, and drawer entry interactions.
  * Out of scope: UI click handling, page-local animation, and content fetch runtime.
  */
-import type { ContentTargetDto } from '../../contracts/content-api.contract'
+import type { ContentTargetRef } from '../../models/content/contentTarget.model'
 import type { ActivityEntry, ActivityNotice } from '../../models/home-rail/homeRailActivity.model'
 import type {
   HomeContentTargetRef,
@@ -73,7 +73,7 @@ export const buildHomeNoticeDetailUrl = (noticeId: string) => {
 }
 
 interface UpdatingTargetUrlInput {
-  target: HomeContentTargetRef | ContentTargetDto
+  target: HomeContentTargetRef
   title?: string
   source: string
 }
@@ -89,7 +89,6 @@ interface UpdatingQueryMeta {
 const buildTargetExtraQuery = (
   target:
     | HomeContentTargetRef
-    | ContentTargetDto
     | {
         provider?: string
         params?: Record<string, string>
@@ -183,7 +182,7 @@ export const buildUpdatingUrlByTarget = (input: UpdatingTargetUrlInput) => {
 
 export const buildActionEntryUrl = (
   target:
-    | ContentTargetDto
+    | HomeContentTargetRef
     | {
         targetType: 'market_action' | 'service_action' | 'settings_action'
         targetId: string
@@ -200,7 +199,7 @@ export const buildActionEntryUrl = (
 
 export const buildContentResourceUrl = (
   target:
-    | ContentTargetDto
+    | ContentTargetRef
     | {
         targetType: 'notice' | 'home_banner' | 'activity' | 'drop' | 'market_item'
         targetId: string
@@ -310,24 +309,26 @@ export const buildProfileAssetDetailUrl = (
   itemId: string,
   category: ProfileCategoryKey,
   _title?: string,
-  subCategory?: string
+  subCategory?: string,
+  holdingInstanceId?: string,
+  holdingSerial?: string,
+  holdingAcquiredAt?: string
 ) => {
   return buildRouteUrl('/pages/profile-asset-detail/index', {
-    source: 'profile-asset-card',
+    source: holdingInstanceId ? 'profile-asset-holding' : 'profile-asset-card',
     itemId,
     category,
     subCategory: subCategory?.trim() || undefined,
+    holdingInstanceId: holdingInstanceId?.trim() || undefined,
+    holdingSerial: holdingSerial?.trim() || undefined,
+    holdingAcquiredAt: holdingAcquiredAt?.trim() || undefined,
   })
 }
 
 export const buildSettingsUrl = (source: string, section = 'account-security') => {
-  return buildRouteUrl('/pages/updating/index', {
-    moduleId: 'UPD-SETTINGS',
-    title: 'System Settings',
-    englishTitle: 'Configuration',
-    statusLabel: 'Construction',
+  return buildRouteUrl('/pages/settings/index', {
     source,
-    targetParams: JSON.stringify({ section }),
+    section,
   })
 }
 
@@ -341,6 +342,12 @@ export const buildHomeShellPageUrl = (page: PageKey, source: string) => {
 export const buildHomeServiceEntryUrl = (entryId: HomeShellDrawerEntryId, source: string) => {
   if (entryId === 'settings') {
     return buildSettingsUrl(source, 'account-security')
+  }
+
+  if (entryId === 'orders') {
+    return buildRouteUrl('/pages/order/index', {
+      source,
+    })
   }
 
   return buildRouteUrl('/pages/updating/index', {

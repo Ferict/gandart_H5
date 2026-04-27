@@ -20,7 +20,7 @@ type NoticeEntryPhase = CardQueuePhase
 type ActivityNoticeResultMotionSource = ResultLoadSource
 
 interface UseActivityNoticeResultWindowPresentationRuntimeOptions {
-  filteredNotices: ComputedRef<ActivityNotice[]>
+  visibleNotices: ComputedRef<ActivityNotice[]>
   displayedNotices: Ref<ActivityNotice[]>
   mountedNotices: Ref<ActivityNotice[]>
   resolvedNoticeTotal: ComputedRef<number>
@@ -35,16 +35,16 @@ export const useActivityNoticeResultWindowPresentationRuntime = (
   options: UseActivityNoticeResultWindowPresentationRuntimeOptions
 ) => {
   const visibleNoticeStructureSignature = computed(() =>
-    buildNoticeStructureSignature(options.filteredNotices.value)
+    buildNoticeStructureSignature(options.visibleNotices.value)
   )
 
   const visibleNoticeContentSignature = computed(() =>
-    buildNoticeContentSignature(options.filteredNotices.value, options.resolveNoticeImageUrl)
+    buildNoticeContentSignature(options.visibleNotices.value, options.resolveNoticeImageUrl)
   )
 
   const shouldShowActivityBottomEndline = computed(() => {
     return (
-      options.resolvedNoticeTotal.value <= options.filteredNotices.value.length &&
+      options.resolvedNoticeTotal.value <= options.visibleNotices.value.length &&
       options.displayedNotices.value.length > 0
     )
   })

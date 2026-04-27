@@ -4,17 +4,16 @@
  * Out of scope: market query execution, result-window choreography, and image reveal state tracking.
  */
 
-import type { ContentTargetDto } from '../../contracts/content-api.contract'
+import type { ContentTargetRef, ContentTargetType } from '../content/contentTarget.model'
 
 export type HomeBannerTone = 'dawn' | 'azure' | 'ember'
 export type HomeMarketBadgeTone = 'new' | 'hot' | 'featured'
 export type HomeMarketVisualTone = 'ink' | 'mist' | 'aqua' | 'sand'
 export type HomePlaceholderIconKey = 'box' | 'cpu' | 'aperture' | 'hexagon' | 'triangle' | 'disc3'
-export type HomeContentTargetType = ContentTargetDto['targetType']
-export type HomeMarketSortField = 'listedAt' | 'price' | 'tradeVolume24h' | 'holderCount'
-export type HomeMarketSortDirection = 'asc' | 'desc'
+export type HomeContentTargetType = ContentTargetType
+export type HomeMarketKind = 'collections' | 'blindBoxes'
 
-export type HomeContentTargetRef = ContentTargetDto
+export type HomeContentTargetRef = ContentTargetRef
 
 export interface HomeNoticeBarConfig {
   label: string
@@ -70,6 +69,12 @@ export interface HomeMarketAction {
 export interface HomeMarketTag {
   id: string
   label: string
+  marketKinds?: HomeMarketKind[]
+}
+
+export interface HomeMarketKindOption {
+  id: HomeMarketKind
+  label: string
 }
 
 export interface HomeMarketBadge {
@@ -95,17 +100,6 @@ export interface HomeMarketCard {
   target: HomeContentTargetRef
 }
 
-export interface HomeMarketSortOption {
-  field: HomeMarketSortField
-  label: string
-}
-
-export interface HomeMarketSortConfig {
-  defaultField: HomeMarketSortField
-  defaultDirection: HomeMarketSortDirection
-  options: HomeMarketSortOption[]
-}
-
 export interface HomeRailHomeContent {
   noticeBar: HomeNoticeBarConfig
   banners: HomeBannerItem[]
@@ -115,7 +109,6 @@ export interface HomeRailHomeContent {
     sectionSubtitle: string
     tags: HomeMarketTag[]
     actions: HomeMarketAction[]
-    sortConfig: HomeMarketSortConfig
     cards: HomeMarketCard[]
   }
 }

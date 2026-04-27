@@ -1,6 +1,6 @@
 /**
  * Responsibility: assemble the activity notice result-window runtime from switch, render, geometry, presentation, and reset sub-runtimes.
- * Out of scope: date-filter query ownership, panel-level refresh orchestration, and template-only footer structure.
+ * Out of scope: panel-level refresh orchestration and template-only footer structure.
  */
 import { ref, type ComputedRef, type Ref } from 'vue'
 import {
@@ -25,8 +25,9 @@ interface UseActivityNoticeResultWindowOptions {
   isPanelActive: ComputedRef<boolean>
   hasResolvedInitialActivityContent: Ref<boolean>
   mountScrollMetrics: ComputedRef<ResultMountScrollMetrics | null | undefined>
-  filteredNotices: ComputedRef<ActivityNotice[]>
+  visibleNotices: ComputedRef<ActivityNotice[]>
   resolvedNoticeTotal: ComputedRef<number>
+  resolveNoticeVisibleCount: () => number
   isRemoteNoticeListLoading: Ref<boolean>
   mountedNoticesRef?: Ref<ActivityNotice[]>
   placeholderIdSetRef?: Ref<Set<string>>
@@ -47,8 +48,9 @@ export const useActivityNoticeResultWindow = ({
   isPanelActive,
   hasResolvedInitialActivityContent,
   mountScrollMetrics,
-  filteredNotices,
+  visibleNotices,
   resolvedNoticeTotal,
+  resolveNoticeVisibleCount,
   isRemoteNoticeListLoading,
   mountedNoticesRef,
   placeholderIdSetRef,
@@ -87,7 +89,7 @@ export const useActivityNoticeResultWindow = ({
     resolveNoticeEntryStyle,
     resolveNoticeRemovedOverlayItemStyle,
   } = useActivityNoticeResultWindowPresentationRuntime({
-    filteredNotices,
+    visibleNotices,
     displayedNotices,
     mountedNotices,
     resolvedNoticeTotal,
@@ -104,6 +106,7 @@ export const useActivityNoticeResultWindow = ({
     clearMountedNoticeWindow,
     clearNoticeMountWindowSyncRaf,
     scheduleNoticeMountWindowSync,
+    resolveDisplayedNoticeVisibleEndRow,
   } = useActivityNoticeResultWindowGeometryRuntime({
     isPanelActive,
     mountScrollMetrics,
@@ -147,7 +150,7 @@ export const useActivityNoticeResultWindow = ({
     isNoticeRefreshPresentationSettled,
   } = useActivityNoticeResultWindowRenderRuntime({
     hasResolvedInitialActivityContent,
-    filteredNotices,
+    visibleNotices,
     displayedNotices,
     pendingNoticeList,
     hasBootstrappedNoticeList,
@@ -158,6 +161,7 @@ export const useActivityNoticeResultWindow = ({
     queuedNoticeSwitch,
     pendingNoticeWindowDiff,
     isRemoteNoticeListLoading,
+    resolveNoticeVisibleCount,
     buildNoticeStructureSignature,
     buildNoticeContentSignature,
     syncMountedNoticeWindow,
@@ -201,6 +205,7 @@ export const useActivityNoticeResultWindow = ({
     resolveNoticeEntryStyle,
     resolveNoticeRemovedOverlayItemStyle,
     syncMountedNoticeWindow,
+    resolveDisplayedNoticeVisibleEndRow,
     scheduleNoticeMountWindowSync,
     requestActivityNoticeRefreshReplay,
     applyResolvedActivityNoticeList,

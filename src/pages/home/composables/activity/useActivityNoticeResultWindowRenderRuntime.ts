@@ -18,7 +18,7 @@ type ActivityNoticeResultMotionSource = ResultLoadSource
 
 interface UseActivityNoticeResultWindowRenderRuntimeOptions {
   hasResolvedInitialActivityContent: Ref<boolean>
-  filteredNotices: ComputedRef<ActivityNotice[]>
+  visibleNotices: ComputedRef<ActivityNotice[]>
   displayedNotices: Ref<ActivityNotice[]>
   pendingNoticeList: Ref<ActivityNotice[]>
   hasBootstrappedNoticeList: Ref<boolean>
@@ -29,6 +29,7 @@ interface UseActivityNoticeResultWindowRenderRuntimeOptions {
   queuedNoticeSwitch: Ref<ActivityNotice[] | null>
   pendingNoticeWindowDiff: Ref<ResultWindowDiff<ActivityNotice> | null>
   isRemoteNoticeListLoading: Ref<boolean>
+  resolveNoticeVisibleCount: () => number
   buildNoticeStructureSignature: (list: ActivityNotice[]) => string
   buildNoticeContentSignature: (list: ActivityNotice[]) => string
   syncMountedNoticeWindow: (items?: ActivityNotice[]) => void
@@ -38,6 +39,10 @@ interface UseActivityNoticeResultWindowRenderRuntimeOptions {
 export const useActivityNoticeResultWindowRenderRuntime = (
   options: UseActivityNoticeResultWindowRenderRuntimeOptions
 ) => {
+  const resolveAppliedNoticeList = (list: ActivityNotice[]) => {
+    return list.slice(0, options.resolveNoticeVisibleCount())
+  }
+
   const requestActivityNoticeRefreshReplay = () => {
     options.noticeRefreshReplayRequestId.value += 1
   }
@@ -46,7 +51,7 @@ export const useActivityNoticeResultWindowRenderRuntime = (
     nextListResult: Pick<ActivityNoticeListResult, 'list' | 'total'>,
     applyOptions: { replay?: boolean; motionSource?: ActivityNoticeResultMotionSource } = {}
   ) => {
-    options.pendingNoticeList.value = nextListResult.list.slice()
+    options.pendingNoticeList.value = resolveAppliedNoticeList(nextListResult.list)
     options.noticeResultMotionSource.value =
       applyOptions.motionSource ??
       (options.hasBootstrappedNoticeList.value ? 'manual-query-switch' : 'initial-enter')
@@ -57,7 +62,7 @@ export const useActivityNoticeResultWindowRenderRuntime = (
     }
 
     options.hasBootstrappedNoticeList.value = true
-    void options.startNoticeResultSwitch(nextListResult.list)
+    void options.startNoticeResultSwitch(options.pendingNoticeList.value)
   }
 
   const reconcileNoticeRender = () => {
@@ -65,7 +70,7 @@ export const useActivityNoticeResultWindowRenderRuntime = (
       return
     }
 
-    const nextList = options.filteredNotices.value.slice()
+    const nextList = options.visibleNotices.value.slice()
     if (
       options.noticeRefreshReplayRequestId.value !==
       options.handledNoticeRefreshReplayRequestId.value

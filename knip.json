@@ -17,7 +17,12 @@
     ".textlintrc.cjs",
     "scripts/**/*.mjs"
   ],
-  "ignoreFiles": ["src/stores/app.store.ts", ".textlintrc.cjs"],
+  "ignoreFiles": [
+    "src/stores/app.store.ts",
+    ".textlintrc.cjs",
+    "src/pages/updating/updatingPriorityDrawContent.ts",
+    "src/pages/home/composables/home/homeMarketTagDomId.ts"
+  ],
   "ignoreDependencies": [
     "@dcloudio/uni-app-plus",
     "@dcloudio/uni-components",
@@ -25,7 +30,8 @@
     "@dcloudio/uni-cli-shared",
     "@dcloudio/uni-stacktracey",
     "textlint-plugin-markdown",
-    "textlint-rule-no-todo"
+    "textlint-rule-no-todo",
+    "z-paging"
   ],
   "ignoreBinaries": ["powershell"],
   "ignore": [

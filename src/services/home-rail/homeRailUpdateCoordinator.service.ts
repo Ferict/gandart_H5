@@ -23,7 +23,6 @@ import {
 import type {
   HomeRailActivityContent,
   ActivityNoticeListResult,
-  ActivityDateFilterRange,
 } from '../../models/home-rail/homeRailActivity.model'
 import {
   buildHomeRailHomeBlockSignatures,
@@ -54,6 +53,7 @@ import {
 } from './homeRailPersistentCacheIntegration.service'
 import type { HomeRailProfileContent } from '../../models/home-rail/homeRailProfile.model'
 import type { HomeRailActivitySceneModuleKey } from './homeRailActivityContent.service'
+import { COMMON_BATCHED_TRANSPORT_PAGES_PER_BATCH } from '../../pages/home/composables/shared/homeRailBatchStrategy'
 
 const HOME_RAIL_SILENT_UPDATE_INTERVAL_MS = 120000
 const isHomeRailCoordinatorDev = Boolean(
@@ -63,7 +63,6 @@ const isHomeRailCoordinatorDev = Boolean(
 type HomeActivityNoticeListQuery = {
   tag?: string
   keyword?: string
-  dateRange?: ActivityDateFilterRange
   page: number
   pageSize: number
 }
@@ -90,10 +89,12 @@ interface ListCache<TQuery extends RailListQuerySnapshot, TResult> {
   displayedQueryKey: string | null
   displayedResult: TResult | null
   displayedEtag: string | null
+  displayedIsBeyondFirstTransportBatch: boolean
   latestQuery: TQuery | null
   latestQueryKey: string | null
   latestResult: TResult | null
   latestEtag: string | null
+  latestIsBeyondFirstTransportBatch: boolean
   stale: boolean
 }
 
@@ -139,10 +140,12 @@ const createListCache = <TQuery extends RailListQuerySnapshot, TResult>(): ListC
   displayedQueryKey: null,
   displayedResult: null,
   displayedEtag: null,
+  displayedIsBeyondFirstTransportBatch: false,
   latestQuery: null,
   latestQueryKey: null,
   latestResult: null,
   latestEtag: null,
+  latestIsBeyondFirstTransportBatch: false,
   stale: false,
 })
 
@@ -219,19 +222,24 @@ const syncListCache = <TQuery extends RailListQuerySnapshot, TResult>(
   cache: ListCache<TQuery, TResult>,
   query: TQuery,
   result: TResult,
-  etag?: string
+  etag?: string,
+  options: { isBeyondFirstTransportBatch?: boolean } = {}
 ) => {
   const queryKey = normalizeQueryKey(query)
+  const isBeyondFirstTransportBatch =
+    options.isBeyondFirstTransportBatch ?? resolveDeepPaginatedListResult(query, result)
   cache.activeQuery = query
   cache.activeQueryKey = queryKey
   cache.displayedQuery = query
   cache.displayedQueryKey = queryKey
   cache.displayedResult = result
   cache.displayedEtag = etag ?? null
+  cache.displayedIsBeyondFirstTransportBatch = isBeyondFirstTransportBatch
   cache.latestQuery = query
   cache.latestQueryKey = queryKey
   cache.latestResult = result
   cache.latestEtag = etag ?? null
+  cache.latestIsBeyondFirstTransportBatch = isBeyondFirstTransportBatch
   cache.stale = false
 }
 
@@ -250,7 +258,8 @@ const hasMatchingListStale = <TQuery extends RailListQuerySnapshot, TResult>(
     cache.stale &&
     cache.activeQueryKey !== null &&
     cache.activeQueryKey === cache.latestQueryKey &&
-    cache.latestResult !== null
+    cache.latestResult !== null &&
+    !cache.displayedIsBeyondFirstTransportBatch
   )
 }
 
@@ -281,13 +290,17 @@ const updateListLatest = <TQuery extends RailListQuerySnapshot, TResult>(
   cache: ListCache<TQuery, TResult>,
   query: TQuery,
   result: TResult,
-  etag?: string
+  etag?: string,
+  options: { isBeyondFirstTransportBatch?: boolean } = {}
 ) => {
   const queryKey = normalizeQueryKey(query)
+  const isBeyondFirstTransportBatch =
+    options.isBeyondFirstTransportBatch ?? resolveDeepPaginatedListResult(query, result)
   cache.latestQuery = query
   cache.latestQueryKey = queryKey
   cache.latestResult = result
   cache.latestEtag = etag ?? null
+  cache.latestIsBeyondFirstTransportBatch = isBeyondFirstTransportBatch
   cache.stale =
     cache.displayedQueryKey !== null &&
     cache.displayedQueryKey === queryKey &&
@@ -320,6 +333,27 @@ const markSceneModulesDisplayed = <TContent, TModuleKey extends string>(
   cache.displayedContent = resolved.content
   cache.displayedSignatures = nextDisplayedSignatures
   cache.staleModules = diffSceneModules(nextDisplayedSignatures, signatures)
+}
+
+const resolveDeepPaginatedListResult = (query: RailListQuerySnapshot, result: unknown) => {
+  if (
+    typeof query.pageSize !== 'number' ||
+    !Number.isFinite(query.pageSize) ||
+    query.pageSize <= 0 ||
+    !result ||
+    typeof result !== 'object'
+  ) {
+    return false
+  }
+
+  if (!('items' in result) || !Array.isArray((result as { items?: unknown }).items)) {
+    return false
+  }
+
+  return (
+    (result as { items: unknown[] }).items.length >
+    query.pageSize * COMMON_BATCHED_TRANSPORT_PAGES_PER_BATCH
+  )
 }
 
 const prefetchHomeScene = async () => {
@@ -523,9 +557,10 @@ export const syncHomeRailHomeMarketQuerySnapshot = (query: ResolveHomeRailMarket
 export const syncHomeRailHomeMarketListSnapshot = (
   query: ResolveHomeRailMarketCardListInput,
   result: HomeRailMarketCardListResult,
-  etag?: string
+  etag?: string,
+  options: { isBeyondFirstTransportBatch?: boolean } = {}
 ) => {
-  syncListCache(homeListCache, query, result, etag)
+  syncListCache(homeListCache, query, result, etag, options)
 }
 
 export const syncHomeRailActivitySceneSnapshot = (
@@ -589,9 +624,10 @@ export const syncHomeRailProfileAssetQuerySnapshot = (
 export const syncHomeRailProfileAssetListSnapshot = (
   query: ResolveHomeRailProfileAssetListInput,
   result: HomeRailProfileAssetListResult,
-  etag?: string
+  etag?: string,
+  options: { isBeyondFirstTransportBatch?: boolean } = {}
 ) => {
-  syncListCache(profileListCache, query, result, etag)
+  syncListCache(profileListCache, query, result, etag, options)
 }
 
 export const resolveHomeRailHomeActivationUpdate = async (
@@ -626,7 +662,9 @@ export const resolveHomeRailHomeActivationUpdate = async (
     })
     if (!result.notModified) {
       updateListLatest(homeListCache, homeListCache.activeQuery, result, result.etag)
-      marketList = result
+      if (!homeListCache.displayedIsBeyondFirstTransportBatch) {
+        marketList = result
+      }
     }
   }
 
@@ -744,7 +782,9 @@ export const resolveHomeRailProfileActivationUpdate = async (
     })
     if (!result.notModified) {
       updateListLatest(profileListCache, profileListCache.activeQuery, result, result.etag)
-      assetList = result
+      if (!profileListCache.displayedIsBeyondFirstTransportBatch) {
+        assetList = result
+      }
     }
   }
 

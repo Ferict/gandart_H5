@@ -3,14 +3,17 @@
  * profile content services, result-window runtimes, and detail-entry adapters.
  * Out of scope: remote list fetching, scene patch orchestration, and persistent cache writes.
  */
-import type { ContentTargetDto } from '../../contracts/content-api.contract'
+import type {
+  ContentTargetProfileCategoryKey,
+  ContentTargetRef,
+} from '../content/contentTarget.model'
 import type {
   HomeMarketBadge,
   HomeMarketVisualTone,
   HomePlaceholderIconKey,
 } from './homeRailHome.model'
 
-export type ProfileCategoryKey = 'collections' | 'blindBoxes' | 'certificates'
+export type ProfileCategoryKey = ContentTargetProfileCategoryKey
 
 export interface ProfileCategory {
   id: ProfileCategoryKey
@@ -23,6 +26,7 @@ export interface ProfileAssetItem {
   name: string
   date: string
   subCategory: string
+  seriesId?: string
   holdingsCount: number
   priceUnit: string
   price: number
@@ -34,7 +38,7 @@ export interface ProfileAssetItem {
   badge?: HomeMarketBadge
   assetId?: string
   linkedMarketItemId?: string
-  target?: ContentTargetDto
+  target?: ContentTargetRef
 }
 
 export interface ProfileSummary {
@@ -47,7 +51,7 @@ export interface ProfileSummary {
   networkLabel?: string
   statusLabel?: string
   qrPayload?: string
-  shareTarget?: ContentTargetDto
+  shareTarget?: ContentTargetRef
 }
 
 export interface HomeRailProfileContent {

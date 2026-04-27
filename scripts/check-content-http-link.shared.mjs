@@ -200,11 +200,6 @@ export const createContentHttpSmokeConfig = (mergedEnv, contractArtifacts) => {
     )
   }
 
-  const listSortDirection = readEnv(mergedEnv, 'VITE_CONTENT_SMOKE_LIST_SORT_DIRECTION', 'desc')
-  if (!['asc', 'desc'].includes(listSortDirection)) {
-    throw createConfigError('VITE_CONTENT_SMOKE_LIST_SORT_DIRECTION must be asc or desc.')
-  }
-
   return {
     provider,
     baseUrl,
@@ -217,8 +212,6 @@ export const createContentHttpSmokeConfig = (mergedEnv, contractArtifacts) => {
       readEnv(mergedEnv, 'VITE_CONTENT_SMOKE_LIST_PAGE_SIZE', '20'),
       20
     ),
-    listSortField: readEnv(mergedEnv, 'VITE_CONTENT_SMOKE_LIST_SORT_FIELD', 'listedAt'),
-    listSortDirection,
     resourceType: readEnv(mergedEnv, 'VITE_CONTENT_SMOKE_RESOURCE_TYPE'),
     resourceId: readEnv(mergedEnv, 'VITE_CONTENT_SMOKE_RESOURCE_ID'),
     noticeId: readEnv(mergedEnv, 'VITE_CONTENT_SMOKE_NOTICE_ID'),
@@ -253,8 +246,6 @@ const buildListQuery = (config) => {
     return {
       ...common,
       categoryId: config.listCategoryId,
-      sortField: config.listSortField,
-      sortDirection: config.listSortDirection,
     }
   }
 

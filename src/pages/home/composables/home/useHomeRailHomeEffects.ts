@@ -10,7 +10,6 @@ import type {
   HomeFeaturedDropContent,
   HomeMarketCard,
   HomeMarketTag,
-  HomeRailHomeContent,
 } from '../../../../models/home-rail/homeRailHome.model'
 import type {
   HomeVisualImageDisplaySource,
@@ -21,7 +20,6 @@ import { isResultMountWindowingSuspended } from '../../../../services/home-rail/
 import type { ResultLoadSource } from '../../../../services/home-rail/homeRailResultWindow.service'
 
 interface UseHomeRailHomeEffectsOptions {
-  marketSortConfig: ComputedRef<HomeRailHomeContent['market']['sortConfig'] | undefined>
   marketTags: ComputedRef<HomeMarketTag[]>
   marketListQuery: ComputedRef<unknown>
   marketListQuerySignature: ComputedRef<string>
@@ -37,11 +35,8 @@ interface UseHomeRailHomeEffectsOptions {
   homeForegroundSignal: Ref<unknown>
   homePollSignal: Ref<unknown>
   marketImageStateVersion: Ref<number>
-  isMarketSortPopoverOpen: Ref<boolean>
-  marketSortPopoverPlacement: Ref<string>
   mountScrollMetrics: ComputedRef<ResultMountScrollMetrics | null | undefined>
-  syncMarketSortConfig: (sortConfig?: HomeRailHomeContent['market']['sortConfig']) => void
-  syncMarketTagSelection: (tags?: HomeRailHomeContent['market']['tags']) => void
+  syncMarketTagSelection: (tags?: HomeMarketTag[]) => void
   syncMarketListQuerySnapshot: () => void
   clearStagedMarketListUpdate: () => void
   reloadMarketList: (options?: {
@@ -72,8 +67,6 @@ interface UseHomeRailHomeEffectsOptions {
   syncMountedMarketWindow: (items?: HomeMarketCard[]) => void
   syncMarketCardRevealStates: (items?: HomeMarketCard[]) => void
   scheduleMarketMountWindowSync: () => void
-  bindMarketSortPopoverViewportListeners: () => void
-  unbindMarketSortPopoverViewportListeners: () => void
   scheduleMarketLoadMoreObserver: () => Promise<void>
   resetHomeMarketResultWindowForInactive: () => void
   resetHomeVisualRevealForInactive: () => void
@@ -100,14 +93,6 @@ export const useHomeRailHomeEffects = (options: UseHomeRailHomeEffectsOptions) =
   onMounted(async () => {
     await options.initializeHomeContent()
   })
-
-  watch(
-    () => options.marketSortConfig.value,
-    (sortConfig) => {
-      options.syncMarketSortConfig(sortConfig)
-    },
-    { immediate: true, deep: true }
-  )
 
   watch(
     () => options.marketTags.value.map((tag) => tag.id).join('|'),
@@ -204,16 +189,6 @@ export const useHomeRailHomeEffects = (options: UseHomeRailHomeEffectsOptions) =
       options.syncMarketCardRevealStates(options.mountedMarketItems.value)
     }
   )
-
-  watch(options.isMarketSortPopoverOpen, (isOpen) => {
-    if (!isOpen) {
-      options.marketSortPopoverPlacement.value = 'down'
-      options.unbindMarketSortPopoverViewportListeners()
-      return
-    }
-
-    options.bindMarketSortPopoverViewportListeners()
-  })
 
   watch(
     () =>

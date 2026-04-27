@@ -4,11 +4,7 @@
  * Out of scope: market result windows, scene patching, reload orchestration, and template logic.
  */
 import type { ComputedRef } from 'vue'
-import type {
-  HomeMarketCard,
-  HomeMarketTag,
-  HomeRailHomeContent,
-} from '../../../../models/home-rail/homeRailHome.model'
+import type { HomeMarketCard, HomeMarketTag } from '../../../../models/home-rail/homeRailHome.model'
 import type {
   HomeRailMarketCardListResult,
   ResolveHomeRailMarketCardListInput,
@@ -17,14 +13,10 @@ import { useHomeMarketQueryState } from './useHomeMarketQueryState'
 import { useHomeMarketRemoteListState } from './useHomeMarketRemoteListState'
 
 interface UseHomeRailHomeMarketDataPipelineOptions {
-  marketContent: ComputedRef<HomeRailHomeContent['market']>
   marketTags: ComputedRef<HomeMarketTag[]>
-  resolveHasBootstrappedMarketResults: () => boolean
   scheduleMarketMountWindowSync: () => void
   emitMarketSearchClick: () => void
-  emitMarketSortClick: () => void
   emitMarketTagSelect: (tagLabel: string, index: number) => void
-  defaultSortLabel: string
   remotePageSize: number
   syncMarketListQuerySnapshot: (query: ResolveHomeRailMarketCardListInput) => void
   syncResolvedMarketListSnapshot: (
@@ -49,14 +41,10 @@ export const useHomeRailHomeMarketDataPipeline = (
   options: UseHomeRailHomeMarketDataPipelineOptions
 ) => {
   const homeMarketQueryState = useHomeMarketQueryState({
-    marketContent: options.marketContent,
     marketTags: options.marketTags,
-    resolveHasBootstrappedMarketResults: options.resolveHasBootstrappedMarketResults,
     scheduleMarketMountWindowSync: options.scheduleMarketMountWindowSync,
     emitMarketSearchClick: options.emitMarketSearchClick,
-    emitMarketSortClick: options.emitMarketSortClick,
     emitMarketTagSelect: options.emitMarketTagSelect,
-    defaultSortLabel: options.defaultSortLabel,
     pageSize: options.remotePageSize,
   })
 

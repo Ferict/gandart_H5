@@ -10,6 +10,9 @@ Out of scope: detail refresh orchestration, persistent cache flow, and hero medi
         <view class="value-card-collection-badge">
           <text class="value-card-collection-badge-text">{{ partitionDisplayText }}</text>
         </view>
+        <view v-if="holdingSerialText" class="value-card-serial-badge">
+          <text class="value-card-serial-badge-text">{{ holdingSerialText }}</text>
+        </view>
         <text class="value-card-creator">by {{ creatorText }}</text>
       </view>
       <text class="value-card-title">{{ titleText }}</text>
@@ -38,8 +41,8 @@ Out of scope: detail refresh orchestration, persistent cache flow, and hero medi
           <text class="summary-value">{{ acquiredAt }}</text>
         </view>
         <view class="summary-item">
-          <text class="summary-label">版本 / EDITION</text>
-          <text class="summary-value">{{ editionCode }}</text>
+          <text class="summary-label">流通量 / CIRCULATION</text>
+          <text class="summary-value">{{ circulationCount }}</text>
         </view>
         <view class="summary-item">
           <text class="summary-label">总量 / SUPPLY</text>
@@ -59,12 +62,13 @@ defineProps<{
   creatorText: string
   titleText: string
   metricLabelText: string
+  holdingSerialText?: string
   displayPrice: string
   displayPriceUnitVisual: string
   totalValueCompactLabelText: string
   holdingsCount: number
   acquiredAt: string
-  editionCode: string
+  circulationCount: number
   issueCount: number
 }>()
 </script>
@@ -113,6 +117,31 @@ defineProps<{
   font-weight: 500;
   letter-spacing: 0.04em;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.83);
+  transform-origin: center center;
+}
+
+.value-card-serial-badge {
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.24);
+  background: rgba(236, 254, 255, 0.9);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.value-card-serial-badge-text {
+  color: #0891b2;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   display: inline-flex;
   align-items: center;
   justify-content: center;

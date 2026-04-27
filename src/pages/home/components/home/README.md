@@ -17,12 +17,13 @@
 2. `HomeRailHomeFeaturedSection.vue`
 3. `HomeRailHomeNoticeBarSection.vue`
 4. `HomeRailHomeMarketHeadSection.vue`
-5. `HomeRailHomeMarketTagSection.vue`
-6. `HomeRailHomeMarketSearchSection.vue`
-7. `HomeRailHomeMarketStateSection.vue`
-8. `HomeRailHomeMarketFooterSection.vue`
-9. `HomeRailHomeMarketResultsSection.vue`
-10. `HomeRailHomeMarketCardShell.vue`
+5. `HomeRailHomeMarketKindSection.vue`
+6. `HomeRailHomeMarketTagSection.vue`
+7. `HomeRailHomeMarketSearchSection.vue`
+8. `HomeRailHomeMarketStateSection.vue`
+9. `HomeRailHomeMarketFooterSection.vue`
+10. `HomeRailHomeMarketResultsSection.vue`
+11. `HomeRailHomeMarketCardShell.vue`
 
 ## 不应放入的内容
 

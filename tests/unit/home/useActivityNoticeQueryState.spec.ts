@@ -34,7 +34,6 @@ describe('useActivityNoticeQueryState', () => {
   it('clearNoticeSearchState collapses search without changing all-tag snapshot semantics', () => {
     const queryState = useActivityNoticeQueryState({
       content: ref(createActivityContent()),
-      activeDateFilterRange: ref(null),
     })
 
     queryState.noticeKeyword.value = 'maintenance'
@@ -51,7 +50,6 @@ describe('useActivityNoticeQueryState', () => {
   it('clearNoticeSearchState keeps search panel open when collapse=false', () => {
     const queryState = useActivityNoticeQueryState({
       content: ref(createActivityContent()),
-      activeDateFilterRange: ref(null),
     })
 
     queryState.noticeKeyword.value = 'system'
@@ -68,7 +66,6 @@ describe('useActivityNoticeQueryState', () => {
   it('resolves all-tag query snapshot without tag filter', () => {
     const queryState = useActivityNoticeQueryState({
       content: ref(createActivityContent()),
-      activeDateFilterRange: ref(null),
     })
 
     queryState.handleTagSelect(ALL_ACTIVITY_NOTICE_TAG)
@@ -79,7 +76,6 @@ describe('useActivityNoticeQueryState', () => {
   it('applies notice tag switches immediately so the active UI and query stay aligned', () => {
     const queryState = useActivityNoticeQueryState({
       content: ref(createActivityContent()),
-      activeDateFilterRange: ref(null),
     })
 
     const nextTag = queryState.noticeTags.value[1] ?? ALL_ACTIVITY_NOTICE_TAG
@@ -94,7 +90,6 @@ describe('useActivityNoticeQueryState', () => {
     vi.useFakeTimers()
     const queryState = useActivityNoticeQueryState({
       content: ref(createActivityContent()),
-      activeDateFilterRange: ref(null),
     })
 
     queryState.handleNoticeKeywordInput({
@@ -114,7 +109,6 @@ describe('useActivityNoticeQueryState', () => {
     vi.useFakeTimers()
     const queryState = useActivityNoticeQueryState({
       content: ref(createActivityContent()),
-      activeDateFilterRange: ref(null),
     })
 
     queryState.handleNoticeKeywordInput({
@@ -144,7 +138,6 @@ describe('useActivityNoticeQueryState', () => {
     vi.useFakeTimers()
     const queryState = useActivityNoticeQueryState({
       content: ref(createActivityContent()),
-      activeDateFilterRange: ref(null),
     })
 
     queryState.isNoticeSearchVisible.value = true
@@ -167,7 +160,6 @@ describe('useActivityNoticeQueryState', () => {
   it('keeps the last selected notice tag in the query snapshot', () => {
     const queryState = useActivityNoticeQueryState({
       content: ref(createActivityContent()),
-      activeDateFilterRange: ref(null),
     })
 
     const nextTag = queryState.noticeTags.value[1] ?? ALL_ACTIVITY_NOTICE_TAG
@@ -182,7 +174,6 @@ describe('useActivityNoticeQueryState', () => {
     content.notices.tags = ['System']
     const queryState = useActivityNoticeQueryState({
       content: ref(content),
-      activeDateFilterRange: ref(null),
     })
 
     expect(queryState.noticeTags.value[0]).toBe(ALL_ACTIVITY_NOTICE_TAG)

@@ -11,7 +11,6 @@ interface SearchDebounceController {
 
 interface UseHomeMarketSearchRuntimeOptions {
   emitMarketSearchClick: () => void
-  dismissSortPopover: () => void
   scheduleMarketMountWindowSync: () => void
   searchDebounce: SearchDebounceController
 }
@@ -21,7 +20,6 @@ const MARKET_SEARCH_QUERY_DEBOUNCE_MS = 300
 
 export const useHomeMarketSearchRuntime = ({
   emitMarketSearchClick,
-  dismissSortPopover,
   scheduleMarketMountWindowSync,
   searchDebounce,
 }: UseHomeMarketSearchRuntimeOptions) => {
@@ -130,7 +128,6 @@ export const useHomeMarketSearchRuntime = ({
 
   const handleMarketSearchClick = () => {
     emitMarketSearchClick()
-    dismissSortPopover()
     if (isMarketSearchVisible.value) {
       clearHomeMarketSearchState()
       return

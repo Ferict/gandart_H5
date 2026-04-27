@@ -267,7 +267,8 @@ const assignMarketLoadMoreSentinelRef = (element: HTMLElement | null) => {
   position: relative;
   width: 100%;
   border-radius: var(--home-market-card-radius);
-  border: none;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-sizing: border-box;
   background: var(--aether-surface-primary, #ffffff);
   box-shadow: var(--aether-shadow-soft, 0 0 24px rgba(15, 23, 42, 0.05));
   overflow: hidden;

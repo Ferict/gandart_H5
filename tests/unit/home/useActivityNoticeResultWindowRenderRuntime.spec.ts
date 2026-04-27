@@ -33,7 +33,7 @@ describe('useActivityNoticeResultWindowRenderRuntime', () => {
 
     const runtime = useActivityNoticeResultWindowRenderRuntime({
       hasResolvedInitialActivityContent: ref(true),
-      filteredNotices: computed(() => []),
+      visibleNotices: computed(() => []),
       displayedNotices: ref<ActivityNotice[]>([]),
       pendingNoticeList,
       hasBootstrappedNoticeList: ref(true),
@@ -44,6 +44,7 @@ describe('useActivityNoticeResultWindowRenderRuntime', () => {
       queuedNoticeSwitch: ref(null),
       pendingNoticeWindowDiff: ref(null),
       isRemoteNoticeListLoading: ref(false),
+      resolveNoticeVisibleCount: () => 1,
       buildNoticeStructureSignature: buildStructureSignature,
       buildNoticeContentSignature: buildContentSignature,
       syncMountedNoticeWindow: vi.fn(),
@@ -68,7 +69,7 @@ describe('useActivityNoticeResultWindowRenderRuntime', () => {
 
     const runtime = useActivityNoticeResultWindowRenderRuntime({
       hasResolvedInitialActivityContent: ref(true),
-      filteredNotices: computed(() => filteredNotices.value),
+      visibleNotices: computed(() => filteredNotices.value),
       displayedNotices: ref<ActivityNotice[]>([createNotice('a')]),
       pendingNoticeList: ref<ActivityNotice[]>([]),
       hasBootstrappedNoticeList: ref(true),
@@ -79,6 +80,7 @@ describe('useActivityNoticeResultWindowRenderRuntime', () => {
       queuedNoticeSwitch: ref(null),
       pendingNoticeWindowDiff: ref(null),
       isRemoteNoticeListLoading: ref(false),
+      resolveNoticeVisibleCount: () => filteredNotices.value.length,
       buildNoticeStructureSignature: buildStructureSignature,
       buildNoticeContentSignature: buildContentSignature,
       syncMountedNoticeWindow: vi.fn(),
@@ -94,7 +96,7 @@ describe('useActivityNoticeResultWindowRenderRuntime', () => {
   it('reports settled only when replay bookkeeping and transition state are both complete', () => {
     const runtime = useActivityNoticeResultWindowRenderRuntime({
       hasResolvedInitialActivityContent: ref(true),
-      filteredNotices: computed(() => []),
+      visibleNotices: computed(() => []),
       displayedNotices: ref<ActivityNotice[]>([]),
       pendingNoticeList: ref<ActivityNotice[]>([]),
       hasBootstrappedNoticeList: ref(true),
@@ -105,6 +107,7 @@ describe('useActivityNoticeResultWindowRenderRuntime', () => {
       queuedNoticeSwitch: ref(null),
       pendingNoticeWindowDiff: ref(null),
       isRemoteNoticeListLoading: ref(false),
+      resolveNoticeVisibleCount: () => 0,
       buildNoticeStructureSignature: buildStructureSignature,
       buildNoticeContentSignature: buildContentSignature,
       syncMountedNoticeWindow: vi.fn(),

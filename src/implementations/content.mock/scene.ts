@@ -7,6 +7,7 @@
 import type {
   ContentActivityEntriesBlockDto,
   ContentActivityNoticeFeedBlockDto,
+  ContentMarketKind,
   ContentMarketItemSummaryDto,
   ContentProfileAssetsBlockDto,
   ContentProfileSummaryBlockDto,
@@ -24,11 +25,6 @@ import { contentMarketItemDb } from '../../mocks/content-db/market-items'
 import { contentNoticeDb } from '../../mocks/content-db/notices'
 import { activitySceneDb } from '../../mocks/content-db/scenes/activity'
 import { homeMarketActionDb, homeSceneDb } from '../../mocks/content-db/scenes/home'
-import {
-  homeMarketDefaultSortDirection,
-  homeMarketDefaultSortField,
-  homeMarketSortOptionSeed,
-} from '../../mocks/content-db/shared-home-collection-catalog'
 import { profileSceneDb } from '../../mocks/content-db/scenes/profile'
 import { settingsSceneDb } from '../../mocks/content-db/scenes/settings'
 import {
@@ -37,6 +33,20 @@ import {
   getServiceHubReminderEntries,
   resolveNoticeVisual,
 } from './shared'
+
+const resolveHomeMarketCategoryKinds = (categoryId: string): ContentMarketKind[] => {
+  if (categoryId === 'all') {
+    return ['collections', 'blindBoxes']
+  }
+
+  return Array.from(
+    new Set(
+      contentMarketItemDb
+        .filter((item) => item.categoryIds.includes(categoryId))
+        .map((item) => item.marketKind)
+    )
+  )
+}
 
 const buildHomeSceneBlocks = (): ContentSceneBlockDto[] => {
   const noticeBarBlock: ContentSceneBlockDto = {
@@ -130,20 +140,13 @@ const buildHomeSceneBlocks = (): ContentSceneBlockDto[] => {
       .map((item) => ({
         categoryId: item.categoryId,
         categoryName: item.categoryName,
+        marketKinds: resolveHomeMarketCategoryKinds(item.categoryId),
       })),
     actions: homeSceneDb.market.actionIds.map((actionId) => ({
       actionId,
       label: homeMarketActionDb[actionId].label,
       target: { ...homeMarketActionDb[actionId].target },
     })),
-    sortConfig: {
-      defaultField: homeMarketDefaultSortField,
-      defaultDirection: homeMarketDefaultSortDirection,
-      options: homeMarketSortOptionSeed.map((item) => ({
-        field: item.field,
-        label: item.label,
-      })),
-    },
     items: homeSceneDb.market.itemIds
       .map((itemId) => contentMarketItemDb.find((item) => item.itemId === itemId))
       .filter((item): item is NonNullable<typeof item> => Boolean(item))

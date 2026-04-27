@@ -20,12 +20,16 @@
 
 1. `home/`
 2. `profile-asset-detail/`
-3. `updating/`
+3. `order/`
+4. `settings/`
+5. `updating/`
 
 说明：
 
-1. `updating/` 是当前唯一统一建设中承载页。
-2. `settings / service-entry / action-entry / content-resource / profile-address / profile-assets / notice-detail` 已退出注册路由，不再作为现行页面入口。
+1. `order/` 是个人中心“我的订单”聚合页入口。
+2. `updating/` 是当前唯一统一建设中承载页。
+3. `settings/` 是个人中心设置入口对应的独立二级页。
+4. `service-entry / action-entry / content-resource / profile-address / profile-assets / notice-detail` 已退出注册路由，不再作为现行页面入口。
 
 ## 不应放入的内容
 

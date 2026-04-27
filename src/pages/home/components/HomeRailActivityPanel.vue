@@ -28,9 +28,7 @@ or routing policy.
           subtitle="UPDATES"
           :is-notice-search-visible="isNoticeSearchVisible"
           :has-active-notice-search="hasActiveNoticeSearch"
-          :active-date-filter-label="activeDateFilterLabel"
           @notice-search-toggle="handleNoticeSearchToggle"
-          @date-filter-open="openDateFilterOverlay"
         />
 
         <HomeRailActivityTagSection
@@ -98,7 +96,6 @@ or routing policy.
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ActivityDateFilterRange } from '../../../models/home-rail/homeRailActivity.model'
 import type { ResultMountScrollMetrics } from '../../../services/home-rail/homeRailResultMountWindow.service'
 import { createResolvedTemplateRefAssigner } from '../../../utils/resolveTemplateRefElement.util'
 import HomeRailActivityEntryHighlightsSection from './activity/HomeRailActivityEntryHighlightsSection.vue'
@@ -109,7 +106,6 @@ import HomeRailActivityTagSection from './activity/HomeRailActivityTagSection.vu
 import { useHomeRailActivityPanelRuntime } from '../composables/activity/useHomeRailActivityPanelRuntime'
 
 interface Props {
-  activeDateFilterRange: ActivityDateFilterRange
   isActive?: boolean
   mountScrollMetrics?: ResultMountScrollMetrics | null
 }
@@ -119,13 +115,8 @@ const props = withDefaults(defineProps<Props>(), {
   mountScrollMetrics: null,
 })
 
-const emit = defineEmits<{
-  openDateFilter: []
-}>()
-
 const activityPanelActiveProp = computed(() => props.isActive)
 const activityMountScrollMetricsProp = computed(() => props.mountScrollMetrics)
-const activeDateFilterRangeProp = computed(() => props.activeDateFilterRange)
 
 const {
   assetMergeEntry,
@@ -134,7 +125,6 @@ const {
   isActivityScenePatchMotionReduced,
   isNoticeSearchVisible,
   hasActiveNoticeSearch,
-  activeDateFilterLabel,
   noticeTags,
   activeTag,
   isNoticeTagLeftFadeVisible,
@@ -183,16 +173,13 @@ const {
   handleActivityBottomRetry,
   handleNoticeFirstScreenRetry,
   handleNoticeSearchToggle,
-  openDateFilterOverlay,
   handleEntryClick,
   handleNoticeClick,
   refreshContent,
   waitForRefreshPresentation,
 } = useHomeRailActivityPanelRuntime({
-  activeDateFilterRange: activeDateFilterRangeProp,
   isActive: activityPanelActiveProp,
   mountScrollMetrics: activityMountScrollMetricsProp,
-  emitOpenDateFilter: () => emit('openDateFilter'),
 })
 
 const assignNoticeResultsStageRef = createResolvedTemplateRefAssigner(noticeResultsStageRef)

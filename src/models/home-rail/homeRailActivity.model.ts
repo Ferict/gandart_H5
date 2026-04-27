@@ -1,9 +1,9 @@
 /**
- * Responsibility: define the activity rail content, notice list, and date-filter data shapes
+ * Responsibility: define the activity rail content and notice list data shapes
  * consumed by home activity services, runtimes, and page-local presentation layers.
  * Out of scope: query execution, result-window timing, and notice read-state side effects.
  */
-import type { ContentTargetDto } from '../../contracts/content-api.contract'
+import type { ContentTargetRef } from '../content/contentTarget.model'
 
 export type ActivityEntryTone = 'dark' | 'light' | 'soft'
 export type ActivityNoticeType = string
@@ -15,11 +15,6 @@ export type ActivityNoticeVisualPreset =
   | 'synthesis'
   | 'platform'
   | 'swap'
-export type ActivityDateFilterRange = {
-  startDate: string
-  endDate: string
-} | null
-
 export interface ActivityNoticeVisual {
   preset: ActivityNoticeVisualPreset
   imageUrl?: string
@@ -32,7 +27,7 @@ export interface ActivityEntry {
   description: string
   tone: ActivityEntryTone
   badgeText?: string
-  target: ContentTargetDto
+  target: ContentTargetRef
 }
 
 export interface ActivityNotice {
@@ -43,7 +38,7 @@ export interface ActivityNotice {
   time: string
   isUnread: boolean
   visual?: ActivityNoticeVisual
-  target: ContentTargetDto
+  target: ContentTargetRef
 }
 
 export interface ActivityNoticeListResult {

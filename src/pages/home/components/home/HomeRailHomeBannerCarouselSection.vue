@@ -78,7 +78,7 @@ const emit = defineEmits<{
   position: relative;
   width: calc(100% + (var(--home-page-inline-padding, 16px) * 2));
   margin-left: calc(var(--home-page-inline-padding, 16px) * -1);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .home-banner-ratio-shell {
@@ -94,9 +94,20 @@ const emit = defineEmits<{
   padding-top: 48.9796%;
 }
 
+.home-banner-ratio-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(15, 23, 42, 0.08);
+  pointer-events: none;
+}
+
 .home-banner-swiper {
   position: absolute;
   inset: 0 auto 0 calc(var(--home-page-inline-padding, 16px) * -1);
+  z-index: 1;
   width: calc(100% + (var(--home-page-inline-padding, 16px) * 2));
   height: 100%;
 }
@@ -112,7 +123,7 @@ const emit = defineEmits<{
   position: relative;
   height: 100%;
   min-height: 0;
-  border-radius: 0;
+  border-radius: 12px;
   overflow: visible;
   background: transparent;
   color: #ffffff;
@@ -133,6 +144,7 @@ const emit = defineEmits<{
   height: 100%;
   min-height: 0;
   border-radius: 12px;
+  border: 1px solid #edf0f3;
   overflow: hidden;
   padding: 16px;
   box-sizing: border-box;

@@ -26,7 +26,6 @@ global app shell routing.
   >
     <ProfileAssetDetailHeroCard
       class="motion"
-      :detail-id="detailContent.id"
       :hero-top-code-text="heroTopCodeText"
       :hero-barcode-bars="heroBarcodeBars"
       :hero-media-frame-style="heroMediaFrameStyle"
@@ -46,12 +45,13 @@ global app shell routing.
       :creator-text="valueCardCreatorText"
       :title-text="valueCardTitleText"
       :metric-label-text="valueCardMetricLabelText"
+      :holding-serial-text="valueCardHoldingSerialText"
       :display-price="displayPrice"
       :display-price-unit-visual="displayPriceUnitVisual"
       :total-value-compact-label-text="valueCardTotalValueCompactLabelText"
-      :holdings-count="detailContent.holdingsCount"
-      :acquired-at="detailContent.acquiredAt"
-      :edition-code="detailContent.editionCode"
+      :holdings-count="valueCardHoldingCount"
+      :acquired-at="valueCardAcquiredAtText"
+      :circulation-count="detailContent.issueCount"
       :issue-count="detailContent.issueCount"
     />
 
@@ -119,13 +119,21 @@ defineProps<{
   itemId?: string
   category?: string
   subCategory?: string
+  holdingInstanceId?: string
+  holdingSerial?: string
+  holdingAcquiredAt?: string
 }>()
 
 const PROFILE_ASSET_ACTION_RAIL_OCCUPIED_HEIGHT_PX = 112
 
 const { runtimeContext } = useResponsiveRailLayout()
-const { routeSource, resolveCurrentDetailRoute, currentDetailRouteSignature, updateRouteQuery } =
-  useProfileAssetDetailRouteState()
+const {
+  routeQuery,
+  routeSource,
+  resolveCurrentDetailRoute,
+  currentDetailRouteSignature,
+  updateRouteQuery,
+} = useProfileAssetDetailRouteState()
 
 const {
   detailContent,
@@ -168,11 +176,15 @@ const {
   valueCardTitleText,
   displayPriceUnitVisual,
   valueCardMetricLabelText,
+  valueCardHoldingSerialText,
+  valueCardHoldingCount,
+  valueCardAcquiredAtText,
   assetDescriptionText,
   valueCardTotalValueCompactLabelText,
   resolvedTraits,
 } = useProfileAssetDetailPresentation({
   detailContent,
+  routeQuery,
 })
 
 const {
@@ -192,7 +204,7 @@ const {
 const pageMetaStyle = computed(() => {
   const viewportHeight = runtimeContext.value.viewportHeight
   const height = viewportHeight > 0 ? `${viewportHeight}px` : '100vh'
-  return `height:${height};min-height:${height};overflow:hidden;background:#ffffff;`
+  return `height:${height};min-height:${height};overflow:hidden;background:var(--aether-page-background,#fafafa);`
 })
 
 const prepareDetailPageForPageOpen = () => {

@@ -24,5 +24,6 @@ Thumbs.db
 _codex_home_test/
 .tools/
 
-# Trash area is fully excluded from the private collaboration repo
-垃圾桶/
+# Trash area remains tracked only for its README
+垃圾桶/*
+!垃圾桶/README.md

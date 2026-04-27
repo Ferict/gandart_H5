@@ -19,19 +19,19 @@ export const contentCategoryDb: ContentCategoryRecord[] = [
   },
   {
     categoryId: '3d-component',
-    categoryName: '3D组件',
+    categoryName: '组件',
     status: 'online',
     updatedAt: '2026-03-25T12:24:00+08:00',
   },
   {
     categoryId: 'digital-art',
-    categoryName: '数字艺术',
+    categoryName: '数字艺术馆',
     status: 'online',
     updatedAt: '2026-03-25T12:24:00+08:00',
   },
   {
     categoryId: 'equity-certificate',
-    categoryName: '权益凭证',
+    categoryName: '权益证',
     status: 'online',
     updatedAt: '2026-03-25T12:24:00+08:00',
   },
@@ -55,7 +55,7 @@ export const contentCategoryDb: ContentCategoryRecord[] = [
   },
   {
     categoryId: 'onchain-ticket',
-    categoryName: '链上门票',
+    categoryName: '链上票',
     status: 'online',
     updatedAt: '2026-03-25T12:24:00+08:00',
   },

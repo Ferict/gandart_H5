@@ -108,7 +108,7 @@ const emitBack = () => {
 .construction-placeholder {
   width: 100%;
   min-height: 100dvh;
-  background: #fafafa;
+  background: var(--aether-page-background, #fafafa);
 }
 
 .construction-placeholder-shell {
@@ -198,7 +198,7 @@ const emitBack = () => {
   height: 96px;
   border-radius: var(--aether-surface-radius-lg, 20px);
   border: 1px solid #f1f5f9;
-  background: #ffffff;
+  background: var(--aether-surface-primary, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,7 +216,7 @@ const emitBack = () => {
   width: 20px;
   height: 20px;
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--aether-surface-primary, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -285,7 +285,7 @@ const emitBack = () => {
   justify-content: center;
   gap: 8px;
   color: #ffffff;
-  background: #111111;
+  background: var(--aether-surface-inverse, #111111);
   box-shadow: var(--aether-shadow-overlay-float, 0 0 24px rgba(15, 23, 42, 0.08));
 }
 

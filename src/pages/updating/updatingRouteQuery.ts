@@ -21,17 +21,40 @@ export type UpdatingRouteQuery = Record<UpdatingRouteQueryKey, string>
 
 const clean = (value: string) => value.trim()
 
+const decodeUpdatingRouteQueryValueOnce = (value: string) => {
+  try {
+    return decodeURIComponent(value)
+  } catch {
+    return value
+  }
+}
+
+const decodeUpdatingRouteQueryValue = (value: string) => {
+  let decodedValue = value
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const nextValue = decodeUpdatingRouteQueryValueOnce(decodedValue)
+    if (nextValue === decodedValue) {
+      break
+    }
+
+    decodedValue = nextValue
+  }
+
+  return decodedValue
+}
+
 const pickByPattern = (value: string, pattern: RegExp, maxLength: number) => {
-  const normalized = clean(value).slice(0, maxLength)
+  const normalized = clean(decodeUpdatingRouteQueryValue(value)).slice(0, maxLength)
   return pattern.test(normalized) ? normalized : ''
 }
 
 const pickText = (value: string, maxLength: number) => {
-  return clean(value).slice(0, maxLength)
+  return clean(decodeUpdatingRouteQueryValue(value)).slice(0, maxLength)
 }
 
 const normalizeEnumText = (value: string, fallback: string, maxLength: number) => {
-  const normalized = clean(value).slice(0, maxLength)
+  const normalized = clean(decodeUpdatingRouteQueryValue(value)).slice(0, maxLength)
   return normalized || fallback
 }
 

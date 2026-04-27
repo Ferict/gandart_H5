@@ -3,52 +3,6 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $toolsBin = Join-Path $repoRoot '.tools\bin'
 
-function Add-ToPathIfExists {
-  param([string]$PathEntry)
-
-  if ((Test-Path $PathEntry) -and -not ($env:PATH.Split(';') -contains $PathEntry)) {
-    $env:PATH = "$PathEntry;$env:PATH"
-  }
-}
-
-function Refresh-LocalToolPath {
-  $pythonUserBase = py -c "import site; print(site.USER_BASE)"
-  if ($LASTEXITCODE -eq 0 -and $pythonUserBase) {
-    Add-ToPathIfExists (Join-Path $pythonUserBase.Trim() 'Scripts')
-  }
-
-  Add-ToPathIfExists (Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Links')
-}
-
-function Test-Tool {
-  param([string]$Name)
-  return $null -ne (Get-Command $Name -ErrorAction SilentlyContinue)
-}
-
-function Install-Semgrep {
-  Refresh-LocalToolPath
-  if (Test-Tool 'semgrep') {
-    Write-Host 'Semgrep already installed. Skip.'
-    return
-  }
-
-  Write-Host 'Installing Semgrep...'
-  py -m pip install --user semgrep
-  Refresh-LocalToolPath
-}
-
-function Install-Vale {
-  Refresh-LocalToolPath
-  if (Test-Tool 'vale') {
-    Write-Host 'Vale already installed. Skip.'
-    return
-  }
-
-  Write-Host 'Installing Vale...'
-  winget install --id errata-ai.Vale -e --accept-package-agreements --accept-source-agreements
-  Refresh-LocalToolPath
-}
-
 function Install-Reviewdog {
   $reviewdogExe = Join-Path $toolsBin 'reviewdog.exe'
   if (Test-Path $reviewdogExe) {
@@ -66,11 +20,12 @@ function Install-Reviewdog {
     throw 'Reviewdog Windows x86_64 asset was not found.'
   }
 
-  $archivePath = Join-Path $env:TEMP 'reviewdog-latest.tar.gz'
-  $extractDir = Join-Path $env:TEMP 'reviewdog-extract'
+  $timestamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+  $archivePath = Join-Path $env:TEMP "reviewdog-latest-$PID-$timestamp.tar.gz"
+  $extractDir = Join-Path $env:TEMP "reviewdog-extract-$PID-$timestamp"
 
   if (Test-Path $extractDir) {
-    Remove-Item $extractDir -Recurse -Force
+    throw "Reviewdog extraction directory already exists: $extractDir"
   }
 
   Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $archivePath
@@ -105,8 +60,6 @@ function Install-Lefthook {
   }
 }
 
-Install-Semgrep
-Install-Vale
 Install-Reviewdog
 Install-PlaywrightBrowser
 Install-Lefthook

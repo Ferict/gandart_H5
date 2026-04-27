@@ -19,10 +19,7 @@ import type {
 import type { HomeRailActivityContent } from '../../models/home-rail/homeRailActivity.model'
 import type { HomeRailHomeContent } from '../../models/home-rail/homeRailHome.model'
 import type { HomeRailProfileContent } from '../../models/home-rail/homeRailProfile.model'
-import type {
-  ActivityDateFilterRange,
-  ActivityNoticeListResult,
-} from '../../models/home-rail/homeRailActivity.model'
+import type { ActivityNoticeListResult } from '../../models/home-rail/homeRailActivity.model'
 import { isAppContentPersistentCacheEnabled } from '../content/contentCacheRuntime.service'
 import { clearImageLocalCacheByUserScope } from '../content/contentImageFileCache.service'
 import {
@@ -44,7 +41,6 @@ import { logSafeError } from '../../utils/safeLogger.util'
 export interface ActivityNoticeQuerySnapshot {
   tag?: string
   keyword?: string
-  dateRange?: ActivityDateFilterRange
   page: number
   pageSize: number
 }

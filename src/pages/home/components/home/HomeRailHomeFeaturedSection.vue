@@ -180,6 +180,7 @@ const emit = defineEmits<{
   width: 100%;
   height: 100%;
   border-radius: var(--aether-surface-radius-sm, 12px);
+  border: 1px solid #edf0f3;
   background-color: #f4f5f7;
   background-image: linear-gradient(
     135deg,
@@ -187,7 +188,7 @@ const emit = defineEmits<{
     rgba(34, 211, 238, 0.015) 26%,
     rgba(34, 211, 238, 0) 48%
   );
-  box-shadow: var(--aether-shadow-soft, 0 0 24px rgba(15, 23, 42, 0.05));
+  box-shadow: none;
   overflow: hidden;
   box-sizing: border-box;
   transition:
@@ -332,6 +333,7 @@ const emit = defineEmits<{
   width: 100%;
   height: 100%;
   border-radius: var(--aether-surface-radius-sm, 12px);
+  border: 1px solid #edf0f3;
   overflow: hidden;
   background: var(--aether-surface-primary, #ffffff);
   box-shadow: var(--aether-shadow-soft, 0 0 24px rgba(15, 23, 42, 0.05));

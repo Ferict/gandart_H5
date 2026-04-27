@@ -1,10 +1,15 @@
 <!--
-Responsibility: adapt route query data into the shared construction placeholder component.
-Out of scope: real feature execution, content-domain fetching, and long-term business-page presentation.
+Responsibility: adapt route query data into either the shared construction placeholder or
+small retained module pages that have graduated from placeholder-only status.
+Out of scope: content-domain fetching, provider transport, and long-term business-domain routing.
 -->
 
 <template>
+  <UpdatingPriorityDrawPage v-if="isPriorityDrawModule" @back="handleBack" />
+  <UpdatingAssetMergePage v-else-if="isAssetMergeModule" @back="handleBack" />
+  <UpdatingIdentityVerificationPage v-else-if="isIdentityVerificationModule" @back="handleBack" />
   <ConstructionPlaceholder
+    v-else
     :title="page.title"
     :english-title="page.englishTitle"
     :status-label="page.statusLabel"
@@ -15,9 +20,13 @@ Out of scope: real feature execution, content-domain fetching, and long-term bus
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import ConstructionPlaceholder from '../../components/ConstructionPlaceholder.vue'
+import UpdatingAssetMergePage from './UpdatingAssetMergePage.vue'
+import UpdatingIdentityVerificationPage from './UpdatingIdentityVerificationPage.vue'
+import UpdatingPriorityDrawPage from './UpdatingPriorityDrawPage.vue'
+import { runUpdatingBackNavigation } from './updatingBackNavigation'
 import { resolveUpdatingContent } from './updatingContent'
 import { parseUpdatingRouteQuery } from './updatingRouteQuery'
 
@@ -31,14 +40,29 @@ const defaultPage = {
 }
 
 const page = reactive({ ...defaultPage })
+const isPriorityDrawModule = computed(() => page.moduleId === 'UPD-ACT-PRIORITY-DRAW')
+const isAssetMergeModule = computed(() => page.moduleId === 'UPD-ACT-ASSET-MERGE')
+const isIdentityVerificationModule = computed(() => page.moduleId === 'UPD-SERVICE-AUTH')
 
 onLoad((query) => {
   const routeQuery = parseUpdatingRouteQuery(query as Record<string, unknown>)
   const { moduleId, title, englishTitle, statusLabel, source } = routeQuery
 
   page.moduleId = moduleId || defaultPage.moduleId
-  page.title = title || defaultPage.title
-  page.englishTitle = englishTitle || defaultPage.englishTitle
+  page.title = isPriorityDrawModule.value
+    ? '优先抽奖'
+    : isAssetMergeModule.value
+      ? '资产合成'
+      : isIdentityVerificationModule.value
+        ? '实名认证'
+        : title || defaultPage.title
+  page.englishTitle = isPriorityDrawModule.value
+    ? 'Priority_Draw'
+    : isAssetMergeModule.value
+      ? 'Protocol_Merge'
+      : isIdentityVerificationModule.value
+        ? 'Identity_Verification'
+        : englishTitle || defaultPage.englishTitle
   page.statusLabel = statusLabel || defaultPage.statusLabel
 
   const resolvedContent = resolveUpdatingContent(page.moduleId, source)
@@ -47,13 +71,13 @@ onLoad((query) => {
 })
 
 const handleBack = () => {
-  if (getCurrentPages().length > 1) {
-    uni.navigateBack()
-    return
-  }
-
-  uni.switchTab({
-    url: '/pages/home/index',
+  runUpdatingBackNavigation(getCurrentPages().length, {
+    navigateBack: () => {
+      uni.navigateBack()
+    },
+    reLaunch: (options) => {
+      uni.reLaunch(options)
+    },
   })
 }
 </script>

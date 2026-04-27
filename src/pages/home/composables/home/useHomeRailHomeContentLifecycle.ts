@@ -58,7 +58,7 @@ interface UseHomeRailHomeContentLifecycleOptions {
   ) => Promise<RailSceneResolvedContent<HomeRailHomeContent> | null>
   applyHomeRailContent: (
     nextContent: HomeRailHomeContent,
-    options?: { preserveMarketPresentation?: boolean; preserveMarketSort?: boolean }
+    options?: { preserveMarketPresentation?: boolean }
   ) => void
   syncDisplayedHomeSceneSnapshot: (resolved: RailSceneResolvedContent<HomeRailHomeContent>) => void
   applyHomeSceneModules: (
@@ -112,7 +112,6 @@ export const useHomeRailHomeContentLifecycle = (
 
     options.applyHomeRailContent(nextResolved.content, {
       preserveMarketPresentation: true,
-      preserveMarketSort: true,
     })
     options.lastResolvedMeta.value = nextResolved.meta
     options.syncDisplayedHomeSceneSnapshot(nextResolved)

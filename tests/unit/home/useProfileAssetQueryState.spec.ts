@@ -19,23 +19,17 @@ const createProfileContent = (): HomeRailProfileContent => ({
     {
       id: 'collections',
       label: 'Collections',
-      subCategories: ['All', 'Reserved'],
+      subCategories: ['All', 'Reserved', '资格证'],
     },
     {
       id: 'blindBoxes',
       label: 'Blind boxes',
       subCategories: ['All', 'Unopened'],
     },
-    {
-      id: 'certificates',
-      label: 'Certificates',
-      subCategories: ['All', 'Verified'],
-    },
   ],
   assets: {
     collections: [],
     blindBoxes: [],
-    certificates: [],
   },
 })
 
@@ -59,7 +53,7 @@ const createAsset = (id: string, subCategory: string): ProfileAssetItem => ({
 
 const createHarness = () => {
   const content = computed(() => createProfileContent())
-  const activeCategory = ref<'collections' | 'blindBoxes' | 'certificates'>('collections')
+  const activeCategory = ref<'collections' | 'blindBoxes'>('collections')
   const activeSubCategory = ref('')
 
   const currentCategoryAssets = computed(() => {
@@ -71,7 +65,7 @@ const createHarness = () => {
       return [createAsset('b1', 'Unopened')]
     }
 
-    return [createAsset('t1', 'Verified')]
+    return []
   })
 
   const state = useProfileAssetQueryState({
@@ -154,20 +148,20 @@ describe('useProfileAssetQueryState', () => {
       subCategory: 'Unopened',
       keyword: undefined,
       page: 1,
-      pageSize: 60,
+      pageSize: 15,
     })
 
-    state.handleCategoryChange('certificates')
-    state.handleSubCategoryChange('Verified')
+    state.handleCategoryChange('collections')
+    state.handleSubCategoryChange('资格证')
 
-    expect(activeCategory.value).toBe('certificates')
+    expect(activeCategory.value).toBe('collections')
 
     expect(state.resolveProfileAssetQuerySnapshot()).toMatchObject({
-      categoryId: 'certificates',
-      subCategory: 'Verified',
+      categoryId: 'collections',
+      subCategory: '资格证',
       keyword: undefined,
       page: 1,
-      pageSize: 60,
+      pageSize: 15,
     })
   })
 })

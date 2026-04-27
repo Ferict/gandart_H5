@@ -76,15 +76,50 @@ describe('content.mock equivalence baseline', () => {
     expect(typeof profilePayload.holdingsCount).toBe('number')
   })
 
+  it('createContentResourceSnapshot keeps identity_verification payload fields', () => {
+    const snapshot = createContentResourceSnapshot('identity_verification' as never, 'auth')
+
+    expect(snapshot).not.toBeNull()
+    expect(snapshot?.resourceType).toBe('identity_verification')
+    expect(snapshot?.resourceId).toBe('auth')
+    expect(snapshot?.title).toBe('实名认证')
+
+    const payload = snapshot?.payload as {
+      verificationStatus?: string
+      legalName?: string
+      idNumber?: string
+      verifiedAt?: string
+      didNode?: string
+      unlockedFeatures?: Array<{ iconKey?: string; title?: string }>
+      submitEnabled?: boolean
+      processingCode?: string
+      mockSubmitResult?: string
+      successResult?: { title?: string; code?: string; description?: string }
+      failureResult?: { title?: string; code?: string; description?: string }
+    }
+
+    expect(typeof payload.verificationStatus).toBe('string')
+    expect(typeof payload.legalName).toBe('string')
+    expect(typeof payload.idNumber).toBe('string')
+    expect(typeof payload.verifiedAt).toBe('string')
+    expect(typeof payload.didNode).toBe('string')
+    expect(Array.isArray(payload.unlockedFeatures)).toBe(true)
+    expect(typeof payload.unlockedFeatures?.[0]?.iconKey).toBe('string')
+    expect(typeof payload.unlockedFeatures?.[0]?.title).toBe('string')
+    expect(typeof payload.submitEnabled).toBe('boolean')
+    expect(typeof payload.processingCode).toBe('string')
+    expect(typeof payload.mockSubmitResult).toBe('string')
+    expect(typeof payload.successResult?.title).toBe('string')
+    expect(typeof payload.successResult?.code).toBe('string')
+    expect(typeof payload.failureResult?.title).toBe('string')
+    expect(typeof payload.failureResult?.code).toBe('string')
+  })
+
   it('market_item list keeps pagination + etag + notModified semantics', async () => {
     const request: ContentListRequestDto = {
       resourceType: 'market_item',
       categoryId: 'all',
       keyword: '',
-      sort: {
-        field: 'listedAt',
-        direction: 'desc',
-      },
       page: 1,
       pageSize: 5,
     }
@@ -105,6 +140,37 @@ describe('content.mock equivalence baseline', () => {
     expect(secondResponse.notModified).toBe(true)
     expect(secondResponse.etag).toBe(firstResponse.etag)
     expect(secondResponse.envelope.data).toBeNull()
+  })
+
+  it('filters market mock list by marketKind and defaults missing kind to collections', async () => {
+    const baseRequest = {
+      resourceType: 'market_item' as const,
+      categoryId: 'all',
+      keyword: '',
+      page: 1,
+      pageSize: 100,
+    }
+
+    const defaultResponse = await resolveListOrThrow(baseRequest)
+    const collectionsResponse = await resolveListOrThrow({
+      ...baseRequest,
+      marketKind: 'collections',
+    })
+    const blindBoxResponse = await resolveListOrThrow({
+      ...baseRequest,
+      marketKind: 'blindBoxes',
+    })
+
+    const defaultList = defaultResponse.envelope.data as ContentListDtoBase<'market_item'>
+    const collectionsList = collectionsResponse.envelope.data as ContentListDtoBase<'market_item'>
+    const blindBoxList = blindBoxResponse.envelope.data as ContentListDtoBase<'market_item'>
+
+    expect(defaultList.total).toBe(collectionsList.total)
+    expect(defaultList.items.map((item) => item.resourceId)).toEqual(
+      collectionsList.items.map((item) => item.resourceId)
+    )
+    expect(blindBoxList.total).toBeGreaterThan(0)
+    expect(blindBoxList.total).not.toBe(collectionsList.total)
   })
 
   it("notice list keeps publishedAt desc order and tag='全部' as no-filter", async () => {

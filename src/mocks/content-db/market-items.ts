@@ -5,8 +5,7 @@
  */
 import type {
   ContentMarketBadgeType,
-  ContentMarketSortField,
-  ContentSortDirection,
+  ContentMarketKind,
   ContentMarketVisualTone,
   ContentPlaceholderIconKey,
 } from '../../contracts/content-api.contract'
@@ -14,6 +13,7 @@ import { sharedHomeCollectionCatalog } from './shared-home-collection-catalog'
 
 export interface ContentMarketItemRecord {
   itemId: string
+  marketKind: ContentMarketKind
   title: string
   currency: string
   priceInCent: number
@@ -36,6 +36,7 @@ export interface ContentMarketItemRecord {
 export const contentMarketItemDb: ContentMarketItemRecord[] = sharedHomeCollectionCatalog.map(
   (item) => ({
     itemId: item.itemId,
+    marketKind: item.profileCategoryId,
     title: item.title,
     currency: item.currency,
     priceInCent: item.priceInCent,
@@ -55,44 +56,3 @@ export const contentMarketItemDb: ContentMarketItemRecord[] = sharedHomeCollecti
     summary: item.summary,
   })
 )
-
-const resolveMarketSortMetricValue = (
-  item: ContentMarketItemRecord,
-  field: ContentMarketSortField
-): number => {
-  if (field === 'listedAt') {
-    const timestamp = Date.parse(item.listedAt)
-    return Number.isFinite(timestamp) ? timestamp : 0
-  }
-
-  if (field === 'priceInCent') {
-    return item.priceInCent
-  }
-
-  if (field === 'tradeVolume24h') {
-    return item.tradeVolume24h
-  }
-
-  return item.holderCount
-}
-
-const compareMarketItemId = (left: ContentMarketItemRecord, right: ContentMarketItemRecord) => {
-  return left.itemId.localeCompare(right.itemId, 'zh-Hans-CN', { numeric: true })
-}
-
-export const sortContentMarketItems = (
-  items: ContentMarketItemRecord[],
-  sort: { field: ContentMarketSortField; direction: ContentSortDirection }
-): ContentMarketItemRecord[] => {
-  const sortedItems = items.slice()
-  sortedItems.sort((left, right) => {
-    const leftValue = resolveMarketSortMetricValue(left, sort.field)
-    const rightValue = resolveMarketSortMetricValue(right, sort.field)
-    if (leftValue === rightValue) {
-      return compareMarketItemId(left, right)
-    }
-
-    return sort.direction === 'asc' ? leftValue - rightValue : rightValue - leftValue
-  })
-  return sortedItems
-}

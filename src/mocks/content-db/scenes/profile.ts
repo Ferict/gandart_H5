@@ -126,11 +126,6 @@ export const profileSceneDb: ProfileSceneDb = {
         categoryName: '盲盒',
         subCategories: profileSubCategoryByCategory('blindBoxes'),
       },
-      {
-        categoryId: 'certificates',
-        categoryName: '资格证',
-        subCategories: profileSubCategoryByCategory('certificates'),
-      },
     ],
     subCategories: profileSubCategories,
     items: profileSceneItems,

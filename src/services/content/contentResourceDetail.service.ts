@@ -16,12 +16,13 @@ import type {
   ContentResourceDetailContent,
   ContentResourceDetailStat,
 } from '../../models/content/contentResourceDetail.model'
+import { resolvePriceSymbol } from '../../utils/priceSymbol.util'
 import { contentResourceBadgeToneMap } from '../../models/content/contentResourceDetail.model'
 import { resolveContentResource } from './content.service'
 
 type SupportedResourceType = 'home_banner' | 'activity' | 'drop' | 'market_item'
 
-const resolveCurrencyUnit = (currency: string): string => (currency === 'CNY' ? '￥' : currency)
+const resolveCurrencyUnit = resolvePriceSymbol
 const formatCurrencyValue = (priceInCent: number): string =>
   Math.round(priceInCent / 100).toLocaleString('en-US')
 

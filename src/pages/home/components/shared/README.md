@@ -14,13 +14,11 @@
 ## 当前内容
 
 1. `HomeActivityNoticeCard.vue`
-2. `HomeActivityDateFilterSheet.vue`
-3. `homeActivityDateFilterSheet.runtime.ts`
-4. `HomeRailListLoadingFooter.vue`
-5. `homeRailListLoadingFooter.a11y.ts`
-6. `HomeRailTopbar.vue`
-7. `HomeShellTabbar.vue`
-8. `HomeShellTrackStage.vue`
+2. `HomeRailListLoadingFooter.vue`
+3. `homeRailListLoadingFooter.a11y.ts`
+4. `HomeRailTopbar.vue`
+5. `HomeShellTabbar.vue`
+6. `HomeShellTrackStage.vue`
 
 ## 已回流到 src/components 的共享组件
 

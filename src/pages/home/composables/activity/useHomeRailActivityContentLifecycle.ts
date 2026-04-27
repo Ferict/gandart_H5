@@ -20,13 +20,14 @@ import {
 } from '../../../../services/home-rail/homeRailUpdateCoordinator.service'
 import type { HomeRailActivitySceneModuleKey } from '../../../../services/home-rail/homeRailActivityContent.service'
 import type { RailSceneResolvedContent } from '../../../../services/home-rail/homeRailPageReloadPolicy.service'
+import type { ResultLoadSource } from '../../../../services/home-rail/homeRailResultWindow.service'
 import type {
   ActivityNoticeQuerySnapshot,
   ActivityNoticeRemoteListResult,
 } from './useActivityNoticeRemoteListState'
 
 type RailRefreshReason = 'pull-refresh'
-type ActivityNoticeMotionSource = 'initial-enter' | 'manual-query-switch' | 'manual-refresh'
+type ActivityNoticeMotionSource = ResultLoadSource
 
 interface UseHomeRailActivityContentLifecycleOptions {
   isActive: ComputedRef<boolean>
@@ -72,7 +73,7 @@ interface UseHomeRailActivityContentLifecycleOptions {
   ) => { payload: unknown; etag?: string } | null
   applyResolvedActivityNoticeList: (
     result: Pick<ActivityNoticeListResult, 'list' | 'total'>,
-    options?: { replay?: boolean; motionSource?: ActivityNoticeMotionSource | 'activation-apply' }
+    options?: { replay?: boolean; motionSource?: ActivityNoticeMotionSource }
   ) => void
   stageNoticeListUpdate: (
     querySignature: string,

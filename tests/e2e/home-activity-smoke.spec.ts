@@ -26,7 +26,12 @@ test('activity tab keeps core interactions stable', async ({ page }) => {
     )
     await expect(page.locator('.home-activity-panel')).toBeVisible()
     await expect(page.locator('.home-activity-header-title')).toBeVisible()
+    await expect(page.locator('.home-activity-section-head')).toBeVisible()
+    await expect(page.locator('.home-activity-section-title')).toBeVisible()
+    await expect(page.locator('.home-activity-notice-list')).toBeVisible()
     await ensureRealNoticeCards()
+    await expect(noticeCards.first().locator('.home-activity-notice-title-row')).toBeVisible()
+    await expect(noticeCards.first().locator('.home-activity-notice-meta')).toBeVisible()
   }
 
   const assertRouteChangedFromActivity = async () => {
@@ -59,6 +64,7 @@ test('activity tab keeps core interactions stable', async ({ page }) => {
   }
   await ensureRealNoticeCards()
   await expect(page.locator('.home-activity-notice-empty-state:not(.is-error)')).toHaveCount(0)
+  await expect(page.locator('.home-activity-notice-list')).toBeVisible()
 
   const searchTrigger = page.locator('.home-activity-section-action-entry').first()
   await searchTrigger.click()
@@ -86,16 +92,14 @@ test('activity tab keeps core interactions stable', async ({ page }) => {
     await expect(page.locator('.home-activity-notice-empty-state:not(.is-error)')).toHaveCount(0)
   }
 
+  const activityFooter = page.locator('.home-list-loading-footer')
+  if (await activityFooter.count()) {
+    await expect(activityFooter.first()).toBeVisible()
+  }
   await expect(page.locator('.home-list-loading-footer.is-error')).toHaveCount(0)
 
-  const dateFilterTrigger = page.locator('.home-activity-section-action-entry').nth(1)
-  await expect(dateFilterTrigger).toBeVisible()
-  await dateFilterTrigger.click()
-  await expect(page.locator('.home-activity-filter-mask.is-open')).toBeVisible()
-  await expect(page.locator('.home-activity-filter-bottom-sheet.is-open')).toBeVisible()
-
-  await page.locator('.home-activity-filter-mask').click({ position: { x: 12, y: 12 } })
-  await expect(page.locator('.home-activity-filter-bottom-sheet.is-open')).toHaveCount(0)
+  await expect(page.locator('.home-activity-filter-mask')).toHaveCount(0)
+  await expect(page.locator('.home-activity-filter-bottom-sheet')).toHaveCount(0)
 
   const activityEntries = page.locator('.home-activity-entry')
   const entryCount = await activityEntries.count()
@@ -121,6 +125,8 @@ test('activity tab keeps core interactions stable', async ({ page }) => {
   expect(firstNoticeIconBox.width).toBeGreaterThanOrEqual(48)
   expect(firstNoticeIconBox.height).toBeGreaterThanOrEqual(48)
   await expect(firstNoticeCard.locator('.home-activity-notice-title')).toBeVisible()
+  await expect(firstNoticeCard.locator('.home-activity-notice-title-row')).toBeVisible()
+  await expect(firstNoticeCard.locator('.home-activity-notice-meta')).toBeVisible()
 
   await noticeCards.first().click()
   await assertRouteChangedFromActivity()

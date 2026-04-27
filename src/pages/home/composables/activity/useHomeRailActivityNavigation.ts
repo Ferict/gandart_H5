@@ -1,5 +1,5 @@
 /**
- * Responsibility: host the activity rail navigation shell, date-filter entry, and local unread
+ * Responsibility: host the activity rail navigation shell and local unread
  * consumption bridge used by the panel runtime.
  * Out of scope: remote list refresh, scene patching, presentation derivation, and page watchers.
  */
@@ -14,16 +14,11 @@ import type {
 import { logSafeError } from '../../../../utils/safeLogger.util'
 
 interface UseHomeRailActivityNavigationOptions {
-  emitOpenDateFilter: () => void
   markNoticeReadLocal: (noticeId: string) => void
   consumeActivityNoticeUnread: (noticeId: string) => Promise<unknown>
 }
 
 export const useHomeRailActivityNavigation = (options: UseHomeRailActivityNavigationOptions) => {
-  const openDateFilterOverlay = () => {
-    options.emitOpenDateFilter()
-  }
-
   const handleEntryClick = (entry: ActivityEntry) => {
     navigateByUrlSafely(buildContentResourceUrl(entry.target, 'activity-entry'))
   }
@@ -42,7 +37,6 @@ export const useHomeRailActivityNavigation = (options: UseHomeRailActivityNaviga
   }
 
   return {
-    openDateFilterOverlay,
     handleEntryClick,
     handleNoticeClick,
   }

@@ -12,6 +12,7 @@ import {
   HOME_TRACK_PULL_REFRESH_TRIGGER_OFFSET_PX,
   HOME_TRACK_REFRESH_INDICATOR_FADE_IN_RISE_PX,
   HOME_TRACK_REFRESH_TOP_OFFSET_PX,
+  HOME_TRACK_REFRESH_SLOT_MAX_HEIGHT_PX,
   HOME_TRACK_PULL_RESISTANCE_POWER,
 } from './homeTrackRefresh.constants'
 
@@ -37,6 +38,14 @@ export interface HomeTrackRefreshOptions {
 export interface HomeTrackRefreshHandle {
   refreshContent?: (options?: HomeTrackRefreshOptions) => Promise<void>
   waitForRefreshPresentation?: () => Promise<void>
+}
+
+export interface HomeTrackRefreshSlotState {
+  heightPx: number
+  progress: number
+  isVisible: boolean
+  isRefreshing: boolean
+  isPullActive: boolean
 }
 
 const createTrackNumberStateRecord = (pageKeys: readonly PageKey[]) => {
@@ -126,6 +135,19 @@ export const useHomeTrackRefreshController = ({
     }
   }
 
+  const resolveTrackRefreshSlotState = (pageKey: PageKey): HomeTrackRefreshSlotState => {
+    const isRefreshingPage = refreshingPageKey.value === pageKey
+    const progress = resolveTrackRefreshRevealProgress(pageKey)
+    const isVisible = progress > 0 || isRefreshingPage
+    return {
+      heightPx: isVisible ? Math.round(progress * HOME_TRACK_REFRESH_SLOT_MAX_HEIGHT_PX) : 0,
+      progress,
+      isVisible,
+      isRefreshing: isRefreshingPage,
+      isPullActive: !isRefreshingPage && progress > 0,
+    }
+  }
+
   const resetTrackRefresherVisualState = (pageKey: PageKey) => {
     if (refreshingPageKey.value === pageKey) {
       return
@@ -155,9 +177,10 @@ export const useHomeTrackRefreshController = ({
       trackRefresherPullDistance[pageKey] = 0
       trackWindowingSuspendedByRefresher[pageKey] = false
       trackWindowingSuspendedByPresentation[pageKey] = false
-      return
+      return false
     }
 
+    let didRefreshSucceed = true
     refreshingPageKey.value = pageKey
     trackRefresherTriggered[pageKey] = true
     trackRefresherPullDistance[pageKey] = HOME_TRACK_PULL_REFRESH_TRIGGER_OFFSET_PX
@@ -185,6 +208,7 @@ export const useHomeTrackRefreshController = ({
         trackWindowingSuspendedByPresentation[pageKey] = false
       }
     } catch (error) {
+      didRefreshSucceed = false
       logSafeError('homeTrack', error, {
         message: 'failed to refresh current page',
       })
@@ -194,6 +218,16 @@ export const useHomeTrackRefreshController = ({
       trackRefresherPullDistance[pageKey] = 0
       refreshingPageKey.value = null
     }
+
+    return didRefreshSucceed
+  }
+
+  const refreshTrackPage = async (pageKey: PageKey) => {
+    if (activePageKey.value !== pageKey || isTrackRefreshing.value) {
+      return false
+    }
+
+    return triggerPageRefresh(pageKey)
   }
 
   const resolveTrackRefresherTriggered = (pageKey: PageKey) => {
@@ -257,8 +291,10 @@ export const useHomeTrackRefreshController = ({
     resolveTrackRefresherTriggered,
     resolveTrackRefreshIndicatorClass,
     resolveTrackRefreshIndicatorStyle,
+    resolveTrackRefreshSlotState,
     resetTrackRefresherVisualState,
     resetTrackRefresherVisualStateForAllPages,
+    refreshTrackPage,
     handleTrackRefresherPulling,
     handleTrackRefresherRefresh,
     handleTrackRefresherRestore,

@@ -14,6 +14,7 @@ import type {
 import { buildRailContentSignature } from '../../../../services/home-rail/homeRailPageReloadPolicy.service'
 import type { Ref } from 'vue'
 import { createQueryApplyScheduler } from '../shared/queryApplyScheduler'
+import { PROFILE_ASSET_BATCH_STRATEGY } from '../shared/homeRailBatchStrategy'
 
 interface UseProfileAssetQueryStateOptions {
   resolvedProfileCategories: ComputedRef<HomeRailProfileContent['categories']>
@@ -95,7 +96,7 @@ export const useProfileAssetQueryState = ({
       subCategory: activeSubCategoryQueryValue.value,
       keyword: normalizedAppliedProfileKeyword.value || undefined,
       page: 1,
-      pageSize: 60,
+      pageSize: PROFILE_ASSET_BATCH_STRATEGY.backendPageSize,
     }
   })
 

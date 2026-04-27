@@ -8,6 +8,7 @@ import {
   buildActionEntryUrl,
   buildContentResourceUrl,
   buildHomeServiceEntryUrl,
+  navigateByUrlSafely,
   buildProfileAddressQrUrl,
   buildProfileAssetDetailUrl,
   buildProfileSettingsUrl,
@@ -16,6 +17,7 @@ import type {
   ProfileAssetItem,
   ProfileCategoryKey,
 } from '../../../../models/home-rail/homeRailProfile.model'
+import type { ProfileAssetHoldingInstanceViewModel } from './useProfileAssetHoldingsSheet'
 
 interface UseHomeRailProfileNavigationOptions {
   activeCategory: Ref<ProfileCategoryKey>
@@ -23,7 +25,7 @@ interface UseHomeRailProfileNavigationOptions {
 }
 
 const safeNavigate = (url: string) => {
-  uni.navigateTo({ url })
+  navigateByUrlSafely(url)
 }
 
 const resolveProfileCategoryKey = (value?: string): ProfileCategoryKey | undefined => {
@@ -31,7 +33,7 @@ const resolveProfileCategoryKey = (value?: string): ProfileCategoryKey | undefin
     return undefined
   }
 
-  if (value === 'collections' || value === 'blindBoxes' || value === 'certificates') {
+  if (value === 'collections' || value === 'blindBoxes') {
     return value
   }
 
@@ -61,7 +63,10 @@ export const useHomeRailProfileNavigation = (options: UseHomeRailProfileNavigati
     safeNavigate(url)
   }
 
-  const resolveProfileAssetDetailUrl = (item: ProfileAssetItem): string => {
+  const resolveProfileAssetDetailUrl = (
+    item: ProfileAssetItem,
+    instance?: ProfileAssetHoldingInstanceViewModel
+  ): string => {
     const target = item.target
     const profileAssetTarget = target?.targetType === 'profile_asset' ? target : undefined
     const targetCategory = resolveProfileCategoryKey(profileAssetTarget?.params?.category)
@@ -72,7 +77,10 @@ export const useHomeRailProfileNavigation = (options: UseHomeRailProfileNavigati
       resolvedItemId,
       resolvedCategory,
       item.name,
-      targetSubCategory
+      targetSubCategory,
+      instance?.id,
+      instance?.serial,
+      instance?.acquiredAtLabel
     )
   }
 
@@ -107,6 +115,17 @@ export const useHomeRailProfileNavigation = (options: UseHomeRailProfileNavigati
     safeNavigate(resolveProfileAssetDetailUrl(item))
   }
 
+  const handleAssetDetailNavigation = (item: ProfileAssetItem) => {
+    safeNavigate(resolveProfileAssetDetailUrl(item))
+  }
+
+  const handleAssetInstanceDetailNavigation = (
+    item: ProfileAssetItem,
+    instance: ProfileAssetHoldingInstanceViewModel
+  ) => {
+    safeNavigate(resolveProfileAssetDetailUrl(item, instance))
+  }
+
   return {
     handleOpenCommunity,
     handleOpenSettings,
@@ -114,6 +133,8 @@ export const useHomeRailProfileNavigation = (options: UseHomeRailProfileNavigati
     handleShowQr,
     handleQuickEntryClick,
     resolveProfileAssetDetailUrl,
+    handleAssetDetailNavigation,
+    handleAssetInstanceDetailNavigation,
     handleAssetClick,
   }
 }

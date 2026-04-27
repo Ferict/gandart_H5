@@ -21,7 +21,6 @@
    - `HomeRailProfileAssetCardShell.vue`
 5. `shared/`
    - `HomeActivityNoticeCard.vue`
-   - `HomeActivityDateFilterSheet.vue`
    - `HomeRailListLoadingFooter.vue`
    - `HomeRailTopbar.vue`
    - `HomeShellTabbar.vue`

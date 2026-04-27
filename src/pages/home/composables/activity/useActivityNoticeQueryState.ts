@@ -1,5 +1,5 @@
 /**
- * Responsibility: manage activity notice query state, keyword/date/tag switching, debounce,
+ * Responsibility: manage activity notice query state, keyword/tag switching, debounce,
  * and query-signature production for the activity rail.
  * Out of scope: remote-list loading, result-window timing, notice visual reveal, and page-
  * level presentation orchestration.
@@ -7,21 +7,14 @@
 import { computed, ref } from 'vue'
 import { buildRailContentSignature } from '../../../../services/home-rail/homeRailPageReloadPolicy.service'
 import type {
-  ActivityDateFilterRange,
   ActivityNotice,
   HomeRailActivityContent,
 } from '../../../../models/home-rail/homeRailActivity.model'
-import {
-  formatActivityDateFilterLabel,
-  isActivityDateKeyInRange,
-  resolveActivityDateKeyFromPublishedAt,
-} from '../../../../utils/activityDateFilter.util'
 import type { ActivityNoticeQuerySnapshot } from './useActivityNoticeRemoteListState'
 import { createQueryApplyScheduler } from '../shared/queryApplyScheduler'
 
 interface UseActivityNoticeQueryStateOptions {
   content: { value: HomeRailActivityContent }
-  activeDateFilterRange: { value: ActivityDateFilterRange }
 }
 
 interface ClearNoticeSearchStateOptions {
@@ -32,10 +25,7 @@ const NOTICE_DEFAULT_PAGE_SIZE_FLOOR = 60
 const NOTICE_SEARCH_QUERY_DEBOUNCE_MS = 300
 export const ALL_ACTIVITY_NOTICE_TAG = '全部'
 
-export const useActivityNoticeQueryState = ({
-  content,
-  activeDateFilterRange,
-}: UseActivityNoticeQueryStateOptions) => {
+export const useActivityNoticeQueryState = ({ content }: UseActivityNoticeQueryStateOptions) => {
   const activeTag = ref(ALL_ACTIVITY_NOTICE_TAG)
   const appliedTag = ref(ALL_ACTIVITY_NOTICE_TAG)
   const noticeKeyword = ref('')
@@ -52,10 +42,6 @@ export const useActivityNoticeQueryState = ({
     return [ALL_ACTIVITY_NOTICE_TAG, ...sourceTags]
   })
 
-  const activeDateFilterLabel = computed(() => {
-    return formatActivityDateFilterLabel(activeDateFilterRange.value)
-  })
-
   const normalizedNoticeKeyword = computed(() => noticeKeyword.value.trim().toLowerCase())
 
   const normalizedAppliedNoticeKeyword = computed(() => appliedNoticeKeyword.value)
@@ -69,17 +55,6 @@ export const useActivityNoticeQueryState = ({
       !currentTag || currentTag === ALL_ACTIVITY_NOTICE_TAG
         ? sourceList
         : sourceList.filter((notice) => notice.category === currentTag)
-
-    if (activeDateFilterRange.value) {
-      filteredList = filteredList.filter((notice) => {
-        const noticeDateKey = resolveActivityDateKeyFromPublishedAt(notice.publishedAt)
-        if (!noticeDateKey) {
-          return false
-        }
-
-        return isActivityDateKeyInRange(noticeDateKey, activeDateFilterRange.value)
-      })
-    }
 
     if (normalizedAppliedNoticeKeyword.value) {
       filteredList = filteredList.filter((notice) => {
@@ -119,7 +94,6 @@ export const useActivityNoticeQueryState = ({
   const resolveActivityNoticeQuerySnapshot = (): ActivityNoticeQuerySnapshot => ({
     tag: appliedTag.value === ALL_ACTIVITY_NOTICE_TAG ? undefined : appliedTag.value,
     keyword: normalizedAppliedNoticeKeyword.value || undefined,
-    dateRange: activeDateFilterRange.value,
     page: 1,
     pageSize: resolveActivityNoticeRemotePageSize(),
   })
@@ -199,7 +173,6 @@ export const useActivityNoticeQueryState = ({
     isNoticeSearchVisible,
     isNoticeSearchApplied,
     noticeTags,
-    activeDateFilterLabel,
     normalizedAppliedNoticeKeyword,
     hasActiveNoticeSearch,
     sceneFilteredNotices,

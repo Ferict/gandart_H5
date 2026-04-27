@@ -17,7 +17,7 @@ const createNotice = (id: string, overrides: Partial<ActivityNotice> = {}) =>
 describe('useActivityNoticeResultWindowPresentationRuntime', () => {
   it('exposes signatures, endline state, entry styles, and overlay positioning', () => {
     const runtime = useActivityNoticeResultWindowPresentationRuntime({
-      filteredNotices: computed(() => [createNotice('a'), createNotice('b', { isUnread: true })]),
+      visibleNotices: computed(() => [createNotice('a'), createNotice('b', { isUnread: true })]),
       displayedNotices: ref([createNotice('a')]),
       mountedNotices: ref([createNotice('a'), createNotice('b')]),
       resolvedNoticeTotal: computed(() => 2),

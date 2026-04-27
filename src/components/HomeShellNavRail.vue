@@ -169,7 +169,7 @@ const railStyle = computed<CSSProperties>(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background: var(--aether-surface-primary, #ffffff);
   color: #64748b;
   transition:
     transform 180ms ease,
@@ -179,7 +179,7 @@ const railStyle = computed<CSSProperties>(() => {
 }
 
 .home-shell-nav-button.is-active {
-  background: #111111;
+  background: var(--aether-surface-inverse, #111111);
   color: #22d3ee;
   box-shadow: 0 0 16px rgba(15, 23, 42, 0.08);
 }
@@ -221,7 +221,7 @@ const railStyle = computed<CSSProperties>(() => {
 @media (hover: hover) and (pointer: fine) {
   .home-shell-nav-hit:hover .home-shell-nav-button:not(.is-active) {
     transform: translateY(-1px);
-    background: #ffffff;
+    background: var(--aether-surface-primary, #ffffff);
     color: #334155;
     box-shadow: 0 0 16px rgba(15, 23, 42, 0.05);
   }

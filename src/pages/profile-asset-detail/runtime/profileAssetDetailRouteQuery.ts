@@ -11,6 +11,9 @@ export const profileAssetDetailRouteQueryKeys = [
   'assetId',
   'category',
   'subCategory',
+  'holdingInstanceId',
+  'holdingSerial',
+  'holdingAcquiredAt',
 ] as const
 
 export type ProfileAssetDetailRouteQueryKey = (typeof profileAssetDetailRouteQueryKeys)[number]
@@ -30,6 +33,8 @@ const pickText = (value: string, maxLength: number) => {
 
 const idPattern = /^[A-Za-z0-9:_./-]{1,64}$/
 const sourcePattern = /^[A-Za-z0-9:_./-]{1,40}$/
+const holdingSerialPattern = /^[#A-Za-z0-9:_./-]{1,24}$/
+const holdingAcquiredAtPattern = /^[0-9.\-: T]{1,32}$/
 
 export const parseProfileAssetDetailRouteQuery = (
   query: Record<string, unknown>
@@ -42,5 +47,8 @@ export const parseProfileAssetDetailRouteQuery = (
     assetId: pickByPattern(picked.assetId, idPattern, 64),
     category: pickByPattern(picked.category, sourcePattern, 40),
     subCategory: pickText(picked.subCategory, 40),
+    holdingInstanceId: pickByPattern(picked.holdingInstanceId, idPattern, 64),
+    holdingSerial: pickByPattern(picked.holdingSerial, holdingSerialPattern, 24),
+    holdingAcquiredAt: pickByPattern(picked.holdingAcquiredAt, holdingAcquiredAtPattern, 32),
   }
 }

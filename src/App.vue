@@ -34,6 +34,7 @@ uni-page-body,
 page {
   font-family: var(--aether-font-system, system-ui, sans-serif);
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
   text-rendering: optimizeLegibility;
 }
 
@@ -48,5 +49,11 @@ scroll-view,
 swiper,
 swiper-item {
   font-family: inherit;
+}
+
+scroll-view,
+.uni-scroll-view,
+.uni-scroll-view-content {
+  overscroll-behavior-y: none;
 }
 </style>

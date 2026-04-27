@@ -1,6 +1,9 @@
 import { ref } from 'vue'
 import { useActivityNoticeRemoteListState } from '@/pages/home/composables/activity/useActivityNoticeRemoteListState'
-import type { ActivityNoticeListResult } from '@/models/home-rail/homeRailActivity.model'
+import type {
+  ActivityNotice,
+  ActivityNoticeListResult,
+} from '@/models/home-rail/homeRailActivity.model'
 
 const resolveHomeRailActivityNoticeListMock = vi.hoisted(() => vi.fn())
 const logSafeErrorMock = vi.hoisted(() => vi.fn())
@@ -48,6 +51,19 @@ const createNoticeListResult = (
   ...overrides,
 })
 
+const createNotice = (id: string): ActivityNotice => ({
+  id,
+  title: `notice-${id}`,
+  category: '寄售',
+  publishedAt: '2026-04-01T00:00:00.000Z',
+  time: '04-01 08:00',
+  isUnread: true,
+  target: {
+    targetType: 'notice',
+    targetId: id,
+  },
+})
+
 const stubImmediateAnimationFrame = () => {
   vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
     callback(0)
@@ -72,7 +88,6 @@ describe('useActivityNoticeRemoteListState', () => {
     const querySnapshot = ref({
       tag: undefined,
       keyword: undefined,
-      dateRange: null,
       page: 1,
       pageSize: 60,
     })
@@ -96,7 +111,6 @@ describe('useActivityNoticeRemoteListState', () => {
     querySnapshot.value = {
       tag: '寄售',
       keyword: undefined,
-      dateRange: null,
       page: 1,
       pageSize: 60,
     }
@@ -124,7 +138,6 @@ describe('useActivityNoticeRemoteListState', () => {
       resolveQuerySnapshot: () => ({
         tag: undefined,
         keyword: undefined,
-        dateRange: null,
         page: 1,
         pageSize: 40,
       }),
@@ -153,7 +166,6 @@ describe('useActivityNoticeRemoteListState', () => {
       resolveQuerySnapshot: () => ({
         tag: undefined,
         keyword: undefined,
-        dateRange: null,
         page: 1,
         pageSize: 40,
       }),
@@ -175,7 +187,6 @@ describe('useActivityNoticeRemoteListState', () => {
       resolveQuerySnapshot: () => ({
         tag: undefined,
         keyword: undefined,
-        dateRange: null,
         page: 1,
         pageSize: 60,
       }),
@@ -205,5 +216,171 @@ describe('useActivityNoticeRemoteListState', () => {
     expect(state.isFirstScreenRemoteNoticeListLoading.value).toBe(false)
     expect(state.isNoticePaginationLoading.value).toBe(false)
     expect(logSafeErrorMock).toHaveBeenCalledTimes(4)
+  })
+
+  it('drops stale activity first-screen result when query changes', async () => {
+    const querySnapshot = ref({
+      tag: undefined as string | undefined,
+      keyword: undefined as string | undefined,
+      page: 1,
+      pageSize: 60,
+    })
+    const syncResolvedSnapshot = vi.fn()
+    let releaseRequest: ((value: ActivityNoticeListResult) => void) | null = null
+
+    resolveHomeRailActivityNoticeListMock.mockImplementationOnce(
+      () =>
+        new Promise<ActivityNoticeListResult>((resolve) => {
+          releaseRequest = resolve
+        })
+    )
+
+    const state = useActivityNoticeRemoteListState({
+      resolveQuerySnapshot: () => querySnapshot.value,
+      syncResolvedNoticeSnapshot: syncResolvedSnapshot,
+    })
+
+    const reloadPromise = state.reloadRemoteActivityNoticeList()
+    querySnapshot.value = {
+      ...querySnapshot.value,
+      tag: '寄售',
+    }
+    releaseRequest?.(
+      createNoticeListResult({
+        list: [createNotice('stale')],
+        total: 1,
+      })
+    )
+    await reloadPromise
+
+    expect(state.remoteFilteredNoticeList.value).toBeNull()
+    expect(syncResolvedSnapshot).not.toHaveBeenCalled()
+  })
+
+  it('drops stale activity result when panel becomes inactive', async () => {
+    const isActive = ref(true)
+    let releaseRequest: ((value: ActivityNoticeListResult) => void) | null = null
+    const syncResolvedSnapshot = vi.fn()
+
+    resolveHomeRailActivityNoticeListMock.mockImplementationOnce(
+      () =>
+        new Promise<ActivityNoticeListResult>((resolve) => {
+          releaseRequest = resolve
+        })
+    )
+
+    const state = useActivityNoticeRemoteListState({
+      resolveIsActive: () => isActive.value,
+      resolveQuerySnapshot: () => ({
+        tag: undefined,
+        keyword: undefined,
+        page: 1,
+        pageSize: 60,
+      }),
+      syncResolvedNoticeSnapshot: syncResolvedSnapshot,
+    })
+
+    const reloadPromise = state.reloadRemoteActivityNoticeList()
+    isActive.value = false
+    state.resetRemoteNoticeListForInactive()
+    releaseRequest?.(
+      createNoticeListResult({
+        list: [createNotice('inactive')],
+        total: 1,
+      })
+    )
+    await reloadPromise
+
+    expect(state.remoteFilteredNoticeList.value).toBeNull()
+    expect(syncResolvedSnapshot).not.toHaveBeenCalled()
+  })
+
+  it('loads next activity notice page and appends unique notices', async () => {
+    resolveHomeRailActivityNoticeListMock
+      .mockResolvedValueOnce(
+        createNoticeListResult({
+          page: 1,
+          total: 3,
+          list: [createNotice('N-01'), createNotice('N-02')],
+          etag: 'etag-page-1',
+        })
+      )
+      .mockResolvedValueOnce(
+        createNoticeListResult({
+          page: 2,
+          total: 3,
+          list: [createNotice('N-02'), createNotice('N-03')],
+          etag: 'etag-page-2',
+        })
+      )
+
+    const state = useActivityNoticeRemoteListState({
+      resolveQuerySnapshot: () => ({
+        tag: undefined,
+        keyword: undefined,
+        page: 1,
+        pageSize: 60,
+      }),
+      syncResolvedNoticeSnapshot: vi.fn(),
+    })
+
+    await state.reloadRemoteActivityNoticeList()
+    const result = await state.loadMoreRemoteActivityNoticeListPage({ manual: true })
+
+    expect(result.outcome).toBe('appended')
+    expect(state.remoteFilteredNoticeList.value?.list.map((item) => item.id)).toEqual([
+      'N-01',
+      'N-02',
+      'N-03',
+    ])
+    expect(resolveHomeRailActivityNoticeListMock).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        page: 2,
+        pageSize: 60,
+        ifNoneMatch: undefined,
+      })
+    )
+  })
+
+  it('does not reuse activity etag across query signatures', async () => {
+    const querySnapshot = ref({
+      tag: undefined as string | undefined,
+      keyword: undefined as string | undefined,
+      page: 1,
+      pageSize: 60,
+    })
+
+    resolveHomeRailActivityNoticeListMock
+      .mockResolvedValueOnce(
+        createNoticeListResult({
+          etag: 'etag-all',
+        })
+      )
+      .mockResolvedValueOnce(
+        createNoticeListResult({
+          etag: 'etag-consign',
+          list: [createNotice('N-02')],
+        })
+      )
+
+    const state = useActivityNoticeRemoteListState({
+      resolveQuerySnapshot: () => querySnapshot.value,
+      syncResolvedNoticeSnapshot: vi.fn(),
+    })
+
+    await state.reloadRemoteActivityNoticeList()
+    querySnapshot.value = {
+      ...querySnapshot.value,
+      tag: '寄售',
+    }
+    await state.reloadRemoteActivityNoticeList()
+
+    expect(resolveHomeRailActivityNoticeListMock).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        ifNoneMatch: undefined,
+      })
+    )
   })
 })

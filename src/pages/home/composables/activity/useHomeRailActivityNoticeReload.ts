@@ -5,9 +5,10 @@
  */
 import type { Ref } from 'vue'
 import type { ActivityNoticeListResult } from '../../../../models/home-rail/homeRailActivity.model'
+import type { ResultLoadSource } from '../../../../services/home-rail/homeRailResultWindow.service'
 import type { ActivityNoticeRemoteListResult } from './useActivityNoticeRemoteListState'
 
-type ActivityNoticeMotionSource = 'initial-enter' | 'manual-query-switch' | 'manual-refresh'
+type ActivityNoticeMotionSource = ResultLoadSource
 
 interface UseHomeRailActivityNoticeReloadOptions {
   hasResolvedRemoteNoticeList: Ref<boolean>

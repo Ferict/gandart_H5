@@ -99,7 +99,7 @@ const handleDrawerClose = () => {
 .standalone-page-scaffold {
   width: 100%;
   min-height: 100dvh;
-  background: #fafafa;
+  background: var(--aether-page-background, #fafafa);
 }
 
 .standalone-page-scaffold.is-drawer-open {
@@ -111,7 +111,7 @@ const handleDrawerClose = () => {
   position: relative;
   width: 100%;
   min-height: 100dvh;
-  background: #fafafa;
+  background: var(--aether-page-background, #fafafa);
   display: flex;
   justify-content: center;
 }
@@ -144,7 +144,7 @@ const handleDrawerClose = () => {
   width: 100%;
   min-width: 0;
   min-height: 100dvh;
-  background: #fafafa;
+  background: var(--aether-page-background, #fafafa);
 }
 
 .standalone-page-scaffold-frame.is-wide-rail-mode .standalone-page-scaffold-main {

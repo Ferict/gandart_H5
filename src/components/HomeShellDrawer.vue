@@ -6,15 +6,17 @@ Out of scope: menu data ownership, route navigation strategy, and page content l
 
 <template>
   <view
+    v-if="shouldRenderDrawerLayer"
     class="home-shell-drawer-mask"
-    :class="{ 'is-open': props.open }"
+    :class="{ 'is-open': isDrawerLayerActive }"
     @tap="emitClose"
     @touchmove.stop.prevent
   />
 
   <view
+    v-if="shouldRenderDrawerLayer"
     class="home-shell-side-drawer"
-    :class="{ 'is-open': props.open }"
+    :class="{ 'is-open': isDrawerLayerActive }"
     :style="drawerStyle"
     @tap.stop
     @touchmove.stop.prevent
@@ -107,7 +109,7 @@ Out of scope: menu data ownership, route navigation strategy, and page content l
 </template>
 
 <script setup lang="ts">
-import { computed, type CSSProperties } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch, type CSSProperties } from 'vue'
 import AetherIcon from './AetherIcon.vue'
 import HomeInteractiveTarget from './HomeInteractiveTarget.vue'
 import {
@@ -131,6 +133,61 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   close: []
 }>()
+
+const HOME_DRAWER_EXIT_DURATION_MS = 260
+
+const shouldRenderDrawerLayer = ref(props.open)
+const isDrawerLayerActive = ref(props.open)
+let drawerCloseTimer: ReturnType<typeof setTimeout> | undefined
+let drawerOpenTimer: ReturnType<typeof setTimeout> | undefined
+
+const clearDrawerTimers = () => {
+  if (drawerCloseTimer !== undefined) {
+    clearTimeout(drawerCloseTimer)
+    drawerCloseTimer = undefined
+  }
+
+  if (drawerOpenTimer !== undefined) {
+    clearTimeout(drawerOpenTimer)
+    drawerOpenTimer = undefined
+  }
+}
+
+watch(
+  () => props.open,
+  (isOpen) => {
+    clearDrawerTimers()
+
+    if (isOpen) {
+      shouldRenderDrawerLayer.value = true
+      void nextTick(() => {
+        if (!props.open) {
+          return
+        }
+
+        drawerOpenTimer = setTimeout(() => {
+          if (props.open) {
+            isDrawerLayerActive.value = true
+          }
+          drawerOpenTimer = undefined
+        }, 0)
+      })
+      return
+    }
+
+    isDrawerLayerActive.value = false
+    drawerCloseTimer = setTimeout(() => {
+      if (!props.open) {
+        shouldRenderDrawerLayer.value = false
+      }
+      drawerCloseTimer = undefined
+    }, HOME_DRAWER_EXIT_DURATION_MS)
+  }
+)
+
+onBeforeUnmount(() => {
+  clearDrawerTimers()
+})
 
 const drawerStyle = computed<CSSProperties>(() => {
   const insets = resolveHomeShellInsets(props.runtimeContext)
@@ -193,6 +250,10 @@ const { drawerEntries, handleEntryActivate } = useHomeShellDrawerRuntime({
   pointer-events: auto;
 }
 
+.home-shell-side-drawer:not(.is-open) .home-shell-drawer-panel {
+  box-shadow: none;
+}
+
 .home-shell-drawer-panel {
   width: 100%;
   height: 100%;
@@ -207,7 +268,7 @@ const { drawerEntries, handleEntryActivate } = useHomeShellDrawerRuntime({
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .home-shell-drawer-panel {
-    background: var(--aether-page-background, #ffffff);
+    background: var(--aether-page-background, #fafafa);
   }
 }
 
@@ -489,13 +550,13 @@ const { drawerEntries, handleEntryActivate } = useHomeShellDrawerRuntime({
 @media (hover: hover) and (pointer: fine) {
   .home-shell-drawer-item-entry:hover .home-shell-drawer-item {
     transform: translateX(-2px);
-    background: #ffffff;
+    background: var(--aether-surface-primary, #ffffff);
     box-shadow: var(--aether-shadow-surface-md, 0 0 24px rgba(15, 23, 42, 0.05));
   }
 
   .home-shell-drawer-item-entry:hover .home-shell-drawer-icon-shell {
     color: #22d3ee;
-    background: #111111;
+    background: var(--aether-surface-inverse, #111111);
   }
 
   .home-shell-drawer-item-entry:hover .home-shell-drawer-chevron {
