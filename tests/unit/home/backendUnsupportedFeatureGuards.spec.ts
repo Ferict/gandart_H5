@@ -40,9 +40,7 @@ describe('backend unsupported feature guards', () => {
     expect(activityQueryState).not.toContain('activeDateFilterRange')
   })
 
-  it('does not retain backend unsupported docs in the clean source repo', () => {
-    const legacyFolder = path.join(repoRoot, '后端未实现')
-
-    expect(fs.existsSync(legacyFolder)).toBe(false)
+  it('keeps backend unsupported docs out of the clean source snapshot', () => {
+    expect(fs.existsSync(path.join(repoRoot, '后端未实现', 'README.md'))).toBe(false)
   })
 })

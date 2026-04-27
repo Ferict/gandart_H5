@@ -30,6 +30,13 @@
       }
     },
     {
+      "path": "pages/invite/index",
+      "style": {
+        "navigationStyle": "custom",
+        "backgroundColor": "#F5F6F8"
+      }
+    },
+    {
       "path": "pages/settings/index",
       "style": {
         "navigationStyle": "custom",

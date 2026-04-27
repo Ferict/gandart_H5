@@ -43,12 +43,12 @@ Out of scope: real merge-domain fetching, merge execution, and formal contract w
             <text class="asset-merge-card-title">{{ event.title }}</text>
 
             <view class="asset-merge-card-time">
-              <text class="asset-merge-card-time-label">TIME</text>
+              <text class="asset-merge-card-time-label">活动时间</text>
               <text class="asset-merge-card-time-copy">{{ event.timeRange }}</text>
             </view>
 
             <view class="asset-merge-card-formula">
-              <text class="asset-merge-card-formula-label">需求素材 / Formula</text>
+              <text class="asset-merge-card-formula-label">所需素材</text>
               <view class="asset-merge-card-formula-row">
                 <AetherIcon name="box" :size="14" :stroke-width="2" tone="muted" />
                 <text class="asset-merge-card-formula-copy">{{ event.formula }}</text>
@@ -59,7 +59,7 @@ Out of scope: real merge-domain fetching, merge execution, and formal contract w
               <view class="asset-merge-card-supply">
                 <view class="asset-merge-card-supply-rail" />
                 <view class="asset-merge-card-supply-copy">
-                  <text class="asset-merge-card-supply-label">剩余份数 / Remaining</text>
+                  <text class="asset-merge-card-supply-label">剩余份数</text>
                   <view class="asset-merge-card-supply-value">
                     <text class="asset-merge-card-supply-main">
                       {{ event.remainingSupplyLabel }}

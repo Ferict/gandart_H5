@@ -2,7 +2,7 @@
   "name": "aether-art-uniapp",
   "version": "0.1.0",
   "private": true,
-  "description": "天异艺术 H5 纯净源码仓",
+  "description": "gandart H5 clean source snapshot",
   "scripts": {
     "dev:custom": "uni -p",
     "dev:h5": "uni",

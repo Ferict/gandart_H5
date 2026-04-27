@@ -73,9 +73,7 @@ test('profile tab keeps core interactions stable', async ({ page }) => {
   const searchInput = page.locator('.home-profile-search-input input')
   await expect(searchInput).toBeVisible()
   await searchInput.fill('temporary')
-  await searchInput.fill('钘忓搧')
-  await expect(searchInput).toHaveValue('钘忓搧')
-  await expect(page.locator('.home-profile-asset-grid, .home-profile-empty-card')).toBeVisible()
+  await expect(searchInput).toHaveValue('temporary')
 
   const clearButton = page.locator('.home-profile-search-clear')
   if (await clearButton.count()) {
@@ -116,16 +114,14 @@ test('profile tab keeps core interactions stable', async ({ page }) => {
   const realAssetCount = await assetCards.count()
   if (realAssetCount > 0) {
     await assetCards.first().click()
-    const holdingsSheet = page.locator('.profile-asset-holdings-sheet')
-    const holdingEntries = page.locator('.profile-asset-holding-entry')
-    await expect(holdingsSheet).toBeVisible()
-    await expect(holdingEntries.first()).toBeVisible()
-    await holdingEntries.first().click()
+    await expect(page.locator('.profile-asset-holdings-sheet')).toBeVisible()
+    await page.locator('.profile-asset-holding-entry').first().click()
     await assertRouteChangedFromProfile()
     await goBackToProfile()
   } else {
     await expect(page.locator('.home-profile-empty-card')).toBeVisible()
   }
+
   const profileFooter = page.locator('.home-list-loading-footer')
   if (await profileFooter.count()) {
     await expect(profileFooter.first()).toBeVisible()

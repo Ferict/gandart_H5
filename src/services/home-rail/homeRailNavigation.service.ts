@@ -208,6 +208,10 @@ export const buildContentResourceUrl = (
       },
   source: string
 ) => {
+  if (target.targetType === 'activity' && target.targetId === 'network-invite') {
+    return buildInviteUrl(source, 'invite-overview')
+  }
+
   return buildUpdatingUrlByTarget({
     target,
     source,
@@ -332,6 +336,13 @@ export const buildSettingsUrl = (source: string, section = 'account-security') =
   })
 }
 
+export const buildInviteUrl = (source: string, section = 'invite-overview') => {
+  return buildRouteUrl('/pages/invite/index', {
+    source,
+    section,
+  })
+}
+
 export const buildHomeShellPageUrl = (page: PageKey, source: string) => {
   return buildRouteUrl('/pages/home/index', {
     tab: page,
@@ -348,6 +359,10 @@ export const buildHomeServiceEntryUrl = (entryId: HomeShellDrawerEntryId, source
     return buildRouteUrl('/pages/order/index', {
       source,
     })
+  }
+
+  if (entryId === 'invite') {
+    return buildInviteUrl(source, 'invite-overview')
   }
 
   return buildRouteUrl('/pages/updating/index', {
